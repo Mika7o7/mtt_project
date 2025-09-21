@@ -1,0 +1,212 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{% static 'apple-touch-icon-120x120.png' %}">
+
+    <!-- Page-specific meta tags -->
+    {% block meta %}
+    {% endblock %}
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'assets/vendor/bootstrap/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/globals.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/custom.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/hamburgers/wx.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/slick-carousel/slick/slick.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/fancybox/jquery.fancybox.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/animate.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&display=swap&subset=cyrillic">
+    <link rel="stylesheet" href="{% static 'assets/vendor/icon-awesome/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/icon-line/css/simple-line-icons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/icon-hs/style.min.css' %}">
+
+    <!-- Scripts (reCAPTCHA, Analytics, etc.) -->
+    <script src="https://www.google.com/recaptcha/api.js?render=6LftcM8rAAAAAMx1Brcc8IYsjwlF-IfBmM-KZuAl"></script>
+    <script>
+        grecaptcha.ready(function() {
+            grecaptcha.execute("6LftcM8rAAAAAMx1Brcc8IYsjwlF-IfBmM-KZuAl", {action: "submit"}).then(function(token) {
+                document.getElementById("g_recaptcha_response").value = token;
+            });
+        });
+    </script>
+    <!-- Yandex.Metrika -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {
+                if (document.scripts[j].src === r) { return; }
+            }
+            k = e.createElement(t),
+            k.async = 1,
+            k.src = r,
+            a = e.getElementsByTagName(t)[0],
+            a.parentNode.insertBefore(k, a)
+        })
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+        ym(93043876, "init", {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true,
+            webvisor: true
+        });
+    </script>
+    <noscript>
+        <div>
+            <img src="https://mc.yandex.ru/watch/93043876" style="position:absolute; left:-9999px;" alt="" />
+        </div>
+    </noscript>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZGTVZ1HJHJ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-ZGTVZ1HJHJ');
+    </script>
+</head>
+<body>
+    <!-- Header -->
+    {% include 'header.html' %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    {% include 'footer.html' %}
+
+    <!-- Modals -->
+    {% include 'modals.html' %}
+
+    <!-- Cookie Consent -->
+    <div class="g-pos-fix g-z-index-4 g-bottom-0 g-left-0 w-100 g-bg-white g-pt-20 g-pb-10 u-shadow-v17 g-color-black g-font-size-14 d-none cookie_div--js">
+        <div class="container-semiboxed">
+            <div class="g-mb-10 g-pr-30--lg">
+                Мы используем файлы cookie. <a href="{% url 'cookies_policy' %}" class="u-link-v1 g-brd-primary">Узнайте подробнее</a>
+            </div>
+            <span class="btn u-btn-primary g-rounded-5 g-py-10 g-mb-10 g-px-40 g-font-size-14 g-font-weight-600 cookie_btn--js">Хорошо</span>
+        </div>
+    </div>
+
+    <!-- Go to Top -->
+    <a class="js-go-to u-go-to-v2 g-cursor-pointer g-transition-0_2" data-type="fixed" data-position='{ "bottom": 90, "right": 15 }' data-offset-top="400" data-show-effect="fadeIn">
+        <i class="hs-icon hs-icon-arrow-top g-color-white"></i>
+    </a>
+
+    <!-- JS -->
+    <script src="{% static 'assets/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/jquery-migrate/jquery-migrate.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/popper.js/popper.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/bootstrap/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/readmore/readmore.js' %}"></script>
+    <script src="{% static 'assets/vendor/lazyload/lazyload.min.js' %}"></script>
+    <script>
+        var lazyLoadInstance = new LazyLoad({
+            elements_selector: ".lazy"
+        });
+    </script>
+    <script src="{% static 'assets/vendor/appear.js' %}"></script>
+    <script src="{% static 'assets/vendor/slick-carousel/slick/slick.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/fancybox/jquery.fancybox.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/jquery.maskedinput/jquery.maskedinput.js' %}"></script>
+    <script src="{% static 'assets/js/hs.core.js' %}"></script>
+    <script src="{% static 'assets/js/components/hs.carousel.js' %}"></script>
+    <script src="{% static 'assets/js/components/hs.masked-input.js' %}"></script>
+    <script src="{% static 'assets/js/components/hs.go-to.js' %}"></script>
+    <script src="{% static 'assets/js/helpers/hs.rating.js' %}"></script>
+    <script src="{% static 'assets/js/components/hs.onscroll-animation.js' %}"></script>
+    <script src="{% static 'assets/js/custom.js' %}"></script>
+
+    <!-- Page-specific scripts -->
+    {% block scripts %}
+        <!-- Специфичные скрипты для страницы -->
+        <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=5502673e-3b79-4dd2-9a03-ea2be0ba2339&suggest_apikey=069cffc7-8ee9-4f85-ab1e-2693ad53af67"></script>
+        <script>
+            // JS для карты и калькулятора (из твоего кода)
+            ;(function($) {
+                "use strict";
+                ymaps.ready(init);
+                function init() {
+                    var myMap = new ymaps.Map("map_map", {
+                        center: [55.755864, 37.617698],
+                        zoom: 9,
+                        controls: ["fullscreenControl"],
+                        behaviors: ["default", "scrollZoom", "drag"]
+                    });
+                    var routePanelControl = new ymaps.control.RoutePanel({
+                        options: { maxWidth: "280px", autofocus: false }
+                    });
+                    var zoomControl = new ymaps.control.ZoomControl({
+                        options: { size: "small", float: "none", position: { bottom: 45, right: 10 } }
+                    });
+                    var trafficControl = new ymaps.control.TrafficControl({ state: { providerKey: "traffic#actual", trafficShown: true } });
+                    myMap.controls.add(trafficControl);
+                    trafficControl.getProvider("traffic#actual").state.set("infoLayerShown", true);
+                    routePanelControl.routePanel.options.set({ types: { auto: true } });
+                    myMap.controls.add(routePanelControl).add(zoomControl);
+                    routePanelControl.routePanel.getRouteAsync().then(function (route) {
+                        route.model.setParams({ results: 1 }, true);
+                        route.model.events.add("requestsuccess", function () {
+                            var activeRoute = route.getActiveRoute();
+                            if (activeRoute) {
+                                var length = activeRoute.properties.get("distance");
+                                var qq = Math.round(length.value / 1000); if (qq < 1) { qq = 1; }
+                                $("#f_qq").val(qq);
+                                $("#f_qq").prop("readonly", true);
+                                SumRez(); // Предполагаю, что SumRez() — функция расчёта суммы из custom.js
+                                const wayPoints = route.model.getWayPoints();
+                                const addresses = wayPoints.map((point) => point.properties.get("address"));
+                                const coordinates = wayPoints.map((point) => point.properties.get("coordinates"));
+                                $("#f_mesto").val(addresses[0]);
+                                $("#f_end").val(addresses[1]);
+                                $("#f_mesto_cd").val(coordinates[0]);
+                                $("#f_end_cd").val(coordinates[1]);
+                            }
+                        });
+                    });
+                    routePanelControl.routePanel.state.events.add("change", function () {
+                        var fromValue = routePanelControl.routePanel.state.get("from");
+                        var toValue = routePanelControl.routePanel.state.get("to");
+                        if (!fromValue) {
+                            $("#f_mesto").val("");
+                            $("#f_mesto_cd").val("");
+                        } else {
+                            if (!toValue) {
+                                $("#f_mesto").val(fromValue);
+                                $("#f_mesto_cd").val("");
+                                $("#f_end").val("");
+                                $("#f_end_cd").val("");
+                                $("#f_qq").prop("readonly", false);
+                            }
+                        }
+                        if (!toValue) {
+                            $("#f_end").val("");
+                            $("#f_end_cd").val("");
+                            $("#f_qq").prop("readonly", false);
+                        }
+                    });
+                }
+            }(jQuery));
+        </script>
+        <!-- Datepicker -->
+        <link rel="stylesheet" href="{% static 'assets/vendor/jquery-ui/themes/base/jquery-ui.min.css' %}">
+        <script src="{% static 'assets/vendor/jquery-ui/ui/widgets/datepicker.js' %}"></script>
+        <script src="{% static 'assets/js/components/hs.datepicker.js' %}"></script>
+        <script>
+            $(document).ready(function () {
+                $.HSCore.components.HSDatepicker.init("#datepickerDefault");
+            });
+        </script>
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+    <title>Профессиональная компания по услугам эвакуации. Быстро, надежно, доступно</title>
+    <meta name="keywords" content="компания по эвакуации автомобилей, профессиональные услуги эвакуации, быстро, надежно, доступно">
+    <meta name="description" content="Наша компания является профессионалом по услугам эвакуации автомобилей. Наша команда состоит из высококвалифицированных специалистов, которые гарантируют быструю и надежную эвакуацию любых автомобилей.">
+    <meta property="og:url" content="https://evacuator-avto.ru/about/">
+    <meta property="og:title" content="Профессиональная компания по услугам эвакуации. Быстро, надежно, доступно">
+    <meta property="og:image" content="https://evacuator-avto.ru/i/og_image.png">
+    <meta property="og:description" content="Наша компания является профессионалом по услугам эвакуации автомобилей. Наша команда состоит из высококвалифицированных специалистов, которые гарантируют быструю и надежную эвакуацию любых автомобилей.">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="{% url 'about' %}">
+{% endblock %}
+
+{% block content %}
+    <!-- Breadcrumbs -->
+    <div class="g-pos-rel g-pb-20 g-pt-25 g-z-index-2 g-bg-secondary">
+        <div class="container-semiboxed g-font-size-13 g-color-gray-dark-v4" itemscope itemtype="http://schema.org/BreadcrumbList">
+            <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                <a class="u-link-v5 g-color-black g-color-primary--hover" href="{% url 'home' %}" title="Главная" itemprop="item"><span itemprop="name">Главная</span><meta itemprop="position" content="1"></a>
+            </span>
+            <span title="О компании"><span class="g-color-gray-light-v2 g-px-2">&rarr;</span> О компании</span>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <div class="g-bg-secondary">
+        <div class="container-semiboxed">
+            <h1>О компании</h1>
+            <div class="row g-py-10">
+                <div class="col-lg-6 g-mb-30 g-mb-0--lg">
+                    <div class="g-pb-15 wx_txt_style wx_offer_btn">
+                        <p>Наша компания - это профессиональная служба эвакуаторов, которая предоставляет качественные услуги по эвакуации автомобилей на территории города и за его пределами.<br>
+                        Мы гарантируем быстрое и безопасное перемещение вашего авто при любых обстоятельствах.<br>
+                        Мы понимаем, насколько важно для вас ваш автомобиль, поэтому мы сначала заботимся о его сохранности.</p>
+                        <p><a class="u-link-v1 g-font-weight-600 g-font-size-14" href="{% static 'userfiles/files/Реквизиты ООО Альтранс-24.pdf' %}" target="_blank">Реквизиты ООО Альтранс-24.pdf</a></p>
+                        <p>Наша команда состоит из профессионалов в области эвакуации автомобилей, которые обладают опытом и знаниями для оптимальной выбора маршрута, наиболее подходящего типа эвакуатора, а также специализированных инструментов и оборудования.</p>
+                        <div class="btn u-btn-lightred g-py-10 g-font-size-15 g-px-25 g-font-weight-600" data-toggle="modal" data-target="#modal_phones">Заказать эвакуатор</div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="wx_slick_slider_div mx-auto">
+                        <div class="wx_slick_slider js-carousel" data-slides-show="1" data-slides-scroll="1" data-infinite="true" data-arrows-classes="u-arrow-v1 wx_slick_arrows g-pos-abs g-bg-white g-font-size-16 g-z-index-2 g-transition-0_2" data-arrow-left-classes="icon-arrow-left wx_slick_arrows_left" data-arrow-right-classes="icon-arrow-right wx_slick_arrows_right">
+                            <div class="text-center">
+                                <a class="d-inline-block g-pos-rel g-rounded-5 u-block-hover" data-fancybox="video-video" href="https://www.youtube.com/watch?v=dsv4_FICaN8">
+                                    <span itemscope itemtype="http://schema.org/ImageObject"><meta itemprop="name" content="Наш подход к работе"><img class="w-100 m-auto g-rounded-15" src="{% static 'i/figure/sm/135.jpg' %}" alt="Наш подход к работе" itemprop="contentUrl"></span>
+                                    <span class="u-block-hover__additional--fade g-bg-black-opacity-0_1 g-color-white"></span>
+                                    <span class="g-absolute-centered g-transition-0_3 g-py-12 g-px-25 g-bg-red-opacity-0_8 g-color-white g-rounded-5 g-cursor-pointer text-center"><i class="g-font-size-18 g-pos-rel g-left-2 g-top-2 fa fa-play"></i></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How to Order Section -->
+    <div class="g-bg-secondary">
+        <div class="container-semiboxed g-pt-50">
+            <div class="g-py-10 g-bg-secondary">
+                <div class="container-semiboxed g-pb-15">
+                    <h2>Как заказать услугу?</h2>
+                    <div class="g-pos-rel"><div class="wx_pix"></div></div>
+                    <div class="g-mx-minus-15 g-pb-50 g-pb-30--xl wx_test_slider js-carousel" data-slides-show="4" data-slides-scroll="4" data-infinite="false" data-arrows-classes="u-arrow-v1 wx_test_arrows g-pos-abs g-bg-white wx_test_shadow g-font-size-16 g-z-index-2 g-transition-0_2" data-arrow-left-classes="icon-arrow-left wx_test_arrows_left" data-arrow-right-classes="icon-arrow-right wx_test_arrows_right" data-responsive='[{ "breakpoint": 1200, "settings": { "slidesToShow": 3, "slidesToScroll": 3 } },{ "breakpoint": 992, "settings": { "slidesToShow": 2, "slidesToScroll": 2 } }, { "breakpoint": 767, "settings": { "slidesToShow": 1, "slidesToScroll": 1 } }]'>
+                        <div>
+                            <div class="g-height-90 g-pr-50 g-mb-15 g-pos-rel">
+                                <img src="{% static 'images/design/ico/t1.svg' %}" alt="x" width="42" height="42" class="g-pos-abs g-right-minus-10 g-top-minus-10">
+                                <img src="{% static 'images/design/ico/kak_1.svg' %}" alt="i" width="85" height="85">
+                            </div>
+                            <div class="g-color-primary g-font-size-16 g-font-size-18--md g-font-weight-700 g-mb-5 text-uppercase">Связаться с нами</div>
+                            <div class="g-font-size-16">Оформить заказ на эвакуацию возможно как по телефону, так и онлайн, через специальную форму на сайте</div>
+                        </div>
+                        <!-- Add other steps -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- More About Us Section -->
+    <div class="container-semiboxed g-pt-40 g-pb-20">
+        <h2>Ещё немного о нас</h2>
+        <div class="row g-py-10">
+            <div class="col-lg-6 g-mb-30 g-mb-0--lg">
+                <div class="g-pb-15 wx_txt_style wx_offer_btn">
+                    <p>Мы уверены в том, что мы можем обеспечить нашим клиентам качественную услугу и оперативное решение проблемы. За годы нашего опыта мы получили доверие и уважение многих клиентов, которые обратились к нам за помощью и рекомендуют нашу компанию своим друзьям и знакомым.</p>
+                    <p>Мы предлагаем нашим клиентам доступные цены на услуги эвакуатора, предоставляя комфорт и спокойствие по приемлемой цене. Мы гарантируем присутствие на месте вызова в кратчайшие сроки и возможность выбора оптимальной модели эвакуатора в зависимости от характеристик автомобиля и его местоположения.</p>
+                    <p>Если вы ищете решение проблемы в случае, когда ваш автомобиль лежит в поломке или попал в аварию, не стесняйтесь обращаться в нашу компанию! Мы поможем вам решить эту проблему быстро, безопасно и эффективно.</p>
+                    <div class="btn u-btn-lightred g-py-10 g-font-size-15 g-px-25 g-font-weight-600" data-toggle="modal" data-target="#modal_phones">Заказать эвакуатор</div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="wx_slick_slider_div mx-auto text-center" itemscope itemtype="http://schema.org/ImageObject">
+                    <img class="w-100 square-crop m-auto g-rounded-15" src="{% static 'i/primer/sm/183.jpg' %}" alt="О компании" itemprop="contentUrl">
+                    <meta itemprop="name" content="О компании">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Map Section -->
+    <div class="container-semiboxed">
+        <div class="g-pb-15 wx_txt_style wx_offer_btn">
+            <p><iframe frameborder="0" height="500" src="https://yandex.ru/map-widget/v1/?z=12&amp;ol=biz&amp;oid=238941740916" width="100%"></iframe></p>
+        </div>
+    </div>
+
+    <!-- Rating Section -->
+    <div class="g-bg-secondary g-pt-40">
+        <div class="container-semiboxed">
+            <div itemscope itemtype="https://schema.org/LocalBusiness">
+                <meta itemprop="name" content="ЭВАКУАТОР - АВТО">
+                <link itemprop="image" href="{% static 'apple-touch-icon-120x120.png' %}">
+                <input type="hidden" id="rate_p" value="30">
+                <input type="hidden" id="rate_d" value="0">
+                <div class="row g-pb-20 align-items-center">
+                    <div class="col-xl-6 g-mb-30 g-font-size-20 g-font-size-24--md g-font-weight-700">
+                        <div class="d-xl-flex">
+                            <img src="{% static 'assets/i/rating.svg' %}" alt="Оцените" class="g-mr-40 g-mb-10 g-mb-0--xl">
+                            <div>Оцените качество информации<br> на этой странице</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-3 g-mb-15">
+                        <ul class="js-rating u-rating-v1 g-font-size-26 g-line-height-0 g-color-gray-light-v3 rating--js" data-hover-classes="g-color-yellow">
+                            <li data-val="1" class="g-color-yellow"><i class="fa fa-star" title="Плохо"></i></li>
+                            <li data-val="2" class="g-color-yellow"><i class="fa fa-star" title="Сойдёт"></i></li>
+                            <li data-val="3" class="g-color-yellow"><i class="fa fa-star" title="Нормально"></i></li>
+                            <li data-val="4" class="g-color-yellow"><i class="fa fa-star" title="Хорошо"></i></li>
+                            <li data-val="5" class="g-color-yellow"><i class="fa fa-star" title="Отлично"></i></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6 col-xl-3 g-mb-15">
+                        <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+                            <meta itemprop="itemReviewed" content="Услуги авто эвакуатора">
+                            <meta itemprop="worstRating" content="1">
+                            <div class="g-font-size-18">
+                                Рейтинг <span itemprop="ratingValue" class="g-font-weight-700 rating_star--js">4.9</span><br>
+                                Всего <span itemprop="reviewCount" class="rating_count--js">81</span> <span class="rating_noun--js">оценка</span><span class="g-color-black rating_golos--js d-none">, Ваш голос учтён</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Urgent Order Section -->
+    <div class="wx_bg_img g-bg-gray-dark-v1 g-pos-rel g-bg-cover g-bg-pos-center g-bg-img-hero g-bg-black-opacity-0_8--after" style="background-image: url({% static 'assets/design/bg/1.jpg' %});">
+        <div class="container-semiboxed g-pos-rel g-py-30 g-py-60--md g-z-index-2 ajax_form--js">
+            <form class="ajax_form" action="javascript:void(0);">
+                <input type="hidden" name="f_vid" value="2">
+                <input type="hidden" name="page_id" value="30">
+                <input type="hidden" name="dop_id" value="0">
+                <h3 class="h1 g-color-white g-pb-20"><span class="g-color-primary">Срочный</span> заказ эвакуатора</h3>
+                <div class="g-pb-30 g-font-size-18 g-color-white">Подача в течение 18 минут, эвакуация любой сложности</div>
+                <div class="row g-pt-20">
+                    <div class="col-sm-6 col-lg-3 g-mb-15 g-mb-25--sm">
+                        <input class="form-control g-height-55 g-font-size-16 g-font-weight-600 g-color-black g-bg-white g-bg-white--focus g-brd-white g-brd-primary--focus rounded g-py-15 g-px-15 g-px-20--lg g-rounded-7" type="text" name="f_name" placeholder="Ваше имя" required autocomplete="off">
+                    </div>
+                    <div class="col-sm-6 col-lg-3 g-mb-15 g-mb-25--sm">
+                        <input class="form-control g-height-55 g-font-size-16 g-font-weight-700 g-color-black g-bg-white g-bg-white--focus g-brd-white g-brd-primary--focus rounded g-py-15 g-px-15 g-px-20--lg g-rounded-7" type="tel" name="f_phone" placeholder="+7 (___) ___ __ __" required data-mask="+7 (999) 999 99 99" autocomplete="off">
+                    </div>
+                    <div class="col-sm-6 col-lg-3 g-mb-15 g-mb-25--sm">
+                        <input class="form-control g-height-55 g-font-size-16 g-font-weight-600 g-color-black g-bg-white g-bg-white--focus g-brd-white g-brd-primary--focus rounded g-py-15 g-px-15 g-px-20--lg g-rounded-7" type="text" name="f_txt" placeholder="Авто" autocomplete="off">
+                    </div>
+                    <div class="col-sm-6 col-lg-3 g-mb-15 g-mb-25--sm">
+                        <button class="btn w-100 g-font-size-16 text-uppercase g-height-55 g-font-weight-700 u-btn-primary g-rounded-7 g-px-35 g-font-size-16" type="submit">Отправить</button>
+                    </div>
+                </div>
+                <div class="g-color-white-opacity-0_6 g-font-size-12 g-mb-25 text-right">
+                    Нажимая на кнопку, Вы даете свое согласие <a href="{% url 'privacy_policy' %}" class="u-link-v1 g-color-white">на обработку персональных данных</a>
+                </div>
+                <div class="g-font-size-20 g-color-white g-pb-5">Или позвоните нам:</div>
+                <div class="d-flex">
+                    <div class="g-mr-20">
+                        <a href="tel:+74955131347" class="u-link-v5 g-font-size-20 g-font-size-28--md g-color-white g-font-weight-700 g-line-height-1_6">+7 (495) 513-13-47</a>
+                    </div>
+                    <div class="g-mt-10 g-mt-0--md">
+                        <a class="u-link-v5 g-opacity-0_8--hover d-inline-block g-mr-5" href="https://t.me/evacuator_avto" onclick="return !window.open(this.href)" rel="nofollow"><img src="{% static 'assets/i/telegram.svg' %}" width="42" alt="telegram"></a>
+                        <a class="u-link-v5 g-ml-3 g-opacity-0_8--hover" href="https://wa.me/message/FDTVIC6ZHJJTO1" onclick="return !window.open(this.href)" rel="nofollow"><img src="{% static 'assets/i/whatsapp.svg' %}" width="42" alt="whatsapp"></a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% load static %}
+<div itemscope itemtype="http://schema.org/Organization">
+    <div class="g-bg-secondary g-pt-30 g-pt-50--md">
+        <div class="container-semiboxed">
+            <div class="row g-mb-20--md">
+                <div class="col-md-6 col-lg-3 text-center text-md-left g-mb-30">
+                    <div class="g-color-black text-uppercase g-font-size-18 g-font-weight-600 g-pb-10 g-pb-20--md">Клиентам</div>
+                    <ul class="list-unstyled g-font-size-16" itemscope itemtype="http://schema.org/SiteNavigationElement">
+                        <li class="g-py-7"><a href="{% url 'online_payment' %}" class="u-link-v5 g-color-black g-color-primary--hover" itemprop="url">Онлайн оплата</a></li>
+                        <!-- Add other client links -->
+                    </ul>
+                </div>
+                <div class="col-md-6 col-lg-3 text-center text-md-left g-mb-30">
+                    <div class="g-color-black text-uppercase g-font-size-18 g-font-weight-600 g-pb-10 g-pb-20--md">Информация</div>
+                    <ul class="list-unstyled g-font-size-16" itemscope itemtype="http://schema.org/SiteNavigationElement">
+                        <li class="g-py-7"><a href="{% url 'about' %}" class="u-link-v5 g-color-black g-color-primary--hover" itemprop="url">О компании</a></li>
+                        <li class="g-py-7"><a href="{% url 'contacts' %}" class="u-link-v5 g-color-black g-color-primary--hover" itemprop="url">Контакты</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6 col-lg-3 text-center text-md-left g-mb-30">
+                    <div class="g-color-black text-uppercase g-font-size-18 g-font-weight-600 g-pb-10 g-pb-20--md">Услуги</div>
+                    <ul class="list-unstyled g-font-size-16" itemscope itemtype="http://schema.org/SiteNavigationElement">
+                        <li class="g-py-7"><a href="{% url 'services' %}" class="u-link-v5 g-color-black g-color-primary--hover" itemprop="url">Услуги эвакуатора</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6 col-lg-3 text-center text-md-left g-mb-30">
+                    <meta itemprop="name" content="ЭВАКУАТОР - АВТО">
+                    <link itemprop="image" href="{% static 'apple-touch-icon-120x120.png' %}">
+                    <div class="g-color-black text-uppercase g-font-size-18 g-font-weight-600 g-pb-10 g-pb-20--md">Связаться с нами</div>
+                    <div class="g-font-size-16 g-mb-20" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+                        <div class="g-color-black g-pb-8 g-font-weight-600">Адрес офиса:</div>
+                        <span itemprop="addressLocality">Москва</span>, <span itemprop="addressCountry">Россия</span>, <span itemprop="postalCode">123007</span>,<br>
+                        <span itemprop="streetAddress">2-й Хорошевский проезд, д. 7, корп. 1, 5 этаж, кабинет 504</span>
+                    </div>
+                    <div class="g-mb-20 g-font-size-16">
+                        <div class="g-color-black g-pb-8 g-font-weight-600">E-mail:</div>
+                        <a href="mailto:info@evacuator-avto.ru" class="u-link-v5 g-color-black g-color-primary--hover g-font-size-16"><span itemprop="email">info@evacuator-avto.ru</span></a>
+                    </div>
+                    <a href="{% url 'online_payment' %}" class="btn wx_fix_btn_bottom u-btn-outline-primary w-100 g-px-15 g-py-12 text-center g-font-size-16 g-font-weight-600 g-rounded-7 text-uppercase">Онлайн оплата</a>
+                </div>
+            </div>
+            <div class="text-center g-pb-35 g-hidden-lg-up">
+                <div class="btn wx_fix_btn_bottom g-height-55 g-px-25 u-btn-primary g-pt-15 g-font-size-18 g-font-weight-700 g-rounded-7 g-line-height-1_2 text-uppercase" data-toggle="modal" data-target="#modal_backform">Заказать эвакуатор</div>
+            </div>
+        </div>
+    </div>
+    <div class="g-bg-white">
+        <div class="container-semiboxed g-pos-rel g-min-height-100">
+            <a href="{% url 'home' %}" class="head_logo g-pt-10--md">
+                <span class="d-inline-block g-pl-5 g-pl-10--sm g-pl-0--lg g-ml-minus-10--lg g-pt-15 g-color-gray-dark-v3 g-font-size-13 g-line-height-1_2">
+                    <span class="d-block g-font-weight-600 g-color-black g-font-size-22 g-pb-5--lg">ЭВАКУАТОР<span class="g-px-2">&ndash;</span>АВТО</span>
+                    <span class="d-block g-pt-2">Надёжный, быстрый <span class="g-hidden-md-down"> и доступный</span></span>
+                </span>
+            </a>
+            <div class="float-right g-pt-5 g-pb-40--lg">
+                <div class="float-right g-height-70 g-flex-centered g-ml-20 g-hidden-md-down">
+                    <div class="btn wx_header_order g-height-55 g-px-25 u-btn-primary g-pt-15 g-font-size-18 g-font-weight-700 g-rounded-7 g-line-height-1_2 text-uppercase" data-toggle="modal" data-target="#modal_backform">Заказать эвакуатор</div>
+                </div>
+                <div class="float-right g-height-70 d-flex align-items-center g-mr-5--lg g-ml-10--xl wx_mob_img g-mt-minus-10 g-mt-0--md">
+                    <a class="u-link-v5 g-opacity-0_8--hover d-inline-block" href="https://t.me/evacuator_avto" onclick="return !window.open(this.href)" rel="nofollow">
+                        <img src="{% static 'assets/i/telegram.svg' %}" width="30" alt="telegram">
+                    </a>
+                    <a class="u-link-v5 g-ml-3 g-opacity-0_8--hover" href="https://wa.me/message/FDTVIC6ZHJJTO1" onclick="return !window.open(this.href)" rel="nofollow">
+                        <img src="{% static 'assets/i/whatsapp.svg' %}" width="30" alt="whatsapp">
+                    </a>
+                    <div class="d-inline-block g-opacity-0_8--hover g-ml-3 g-cursor-pointer" data-toggle="modal" data-target="#modal_phones">
+                        <img src="{% static 'assets/i/call.svg' %}" width="30" alt="call">
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="float-md-left g-color-black-opacity-0_8 g-pt-15 g-mt-1 g-ml-30--md wx_fix_div text-center text-md-left">
+                <div class="g-min-height-40 g-pb-10 g-pb-0--md w-100 d-md-flex align-items-center g-px-20 g-brd-left--md g-brd-black-opacity-0_2">
+                    <div>
+                        <div class="g-color-black g-font-weight-700">
+                            <a href="tel:+74955131347" class="u-link-v5 g-font-size-18 g-font-size-20--md g-color-gray-dark-v1 g-font-weight-700 g-line-height-1_6 wx_fix_tel g-nowrap"><span itemprop="telephone">+7 (495) 513-13-47</span></a>
+                        </div>
+                        <div class="g-color-gray-dark-v3 d-flex align-items-center g-font-size-15 wx_fix_txt g-hidden-lg-down">
+                            <img src="{% static 'assets/i/clock.svg' %}" width="18" height="18" alt="clock" class="g-mr-5">Круглосуточно по Москве и Московской области
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="g-bg-black g-py-15 text-center g-color-white g-font-size-14" itemscope itemtype="https://schema.org/WPFooter">
+        &copy; 2018 - <span itemprop="copyrightYear">2025</span> <span itemprop="copyrightHolder">ЭВАКУАТОР - АВТО</span>
+    </div>
+</div>

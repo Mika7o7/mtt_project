@@ -1,0 +1,447 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+    <title>Вызвать эвакуатор в Москве недорого – заказать круглосуточные услуги по доступной цене</title>
+    <meta name="keywords" content="эвакуатор москва, вызвать эвакуатор, эвакуатор круглосуточно, эвакуатор недорого, доступная цена эвакуатора, эвакуация москва, служба эвакуации, эвакуатор 24/7">
+    <meta name="description" content="Вызвать эвакуатор в Москве круглосуточно по доступной цене – это просто! Наша служба эвакуации обеспечивает оперативную помощь 24/7, с оплатой картой или по QR-коду и с онлайн-расчетом стоимости. Мы предоставляем надежное и недорогое обслуживание в любых дорожных ситуациях.">
+    <meta property="og:url" content="https://evacuator-avto.ru">
+    <meta property="og:title" content="Вызвать эвакуатор в Москве недорого – заказать круглосуточные услуги по доступной цене">
+    <meta property="og:image" content="https://evacuator-avto.ru/i/og_image.png">
+    <meta property="og:description" content="Вызвать эвакуатор в Москве круглосуточно по доступной цене – это просто! Наша служба эвакуации обеспечивает оперативную помощь 24/7, с оплатой картой или по QR-коду и с онлайн-расчетом стоимости. Мы предоставляем надежное и недорогое обслуживание в любых дорожных ситуациях.">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="{% url 'moscow_services' %}">
+{% endblock %}
+
+{% block content %}
+    <!-- B242YA Script (если нужно, вынеси в base) -->
+    <script>
+        (function(w,d,u){
+            var s=d.createElement('script');s.defer=false;s.async=false;s.id='b242ya-script';s.src=u+'?'+(Date.now()/60000|0);
+            var h=d.getElementsByTagName('script')[0];h.parentNode.insertBefore(s,h);
+        })(window,document,'https://67p.b242ya.ru/static/js/b242ya.js');
+        var b242yaScript = document.querySelector('#b242ya-script');
+        b242yaScript.addEventListener('load', function() {
+            B242YAInit({
+                portal:'https://evacuatoravto.bitrix24.ru/',
+                pid:'adb25cf7b188265d0c9372d6bf47bb13',
+                presets:{}
+            });
+        });
+    </script>
+
+    <!-- Hero Section -->
+    <div class="wx_bg_img g-bg-gray-dark-v1 g-pos-rel g-bg-cover g-bg-pos-center g-bg-img-hero" style="background-image: url({% static 'images/bg.jpg' %});" itemscope itemtype="http://schema.org/Product">
+        <meta itemprop="brand" content="ЭВАКУАТОР - АВТО">
+        <div class="container-semiboxed g-pos-rel g-pt-40 g-pt-70--md g-pt-100--lg g-z-index-2">
+            <h1 itemprop="name" class="text-center text-md-left g-color-white g-font-weight-800 g-font-size-26 g-font-size-36--md g-font-size-h1--lg g-mb-20--lg g-pt-20--lg">
+                Эвакуатор в Москве
+            </h1>
+            <div class="text-center text-md-left g-font-size-15 g-font-size-20--lg g-color-white g-mb-15 g-mb-50--md g-line-height-2" itemprop="description">
+                Круглосуточные услуги эвакуации автомобилей быстро и недорого.<br class="g-hidden-lg-down">
+                Подача эвакуатора в течение 18 минут. Безопасная транспортировка<br>
+                <span class="g-hidden-md-down">вашего автомобиля, внимание каждому клиенту и его<br> потребностям.</span>
+            </div>
+            <div itemprop="offers" itemscope itemtype="http://schema.org/AggregateOffer">
+                <meta itemprop="lowPrice" content="3800">
+                <meta itemprop="priceCurrency" content="RUB">
+                <link itemprop="url" href="{% url 'moscow_services' %}">
+                <link itemprop="availability" href="http://schema.org/InStock">
+            </div>
+            <div class="row g-max-width-645 text-center text-md-left g-pb-20 g-pb-100--md">
+                <div class="col-md-6 g-mt-10 g-mb-30">
+                    <a class="u-link-v5 g-opacity-0_8--hover d-inline-block" href="https://t.me/evacuator_avto" onclick="return !window.open(this.href)" rel="nofollow">
+                        <img src="{% static 'assets/i/telegram.svg' %}" width="40" alt="telegram">
+                    </a>
+                    <a class="u-link-v5 g-mx-10 g-opacity-0_8--hover" href="https://wa.me/message/FDTVIC6ZHJJTO1" onclick="return !window.open(this.href)" rel="nofollow">
+                        <img src="{% static 'assets/i/whatsapp.svg' %}" width="40" alt="whatsapp">
+                    </a>
+                    <div class="d-inline-block g-opacity-0_8--hover g-cursor-pointer" data-toggle="modal" data-target="#modal_phones">
+                        <img src="{% static 'assets/i/call.svg' %}" width="40" alt="call">
+                    </div>
+                </div>
+                <div class="col-md-6 order-md-first g-mb-30">
+                    <div class="btn g-px-25 u-btn-primary g-py-15 g-font-size-16 g-font-size-20--sm g-font-weight-700 g-rounded-7 g-line-height-1_2 text-uppercase" data-toggle="modal" data-target="#modal_backform">
+                        Заказать эвакуатор
+                    </div>
+                </div>
+            </div>
+            <div class="row g-mx-minus-10 g-pb-100">
+                <div class="col-6 col-md-3 g-mb-30 text-center text-xl-left g-px-10">
+                    <div class="d-xl-flex">
+                        <span class="d-inline-block g-bg-primary g-width-60 g-height-60 g-rounded-50 g-pa-10 g-mr-15--xl">
+                            <img src="{% static 'images/design/ico/1.svg' %}" width="40" alt="1">
+                        </span>
+                        <div class="g-color-white g-font-size-13 g-font-size-16--lg g-font-weight-600 g-pt-7">
+                            Подача в течение<br>18 минут
+                        </div>
+                    </div>
+                </div>
+                <!-- Добавь остальные 3 иконки аналогично -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Districts Section -->
+    <div class="container-semiboxed">
+        <div class="g-pos-rel g-mt-minus-80 g-z-index-2 g-py-30 g-bg-white g-rounded-15 g-px-15 wx_div_points more_parent--js">
+            <div class="row">
+                <div class="col-lg-4 d-flex align-items-center g-color-black g-font-weight-700 g-font-size-18 g-mb-10 g-pl-30--lg">
+                    <img src="{% static 'assets/i/point.svg' %}" width="30" alt="i" class="g-mr-10">Выберите точку
+                </div>
+                <div class="col-lg-8">
+                    <div class="row" itemscope itemtype="http://schema.org/SiteNavigationElement">
+                        <div class="col-sm-6 g-px-25 g-font-size-16 g-pl-35--lg">
+                            <div class="g-py-6 g-pos-rel g-pl-15"><i class="wx_div_x"></i><a href="{% url 'districts' %}" class="u-link-v1 g-color-gray-dark-v3 g-color-primary--hover" itemprop="url">По округам Москвы</a></div>
+                            <div class="g-py-6 g-pos-rel g-pl-15"><i class="wx_div_x"></i><a href="{% url 'metro' %}" class="u-link-v1 g-color-gray-dark-v3 g-color-primary--hover" itemprop="url">Эвакуатор возле метро</a></div>
+                            <div class="g-py-6 g-pos-rel g-pl-15"><i class="wx_div_x"></i><a href="{% url 'districts' %}" class="u-link-v1 g-color-gray-dark-v3 g-color-primary--hover" itemprop="url">Эвакуатор по районам Москвы</a></div>
+                        </div>
+                        <div class="col-sm-6 g-px-25 g-font-size-16">
+                            <div class="g-py-6 g-pos-rel g-pl-15"><i class="wx_div_x"></i><a href="{% url 'zelenograd' %}" class="u-link-v1 g-color-gray-dark-v3 g-color-primary--hover" itemprop="url">Эвакуатор Зеленоград</a></div>
+                            <div class="g-py-6 g-pos-rel g-pl-15"><i class="wx_div_x"></i><a href="{% url 'novomoskovskiy' %}" class="u-link-v1 g-color-gray-dark-v3 g-color-primary--hover" itemprop="url">Эвакуатор Новомосковский</a></div>
+                            <div class="g-py-6 g-pos-rel g-pl-15"><i class="wx_div_x"></i><a href="{% url 'troick' %}" class="u-link-v1 g-color-gray-dark-v3 g-color-primary--hover" itemprop="url">Эвакуатор Троицк</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="g-height-50"></div>
+    </div>
+
+    <!-- How to Order Section -->
+    <div class="container-semiboxed">
+        <div class="g-py-10">
+            <div class="container-semiboxed g-pb-15">
+                <h2>Как заказать услугу<br> в Москве?</h2>
+                <div class="g-pos-rel"><div class="wx_pix"></div></div>
+                <div class="g-mx-minus-15 g-pb-50 g-pb-30--xl wx_test_slider js-carousel" data-slides-show="4" data-slides-scroll="4" data-infinite="false" data-arrows-classes="u-arrow-v1 wx_test_arrows g-pos-abs g-bg-white wx_test_shadow g-font-size-16 g-z-index-2 g-transition-0_2" data-arrow-left-classes="icon-arrow-left wx_test_arrows_left" data-arrow-right-classes="icon-arrow-right wx_test_arrows_right" data-responsive='[{ "breakpoint": 1200, "settings": { "slidesToShow": 3, "slidesToScroll": 3 } },{ "breakpoint": 992, "settings": { "slidesToShow": 2, "slidesToScroll": 2 } }, { "breakpoint": 767, "settings": { "slidesToShow": 1, "slidesToScroll": 1 } }]' >
+                    <div>
+                        <div class="g-height-90 g-pr-50 g-mb-15 g-pos-rel">
+                            <img src="{% static 'images/design/ico/t1.svg' %}" alt="x" width="42" height="42" class="g-pos-abs g-right-minus-10 g-top-minus-10">
+                            <img src="{% static 'images/design/ico/kak_1.svg' %}" alt="i" width="85" height="85">
+                        </div>
+                        <div class="g-color-primary g-font-size-16 g-font-size-18--md g-font-weight-700 g-mb-5 text-uppercase">Связаться с нами</div>
+                        <div class="g-font-size-16">Оформить заказ на эвакуацию возможно как по телефону, так и онлайн, через специальную форму на сайте</div>
+                    </div>
+                    <!-- Добавь остальные 3 слайда аналогично -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Section 1 -->
+    <div class="wx_bg_img g-bg-gray-dark-v1 g-pos-rel g-bg-cover g-bg-pos-center g-bg-img-hero g-bg-black-opacity-0_8--after" style="background-image: url({% static 'images/design/bg/2.jpg' %});">
+        <div class="container-semiboxed g-pos-rel g-py-30 g-py-60--md g-z-index-2 ajax_form--js">
+            <form class="ajax_form" action="javascript:void(0);">
+                <input type="hidden" name="f_vid" value="2">
+                <input type="hidden" name="page_id" value="7">
+                <input type="hidden" name="dop_id" value="0">
+                <h3 class="h1 g-color-white g-pb-20">Просто оставьте заявку,<br> а в остальном <span class="g-color-primary">мы поможем</span></h3>
+                <div class="row g-pt-20">
+                    <div class="col-sm-6 col-lg-3 g-mb-15 g-mb-25--sm">
+                        <input class="form-control g-height-55 g-font-size-16 g-font-weight-600 g-color-black g-bg-white g-bg-white--focus g-brd-white g-brd-primary--focus rounded g-py-15 g-px-15 g-px-20--lg g-rounded-7" type="text" name="f_name" placeholder="Ваше имя" required autocomplete="off">
+                    </div>
+                    <!-- Добавь остальные поля формы -->
+                </div>
+                <div class="g-color-white-opacity-0_6 g-font-size-12 g-mb-25 text-right">
+                    Нажимая на кнопку, Вы даете свое согласие <a href="{% url 'privacy_policy' %}" class="u-link-v1 g-color-white">на обработку персональных данных</a>
+                </div>
+                <div class="g-font-size-20 g-color-white g-pb-5">Или позвоните нам:</div>
+                <div class="d-flex">
+                    <div class="g-mr-20">
+                        <a href="tel:+74955131347" class="u-link-v5 g-font-size-20 g-font-size-28--md g-color-white g-font-weight-700 g-line-height-1_6">+7 (495) 513-13-47</a>
+                    </div>
+                    <!-- Социальные ссылки -->
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Video Reviews Section -->
+    <div class="g-bg-secondary">
+        <div class="container-semiboxed g-pt-30">
+            <div class="g-pb-15 wx_txt_style wx_offer_btn">
+                <h2 class="text-center">Видеоотзывы</h2>
+            </div>
+            <div class="g-mx-minus-15 g-pb-60 g-pb-25--xl wx_slick_slider js-carousel" data-slides-show="3" data-slides-scroll="3" data-infinite="true" data-arrows-classes="u-arrow-v1 wx_slick_arrows g-pos-abs g-bg-white g-font-size-16 g-z-index-2 g-transition-0_2" data-arrow-left-classes="icon-arrow-left wx_slick_arrows_left" data-arrow-right-classes="icon-arrow-right wx_slick_arrows_right" data-responsive='[{ "breakpoint": 992, "settings": { "slidesToShow": 2, "slidesToScroll": 2 } }, { "breakpoint": 767, "settings": { "slidesToShow": 1, "slidesToScroll": 1, "dots": false } }]' >
+                <div class="g-px-15">
+                    <a class="d-inline-block g-pos-rel g-rounded-15 u-block-hover" data-fancybox="video-review" href="https://youtu.be/073Syahnoog">
+                        <img class="w-100 m-auto g-rounded-15 lazy" src="{% static 'assets/i/lazy/white/600x400.png' %}" data-src="/i/video/5.jpg" alt="Видеоотзыв">
+                        <span class="u-block-hover__additional--fade g-bg-black-opacity-0_1 g-color-white"></span>
+                        <img class="g-absolute-centered" src="{% static 'assets/i/youtube.svg' %}" alt="y">
+                    </a>
+                    <div class="g-pt-10 g-font-size-16 g-font-size-18--lg g-color-gray-dark-v1 g-font-weight-600">Видеоотзыв клиента Nissan Teana</div>
+                </div>
+                <!-- Добавь остальные видеоотзывы (8 штук) аналогично, чтобы не удлинять -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Photo Gallery Section -->
+    <div class="g-bg-secondary">
+        <div class="container-semiboxed">
+            <div class="g-py-40">
+                <h2>Фото наших работ</h2>
+                <div class="row">
+                    <div class="col-md-6 col-lg-4 g-mb-30" data-animation="fadeIn" data-animation-delay="0" data-animation-duration="1000">
+                        <a class="u-block-hover d-inline-block g-pos-rel g-rounded-15" data-fancybox="lightbox-primer" href="javascript:;" data-src="/i/primer/136.jpg" data-speed="350" data-caption="фото">
+                            <img class="w-100 m-auto g-rounded-15 lazy" src="{% static 'assets/i/lazy/white/600x400.png' %}" data-src="/i/primer/sm/136.jpg" alt="фото">
+                            <span class="u-block-hover__additional--fade g-bg-black-opacity-0_1 g-color-white">
+                                <i class="hs-icon hs-icon-magnifier g-absolute-centered g-font-size-25"></i>
+                            </span>
+                        </a>
+                    </div>
+                    {% for photo in photos %}
+					{% endfor %}
+                </div>
+                <div class="text-center g-pt-10">
+                    <div class="btn g-height-55 g-px-35 g-min-width-220 u-btn-primary g-pt-15 g-font-size-18 g-font-weight-700 g-rounded-7 g-line-height-1_2 text-uppercase load_img_click--js">
+                        Загрузить ещё
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Section 2 -->
+    <div class="wx_bg_img g-bg-gray-dark-v1 g-pos-rel g-bg-cover g-bg-pos-center g-bg-img-hero g-bg-black-opacity-0_8--after" style="background-image: url({% static 'images/design/bg/3.jpg' %});">
+        <!-- Аналогично первой форме, но с заголовком "Обслуживание 24 часа" -->
+    </div>
+
+    <!-- Price Table Section -->
+    <div class="g-bg-secondary">
+        <div class="container-semiboxed g-py-10"></div>
+    </div>
+    <div class="container-semiboxed g-py-20">
+        <h3 class="h2 g-mb-10">Прайс-лист на услуги эвакуатора</h3>
+        <table class="table table-bordered table-striped">
+            <tbody>
+                <tr>
+                    <td class="g-pl-15--lg">Эвакуатор для мотоциклов</td>
+                    <td class="text-right"><span class="g-color-black g-font-size-16--lg g-font-weight-600">от 4000 р.</span></td>
+                </tr>
+                {% for price in prices %}
+				 <tr>
+					<td>{{ price.service }}</td>
+					<td>{{ price.price }}</td>
+				 </tr>
+				{% endfor %}
+            </tbody>
+        </table>
+        <div class="g-height-40"></div>
+    </div>
+
+    <!-- Services Section -->
+    <div class="container-semiboxed g-py-20">
+        <h2>Вызвать эвакуатор в Москве</h2>
+        <div class="row g-py-10">
+            <div class="col-lg-6 g-mb-30 g-mb-0--lg">
+                <div class="g-pb-15 wx_txt_style wx_offer_btn">
+                    <!-- Текст о услугах -->
+                    <p>Эвакуатор в Москве — оперативная помощь на дороге в любое время суток! ...</p>
+                    <div class="btn u-btn-lightred g-py-10 g-font-size-15 g-px-25 g-font-weight-600" data-toggle="modal" data-target="#modal_phones">Заказать эвакуатор</div>
+                    <div class="g-color-gray-dark-v1 g-pt-20">Подача в течение <strong>18 минут</strong></div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="wx_slick_slider_div mx-auto text-center" itemscope itemtype="http://schema.org/ImageObject">
+                    <img class="w-100 square-crop m-auto g-rounded-15" src="{% static 'i/primer/sm/251.jpg' %}" alt="Вызвать эвакуатор в Москве" itemprop="contentUrl">
+                    <meta itemprop="name" content="Вызвать эвакуатор в Москве">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Why Choose Us Section -->
+    <div class="g-bg-secondary">
+        <div class="container-semiboxed">
+            <div class="wx_bg_img g-bg-gray-dark-v1 g-pos-rel g-bg-cover g-bg-pos-center g-bg-img-hero g-bg-black-opacity-0_8--after" style="background-image: url({% static 'images/design/bg/1.jpg' %});">
+                <div class="container-semiboxed g-pos-rel g-py-30 g-py-50--md g-z-index-2">
+                    <div class="h1 g-color-white g-pb-40">Почему выбирают<br><span class="text-lowercase">ЭВАКУАТОР - АВТО?</span></div>
+                    <div class="row">
+                        <div class="col-lg-6 g-mb-15 g-mb-30--md">
+                            <div class="h-100 g-bg-white g-pa-20 g-pa-30--md g-pos-rel g-rounded-15 g-pl-100--md g-pr-40--xl">
+                                <img src="{% static 'images/design/ico/why_1.svg' %}" alt="i" class="g-pos-abs g-left-10 g-ml-5 g-ml-20--md g-mt-10--md">
+                                <div class="wx_fix_why text-uppercase g-font-weight-700 g-color-primary g-font-size-16 g-font-size-18--md g-mb-5 g-pl-60 g-pl-10--md">Все документы для страховой компании</div>
+                                <div class="g-font-size-16 g-font-size-18--md g-pl-10--md">Заказывая эвакуатор у нас, вы можете быть уверены, что получите все необходимые документы</div>
+                            </div>
+                        </div>
+                        <!-- Добавь остальные 3 блока -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Description Section -->
+    <div class="container-semiboxed g-py-20">
+        <h2>Эвакуатор в Москве — Быстрый расчёт и прозрачные условия</h2>
+        <div class="g-pb-15 wx_txt_style wx_offer_btn">
+            <p>EVACUATOR-AVTO.RU — ваш надёжный партнёр в Москве, срочная эвакуация автомобиля. ...</p>
+        </div>
+    </div>
+
+    <!-- Calculator Section -->
+    <div class="container-semiboxed g-mb-20">
+        <h2 class="g-pt-15">Онлайн калькулятор для расчёта стоимости эвакуатора</h2>
+        <div class="g-pt-5 g-pb-10 g-mx-minus-15 g-mx-0--md" id="clc_form">
+            <div class="g-brd-around g-brd-gray-light-v4 g-py-20 g-pt-30--md g-px-20 g-px-40--md g-bg-secondary g-rounded-15 clt_form--js">
+                <!-- Твоя форма калькулятора, с полями select для вида авто, категории, расстояния и т.д. -->
+                <div class="row g-mb-15">
+                    <div class="col-lg-6 g-mb-10">
+                        <div class="d-inline-block g-px-11 g-px-25--sm g-px-40--xl g-rounded-7 g-py-10 g-brd-around g-brd-primary g-transition-0_2 g-font-weight-600 g-font-size-16 g-font-size-20--md g-cursor-pointer g-mr-8 g-mr-15--sm g-bg-primary g-color-white clt_vk--js" data-vk="1">ЭВАКУАТОР</div>
+                        <div class="d-inline-block g-px-11 g-px-25--sm g-px-40--xl g-rounded-7 g-py-10 g-brd-around g-brd-gray-light-v3 g-transition-0_2 g-font-weight-600 g-font-size-16 g-font-size-20--md g-cursor-pointer g-bg-white g-color-black clt_vk--js" data-vk="2">МАНИПУЛЯТОР</div>
+                    </div>
+                </div>
+                <form class="clt_form" action="javascript:void(0);">
+                    <!-- Поля hidden -->
+                    <input type="hidden" name="clt_vk" id="clt_vk" value="1">
+                    <!-- ... остальные hidden -->
+                    <div class="row">
+                        <div class="col-lg-4 g-mb-5 g-mb-20--lg">
+                            <!-- Select для вида авто -->
+                            <div class="g-pb-10 g-font-size-16 g-color-black">Выберите вид авто</div>
+                            <select class="custom-select g-height-55 g-px-15 g-px-20--lg g-color-black g-font-size-16 g-font-weight-600 g-brd-gray-light-v3 g-rounded-7 clt_smena--js" id="clt_vid_1" name="clt_vid_1">
+                                <option value="1" data-skidka="5" selected>Седан</option>
+                                <!-- ... остальные опции -->
+                            </select>
+                        </div>
+                        <!-- Карта -->
+                        <div class="col-lg-8 g-mb-20">
+                            <div id="map_map" class="w-100"></div>
+                        </div>
+                    </div>
+                    <!-- Дополнительные параметры (checkboxes) -->
+                    <div class="g-pb-25 g-color-black g-font-size-24 g-font-weight-600">Дополнительные параметры</div>
+                    <div class="row">
+                        <!-- Checkboxes для доп. опций -->
+                    </div>
+                    <!-- Поля имени, телефона -->
+                    <div class="row">
+                        <div class="col-md-6 col-lg-4 g-mb-15">
+                            <div class="g-pb-10 g-font-size-16 g-color-black">Ваше имя</div>
+                            <input class="form-control g-height-55 g-font-size-16 g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v3 g-brd-primary--focus g-rounded-7 g-py-15 g-px-15 g-px-20--lg" type="text" name="f_name" placeholder="Имя" required autocomplete="off">
+                        </div>
+                        <!-- Телефон и checkboxes -->
+                    </div>
+                    <!-- Итоговая сумма -->
+                    <div class="row g-mb-15">
+                        <div class="col-md-6 col-lg-4 g-mb-20 g-mb-15--lg g-mt-minus-3">
+                            <div class="g-min-height-60 g-font-size-16 g-font-size-18--md g-font-weight-400 g-color-gray-dark-v1">
+                                Стоимость эвакуации:<br> <span class="g-nowrap g-line-height-1_1 g-mr-10">~ <strong class="g-font-size-26 g-font-size-30--sm g-font-weight-700 clt_sum--js">0</strong> руб.</span><s class="d-none g-font-size-20 g-color-gray-dark-v3 clt_old--js">0</s>
+                            </div>
+                            <!-- Промокод -->
+                            <div class="input-group d-none clc_promo_div--js">
+                                <input class="form-control g-font-size-16 g-color-black g-font-weight-600 rounded-0 g-brd-gray-light-v3 g-rounded-left-7 g-px-15 g-pl-20--lg g-py-10 text-uppercase g-brd-primary--focus clt_promo--js" type="text" value="" id="clt_promo" name="f_promo" placeholder="Промокод" autocomplete="off">
+                                <div class="btn rounded-0 g-rounded-right-7 u-btn-lightred g-py-15 g-font-size-16 g-font-weight-600 text-uppercase g-px-10 g-px-20--md g-font-weight-600 promo--js">Применить</div>
+                            </div>
+                        </div>
+                        <!-- Комментарий и кнопка -->
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Content Section -->
+    <div class="g-py-30 g-py-50--lg">
+        <div class="row g-py-10">
+            <div class="col-lg-6 g-mb-20">
+                <div itemscope itemtype="http://schema.org/ImageObject">
+                    <img class="w-100 square-crop g-rounded-15 lazy" src="{% static 'assets/i/lazy/gray/3x2.png' %}" data-src="/i/figure/sm/127.jpg" alt="Эвакуатор в Москве" itemprop="contentUrl">
+                    <meta itemprop="name" content="Эвакуатор в Москве">
+                </div>
+            </div>
+            <div class="col-lg-6 g-mb-30 g-mb-0--lg">
+                <div class="g-pb-15 wx_txt_style">
+                    <div class="g-pb-15 wx_txt_style wx_offer_btn">
+                        <p>Эвакуатор в Москве — это надёжная поддержка в любых непредвиденных ситуациях на дороге. ...</p>
+                        <div class="btn u-btn-lightred g-py-10 g-font-size-15 g-px-25 g-font-weight-600" data-toggle="modal" data-target="#modal_phones">Заказать эвакуатор</div>
+                        <div class="g-color-gray-dark-v1 g-pt-20">Подача в течение <strong>18 минут</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="container-semiboxed g-py-30 g-pt-80--lg">
+        <div class="row g-mb-10--lg">
+            <div class="col-lg-8">
+                <div class="h2">Часто задаваемые вопросы</div>
+            </div>
+            <div class="col-lg-4 text-right g-hidden-md-down">
+                <div class="btn g-height-55 g-px-45 u-btn-primary g-pt-15 g-font-size-18 g-font-weight-700 g-rounded-7 g-line-height-1_2 text-uppercase question--js">Задать вопрос</div>
+            </div>
+        </div>
+        <div class="u-accordion u-accordion-bg-primary" id="accordion_5" itemscope itemtype="https://schema.org/FAQPage">
+            <div class="card g-brd-none g-mb-20" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                <div id="accordion-heading-1" class="u-accordion__header g-pa-0">
+                    <a class="d-flex justify-content-between g-bg-secondary g-text-underline--none--hover g-brd-around g-brd-gray-light-v4 g-rounded-10" href="#accordion-body-1" data-toggle="collapse" aria-expanded="true" aria-controls="accordion-body-1">
+                        <h3 class="w-100 d-flex justify-content-between g-px-20 g-py-15 g-mb-0 g-font-size-18 g-font-weight-600 g-color-black">
+                            <span itemprop="name">Как заказать эвакуатор в Москве?</span>
+                            <span class="u-accordion__control-icon g-font-size-22 g-mt-minus-5 g-mb-minus-5 g-ml-10">
+                                <i class="fa fa-angle-down"></i>
+                                <i class="fa fa-angle-up"></i>
+                            </span>
+                        </h3>
+                    </a>
+                </div>
+                <div id="accordion-body-1" class="collapse show" aria-labelledby="accordion-heading-1" itemscope itemprop="acceptedAnswer" itemtype="http://schema.org/Answer">
+                    <div class="u-accordion__body g-pa-20" itemprop="text">
+                        <p>Чтобы заказать эвакуатор позвоните по номеру <a href="tel:+74955131347" class="u-link-v1 g-nowrap g-font-size-16 g-font-weight-700">+7 (495) 513-13-47</a> или воспользуйтесь онлайн-заказом на нашем сайте.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Добавь остальные 5 вопросов аналогично -->
+        </div>
+        <div class="g-hidden-lg-up g-py-10">
+            <div class="btn w-100 g-height-55 g-px-45 u-btn-primary g-pt-15 g-font-size-18 g-font-weight-700 g-rounded-7 g-line-height-1_2 text-uppercase question--js">Задать вопрос</div>
+        </div>
+    </div>
+
+    <!-- Rating Section -->
+    <div class="g-bg-secondary g-pt-40">
+        <div class="container-semiboxed">
+            <div itemscope itemtype="https://schema.org/LocalBusiness">
+                <meta itemprop="name" content="ЭВАКУАТОР - АВТО">
+                <link itemprop="image" href="{% static 'apple-touch-icon-120x120.png' %}">
+                <input type="hidden" id="rate_p" value="7">
+                <input type="hidden" id="rate_d" value="0">
+                <div class="row g-pb-20 align-items-center">
+                    <div class="col-xl-6 g-mb-30 g-font-size-20 g-font-size-24--md g-font-weight-700">
+                        <div class="d-xl-flex">
+                            <img src="{% static 'assets/i/rating.svg' %}" alt="Оцените" class="g-mr-40 g-mb-10 g-mb-0--xl">
+                            <div>Оцените качество информации<br> на этой странице</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-3 g-mb-15">
+                        <ul class="js-rating u-rating-v1 g-font-size-26 g-line-height-0 g-color-gray-light-v3 rating--js" data-hover-classes="g-color-yellow">
+                            <li data-val="1" class="g-color-yellow"><i class="fa fa-star" title="Плохо"></i></li>
+                            <!-- ... остальные звёзды -->
+                        </ul>
+                    </div>
+                    <div class="col-md-6 col-xl-3 g-mb-15">
+                        <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+                            <meta itemprop="itemReviewed" content="Услуги авто эвакуатора">
+                            <meta itemprop="worstRating" content="1">
+                            <div class="g-font-size-18">
+                                Рейтинг <span itemprop="ratingValue" class="g-font-weight-700 rating_star--js">4.9</span><br>
+                                Всего <span itemprop="reviewCount" class="rating_count--js">137</span> <span class="rating_noun--js">оценок</span><span class="g-color-black rating_golos--js d-none">, Ваш голос учтён</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Urgent Order Form -->
+    <div class="wx_bg_img g-bg-gray-dark-v1 g-pos-rel g-bg-cover g-bg-pos-center g-bg-img-hero g-bg-black-opacity-0_8--after" style="background-image: url({% static 'images/design/bg/1.jpg' %});">
+        <div class="container-semiboxed g-pos-rel g-py-30 g-py-60--md g-z-index-2 ajax_form--js">
+            <form class="ajax_form" action="javascript:void(0);">
+                <!-- Аналогично предыдущим формам, с заголовком "Срочный заказ эвакуатора" -->
+            </form>
+        </div>
+    </div>
+{% endblock %}

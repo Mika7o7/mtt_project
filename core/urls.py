@@ -1,0 +1,26 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.index, name='home'),
+    path('about/', views.about, name='about'),
+    path('services/', views.services, name='services'),
+    path('contacts/', views.contacts, name='contacts'),
+    path('moscow_services/', views.moscow_services, name='moscow_services'),
+    path('airport/', views.airport, name='airport'),
+    path('passenger/', views.passenger, name='passenger'),
+    path('districts/', views.districts, name='districts'),
+    path('metro/', views.metro, name='metro'),
+    path('zelenograd/', views.zelenograd, name='zelenograd'),
+    path('novomoskovskiy/', views.novomoskovskiy, name='novomoskovskiy'),
+    path('troick/', views.troick, name='troick'),
+    path('privacy_policy/', views.privacy_policy, name='privacy_policy'),
+    path('online_payment/', views.online_payment, name='online_payment'),
+    path('cookies_policy/', views.cookies_policy, name='cookies_policy'),
+
+
+    # path('online-payment/', views.online_payment, name='online_payment'),
+    # path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
+    # path('cookies-policy/', views.cookies_policy, name='cookies_policy'),
+    # Add other URL patterns
+]
