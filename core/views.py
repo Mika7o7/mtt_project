@@ -1,14 +1,47 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Page, Service, Document, Review
+from django.shortcuts import render
+from .models import MetaData, HeroSection, District, OrderStep, FormConfig, VideoReview, Photo, Price, Service, WhyChooseUs, FAQ, Rating, CalculatorOption
+
 
 def index(request):
-    services = Service.objects.all()[:5]  # Показать 5 услуг на главной
-    photos = ["photo 1","photo 2","photo 3","photo 4"]
-    prices = [1,2,3,4]
-    context = {'services': services, "photos": photos, "prices": prices}
-    return render(request, 'index.html', {'services': services})
+    """
+    Renders the index page with data for all sections.
+    """
+    metadata = MetaData.objects.get(page='moscow_services')
+    hero = HeroSection.objects.get(page='moscow_services')
+    districts = District.objects.all()
+    order_steps = OrderStep.objects.all()
+    form_configs = FormConfig.objects.all()
+    video_reviews = VideoReview.objects.all()
+    photos = Photo.objects.all()
+    prices = Price.objects.all()
+    services = Service.objects.all()
+    why_choose_us = WhyChooseUs.objects.all()
+    faqs = FAQ.objects.all()[:6]
+    rating = Rating.objects.get(page='moscow_services')
+    calculator_options = CalculatorOption.objects.all()
+
+    context = {
+        'metadata': metadata,
+        'hero': hero,
+        'districts': districts,
+        'order_steps': order_steps,
+        'form_configs': form_configs,
+        'video_reviews': video_reviews,
+        'photos': photos,
+        'prices': prices,
+        'services': services,
+        'why_choose_us': why_choose_us,
+        'faqs': faqs,
+        'rating': rating,
+        'calculator_options': calculator_options,
+    }
+    return render(request, 'index.html', context)
+
 
 def about(request):
+    return render(request, 'about.html')
+
+def services(request):
     return render(request, 'about.html')
 
 def contacts(request):
@@ -44,21 +77,8 @@ def privacy_policy(request):
 def online_payment(request):
     return render(request, 'about.html')
 
-def cookies_policy  (request):
+def cookies_policy(request):
     return render(request, 'about.html')
 
-def page_view(request, slug):
-    page = get_object_or_404(Page, slug=slug)
-    return render(request, 'generic_page.html', {'page': page})
-
-def services(request):
-    services = Service.objects.all()
-    return render(request, 'uslugi-evakuatora.html', {'services': services})
-
-def documents(request):
-    documents = Document.objects.all()
-    return render(request, 'documents.html', {'documents': documents})
-
-def reviews(request):
-    reviews = Review.objects.all()
-    return render(request, 'otzyvy.html', {'reviews': reviews})
+def uslugi(request):
+    return render(request, 'about.html')

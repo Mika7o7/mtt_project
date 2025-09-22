@@ -207,6 +207,35 @@
                 $.HSCore.components.HSDatepicker.init("#datepickerDefault");
             });
         </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const items = document.querySelectorAll("#photo-gallery .photo-item");
+                const loadMoreBtn = document.getElementById("load-more-btn");
+                let visibleCount = 6;
+            
+                // скрываем все кроме первых 6
+                items.forEach((item, index) => {
+                    if (index >= visibleCount) {
+                        item.classList.add("d-none");
+                    }
+                });
+            
+                loadMoreBtn.addEventListener("click", function () {
+                    visibleCount += 6; // каждый раз добавляем по 6
+                    items.forEach((item, index) => {
+                        if (index < visibleCount) {
+                            item.classList.remove("d-none");
+                        }
+                    });
+                
+                    // Если все фото показаны — скрываем кнопку
+                    if (visibleCount >= items.length) {
+                        loadMoreBtn.style.display = "none";
+                    }
+                });
+            });
+        </script>
+
     {% endblock %}
 </body>
 </html>
