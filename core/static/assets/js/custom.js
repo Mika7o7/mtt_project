@@ -521,24 +521,22 @@ function declOfNum(number, titles)
 	
 	// Forms
 	$("form.ajax_form").submit(function(e){
-        e.preventDefault();
-	
-		var forma       = $(this);
-		var g_recaptcha = document.getElementById("g_recaptcha_response").value;
-		var clc_txt     = '';
+	    e.preventDefault();
+	    var forma = $(this);
+	    $.ajax({
+	        type: "POST",
+	        url: forma.attr("action"),
+	        data: forma.serialize(),
+	        headers: { "X-CSRFToken": getCookie("csrftoken") },
+	        success: function(response) {
+	            forma.closest(".ajax_form--js").html("<div class='alert alert-success'>Спасибо! Форма отправлена.</div>");
+	        },
+	        error: function() {
+	            alert("Ошибка при отправке формы. Попробуйте ещё раз.");
+	        }
+	    });
+	});
 
-		$.ajax({
-			type: "GET",
-			url: "/mod/feedback.php?clc_txt="+clc_txt+"&g_recaptcha="+g_recaptcha, 
-			data: $(this).serialize(),
-			cache: false,
-			success: function(html)
-			{
-				forma.closest(".ajax_form--js").html(html);		
-			}
-		});	
-	
-    });
 	
 
 	$(document).on('click', '.question--js', function(e){ 	

@@ -163,58 +163,88 @@
         </div>
     </div>
 
-    <!-- Form Section 1 -->
-    <div class="wx_bg_img g-bg-gray-dark-v1 g-pos-rel g-bg-cover g-bg-pos-center g-bg-img-hero g-bg-black-opacity-0_8--after" style="background-image: url({{ form_configs.0.background_image.url|default:'/static/images/design/bg/2.jpg' }});">
-        <div class="container-semiboxed g-pos-rel g-py-30 g-py-60--md g-z-index-2 ajax_form--js">
-            <form class="ajax_form" action="javascript:void(0);">
-                <input type="hidden" name="f_vid" value="{{ form_configs.0.f_vid|default:'2' }}">
-                <input type="hidden" name="page_id" value="{{ form_configs.0.page_id|default:'7' }}">
-                <input type="hidden" name="dop_id" value="{{ form_configs.0.dop_id|default:'0' }}">
-                <h3 class="h1 g-color-white g-pb-20">{{ form_configs.0.title|safe }}</h3>
-                <div class="row g-pt-20">
-                    <div class="col-sm-6 col-lg-3 g-mb-15 g-mb-25--sm">
-                        <input class="form-control g-height-55 g-font-size-16 g-font-weight-600 g-color-black g-bg-white g-bg-white--focus g-brd-white g-brd-primary--focus rounded g-py-15 g-px-15 g-px-20--lg g-rounded-7" type="text" name="f_name" placeholder="Ваше имя" required autocomplete="off">
-                    </div>
-                    
-                    <div class="col-sm-6 col-lg-3 g-mb-15 g-mb-25--sm">
-                        <input class="form-control g-height-55 g-font-size-16 g-font-weight-700 g-color-black g-bg-white g-bg-white--focus g-brd-white g-brd-primary--focus rounded g-py-15 g-px-15 g-px-20--lg g-rounded-7" type="tel" name="f_phone" placeholder="+7 (___) ___ __ __" required="" data-mask="+7 (999) 999 99 99" autocomplete="off">
-                    </div>
+   <!-- Form Section 1 -->
+<div class="wx_bg_img g-bg-gray-dark-v1 g-pos-rel g-bg-cover g-bg-pos-center g-bg-img-hero g-bg-black-opacity-0_8--after" 
+     style="background-image: url({{ form_configs.0.background_image.url|default:'/static/images/design/bg/2.jpg' }});">
 
-                    <div class="col-sm-6 col-lg-3 g-mb-15 g-mb-25--sm">
-                        <input class="form-control g-height-55 g-font-size-16 g-font-weight-600 g-color-black g-bg-white g-bg-white--focus g-brd-white g-brd-primary--focus rounded g-py-15 g-px-15 g-px-20--lg g-rounded-7" type="text" name="f_name" placeholder="Авто" required autocomplete="off">
-                    </div>
+    <div class="container-semiboxed g-pos-rel g-py-30 g-py-60--md g-z-index-2 ajax_form--js">
+        <form class="ajax_form" method="post" action="{% url 'submit_form' %}">
+            {% csrf_token %}
+            <input type="hidden" name="f_vid" value="{{ form_configs.0.f_vid|default:'2' }}">
+            <input type="hidden" name="page_id" value="{{ form_configs.0.page_id|default:'7' }}">
+            <input type="hidden" name="dop_id" value="{{ form_configs.0.dop_id|default:'0' }}">
 
-                    <div class="col-sm-6 col-lg-3 g-mb-15 g-mb-25--sm">
-                        <div class="btn wx_header_order g-height-55 g-px-25 u-btn-primary g-pt-15 g-font-size-18 g-font-weight-700 g-rounded-7 g-line-height-1_2 text-uppercase" data-toggle="modal" data-target="#modal_backform">
-                            <span class="g-hidden-lg-down">Отправить</span>
-                        </div>
-                    </div>
-                    <!-- Добавь остальные поля формы -->
+            <h3 class="h1 g-color-white g-pb-20">{{ form_configs.0.title|safe }}</h3>
+
+            <div class="row g-pt-20">
+                <div class="col-sm-6 col-lg-3 g-mb-15 g-mb-25--sm">
+                    <input class="form-control g-height-55 g-font-size-16 g-font-weight-600 g-color-black g-bg-white g-bg-white--focus g-brd-white g-brd-primary--focus g-rounded-7" 
+                           type="text" name="f_name" placeholder="Ваше имя" required autocomplete="off">
                 </div>
-                <div class="g-color-white-opacity-0_6 g-font-size-12 g-mb-25 text-right">
-                    Нажимая на кнопку, Вы даете свое согласие <a href="{% url 'privacy_policy' %}" class="u-link-v1 g-color-white">на обработку персональных данных</a>
+
+                <div class="col-sm-6 col-lg-3 g-mb-15 g-mb-25--sm">
+                    <input class="form-control g-height-55 g-font-size-16 g-font-weight-700 g-color-black g-bg-white g-bg-white--focus g-brd-white g-brd-primary--focus g-rounded-7" 
+                           type="tel" name="f_phone" placeholder="+7 (___) ___ __ __" required data-mask="+7 (999) 999 99 99" autocomplete="off">
                 </div>
-                <div class="g-font-size-20 g-color-white g-pb-5">Или позвоните нам:</div>
-                <div class="d-flex">
-                    <div class="g-mr-20">
-                        <a href="tel:+74955131347" class="u-link-v5 g-font-size-20 g-font-size-28--md g-color-white g-font-weight-700 g-line-height-1_6">+7 (495) 513-13-47</a>
-                    </div>
-                    <!-- Социальные ссылки -->
-                     <div class="col-md-6 g-mt-10 g-mb-30">
-                    <a class="u-link-v5 g-opacity-0_8--hover d-inline-block" href="https://t.me/evacuator_avto" onclick="return !window.open(this.href)" rel="nofollow">
+
+                <div class="col-sm-6 col-lg-3 g-mb-15 g-mb-25--sm">
+                    <input class="form-control g-height-55 g-font-size-16 g-font-weight-600 g-color-black g-bg-white g-bg-white--focus g-brd-white g-brd-primary--focus g-rounded-7" 
+                           type="text" name="f_auto" placeholder="Авто" required autocomplete="off">
+                </div>
+                <input type="hidden" id="g_recaptcha_response" name="g_recaptcha_response" value="">
+
+
+                <div class="col-sm-6 col-lg-3 g-mb-15 g-mb-25--sm">
+                    <button type="submit"
+                            class="btn wx_header_order g-height-55 g-px-25 u-btn-primary 
+                                   g-font-size-18 g-font-weight-700 g-rounded-7 text-uppercase 
+                                   w-100 d-flex justify-content-center align-items-center">
+                        Отправить
+                    </button>
+                </div>
+            </div>
+
+            <div class="g-color-white-opacity-0_6 g-font-size-12 g-mb-25 text-right">
+                Нажимая на кнопку, Вы даете свое согласие 
+                <a href="{% url 'privacy_policy' %}" class="u-link-v1 g-color-white">на обработку персональных данных</a>
+            </div>
+
+            <!-- место для сообщений формы -->
+            <div class="form-feedback" style="margin-top:10px;"></div>
+
+            <div class="g-font-size-20 g-color-white g-pb-5">Или позвоните нам:</div>
+
+            <div class="d-flex align-items-center">
+                <div class="g-mr-20">
+                    <a href="tel:+74955131347" 
+                       class="u-link-v5 g-font-size-20 g-font-size-28--md g-color-white g-font-weight-700 g-line-height-1_6">
+                        +7 (495) 513-13-47
+                    </a>
+                </div>
+
+                <div class="d-flex align-items-center g-ml-10">
+                    <a class="u-link-v5 g-opacity-0_8--hover d-inline-block" 
+                       href="https://t.me/evacuator_avto" 
+                       onclick="return !window.open(this.href)" rel="nofollow">
                         <img src="{% static 'assets/i/telegram.svg' %}" width="40" alt="telegram">
                     </a>
-                    <a class="u-link-v5 g-mx-10 g-opacity-0_8--hover" href="https://wa.me/message/FDTVIC6ZHJJTO1" onclick="return !window.open(this.href)" rel="nofollow">
+
+                    <a class="u-link-v5 g-mx-10 g-opacity-0_8--hover" 
+                       href="https://wa.me/message/FDTVIC6ZHJJTO1" 
+                       onclick="return !window.open(this.href)" rel="nofollow">
                         <img src="{% static 'assets/i/whatsapp.svg' %}" width="40" alt="whatsapp">
                     </a>
-                    <div class="d-inline-block g-opacity-0_8--hover g-cursor-pointer" data-toggle="modal" data-target="#modal_phones">
+
+                    <div class="d-inline-block g-opacity-0_8--hover g-cursor-pointer" 
+                         data-toggle="modal" data-target="#modal_phones">
                         <img src="{% static 'assets/i/call.svg' %}" width="40" alt="call">
                     </div>
                 </div>
-                </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
+</div>
+
 
     <!-- Video Reviews Section -->
     <div class="g-bg-secondary">
@@ -355,68 +385,140 @@
         </div>
     </div>
 
-    <!-- Calculator Section -->
-    <div class="container-semiboxed g-mb-20">
-        <h2 class="g-pt-15">Онлайн калькулятор для расчёта стоимости эвакуатора</h2>
-        <div class="g-pt-5 g-pb-10 g-mx-minus-15 g-mx-0--md" id="clc_form">
-            <div class="g-brd-around g-brd-gray-light-v4 g-py-20 g-pt-30--md g-px-20 g-px-40--md g-bg-secondary g-rounded-15 clt_form--js">
-                <!-- Твоя форма калькулятора, с полями select для вида авто, категории, расстояния и т.д. -->
-                <div class="row g-mb-15">
-                    <div class="col-lg-6 g-mb-10">
-                        <div class="d-inline-block g-px-11 g-px-25--sm g-px-40--xl g-rounded-7 g-py-10 g-brd-around g-brd-primary g-transition-0_2 g-font-weight-600 g-font-size-16 g-font-size-20--md g-cursor-pointer g-mr-8 g-mr-15--sm g-bg-primary g-color-white clt_vk--js" data-vk="1">ЭВАКУАТОР</div>
-                        <div class="d-inline-block g-px-11 g-px-25--sm g-px-40--xl g-rounded-7 g-py-10 g-brd-around g-brd-gray-light-v3 g-transition-0_2 g-font-weight-600 g-font-size-16 g-font-size-20--md g-cursor-pointer g-bg-white g-color-black clt_vk--js" data-vk="2">МАНИПУЛЯТОР</div>
-                    </div>
-                </div>
-                <form class="clt_form" action="javascript:void(0);">
-                    <!-- Поля hidden -->
-                    <input type="hidden" name="clt_vk" id="clt_vk" value="1">
-                    <!-- ... остальные hidden -->
-                    <div class="row">
-                        <div class="col-lg-4 g-mb-5 g-mb-20--lg">
-                            <!-- Select для вида авто -->
-                            <div class="g-pb-10 g-font-size-16 g-color-black">Выберите вид авто</div>
-                            <select class="custom-select g-height-55 g-px-15 g-px-20--lg g-color-black g-font-size-16 g-font-weight-600 g-brd-gray-light-v3 g-rounded-7 clt_smena--js" id="clt_vid_1" name="clt_vid_1">
-                                {% for option in calculator_options %}
-                                    <option value="{{ option.value }}" data-skidka="{{ option.discount }}">{{ option.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <!-- Карта -->
-                        <div class="col-lg-8 g-mb-20">
-                            <div id="map_map" class="w-100"></div>
-                        </div>
-                    </div>
-                    <!-- Дополнительные параметры (checkboxes) -->
-                    <div class="g-pb-25 g-color-black g-font-size-24 g-font-weight-600">Дополнительные параметры</div>
-                    <div class="row">
-                        <!-- Checkboxes для доп. опций -->
-                    </div>
-                    <!-- Поля имени, телефона -->
-                    <div class="row">
-                        <div class="col-md-6 col-lg-4 g-mb-15">
-                            <div class="g-pb-10 g-font-size-16 g-color-black">Ваше имя</div>
-                            <input class="form-control g-height-55 g-font-size-16 g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v3 g-brd-primary--focus g-rounded-7 g-py-15 g-px-15 g-px-20--lg" type="text" name="f_name" placeholder="Имя" required autocomplete="off">
-                        </div>
-                        <!-- Телефон и checkboxes -->
-                    </div>
-                    <!-- Итоговая сумма -->
-                    <div class="row g-mb-15">
-                        <div class="col-md-6 col-lg-4 g-mb-20 g-mb-15--lg g-mt-minus-3">
-                            <div class="g-min-height-60 g-font-size-16 g-font-size-18--md g-font-weight-400 g-color-gray-dark-v1">
-                                Стоимость эвакуации:<br> <span class="g-nowrap g-line-height-1_1 g-mr-10">~ <strong class="g-font-size-26 g-font-size-30--sm g-font-weight-700 clt_sum--js">0</strong> руб.</span><s class="d-none g-font-size-20 g-color-gray-dark-v3 clt_old--js">0</s>
-                            </div>
-                            <!-- Промокод -->
-                            <div class="input-group d-none clc_promo_div--js">
-                                <input class="form-control g-font-size-16 g-color-black g-font-weight-600 rounded-0 g-brd-gray-light-v3 g-rounded-left-7 g-px-15 g-pl-20--lg g-py-10 text-uppercase g-brd-primary--focus clt_promo--js" type="text" value="" id="clt_promo" name="f_promo" placeholder="Промокод" autocomplete="off">
-                                <div class="btn rounded-0 g-rounded-right-7 u-btn-lightred g-py-15 g-font-size-16 g-font-weight-600 text-uppercase g-px-10 g-px-20--md g-font-weight-600 promo--js">Применить</div>
-                            </div>
-                        </div>
-                        <!-- Комментарий и кнопка -->
-                    </div>
-                </form>
-            </div>
+ <!-- Calculator Section -->
+<div class="container-semiboxed g-mb-20">
+  <div class="container-semiboxed g-mb-20">
+  <h2 class="g-pt-15">Онлайн калькулятор для расчёта стоимости эвакуатора</h2>
+  <div class="g-pt-5 g-pb-10 g-mx-minus-15 g-mx-0--md" id="clc_form">
+    <div class="g-brd-around g-brd-gray-light-v4 g-py-20 g-pt-30--md g-px-20 g-px-40--md g-bg-secondary g-rounded-15 clt_form--js">
+      
+      <!-- Переключатель -->
+      <div class="row g-mb-15">
+        <div class="col-lg-6 g-mb-10">
+          <div class="d-inline-block g-px-25 g-rounded-7 g-py-10 g-brd-around g-brd-primary g-transition-0_2 g-font-weight-600 g-font-size-16 g-bg-primary g-color-white clt_vk--js" data-vk="1">ЭВАКУАТОР</div>
+          <div class="d-inline-block g-px-25 g-rounded-7 g-py-10 g-brd-around g-brd-gray-light-v3 g-transition-0_2 g-font-weight-600 g-font-size-16 g-bg-white g-color-black clt_vk--js" data-vk="2">МАНИПУЛЯТОР</div>
         </div>
+      </div>
+
+      <form class="clt_form" action="{% url 'submit_form' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="clt_vk" id="clt_vk" value="1">
+
+        <div class="row">
+          <!-- Вид авто -->
+          <div class="col-lg-4 g-mb-20">
+            <div class="g-pb-10 g-font-size-16 g-color-black">Выберите вид авто</div>
+            <select class="custom-select g-height-55 g-px-15 g-color-black g-font-size-16 g-font-weight-600 g-brd-gray-light-v3 g-rounded-7 clt_vid--js" id="clt_vid" name="clt_vid">
+              <option value="1" data-base-price="2000" data-per-km="50" data-min-price="4000" selected>Седан</option>
+              <option value="2" data-base-price="1800" data-per-km="40" data-min-price="3500">Мотоцикл</option>
+              <option value="3" data-base-price="2500" data-per-km="60" data-min-price="4500">Кроссовер</option>
+              <option value="4" data-base-price="2700" data-per-km="65" data-min-price="4700">Минивен</option>
+              <option value="5" data-base-price="3000" data-per-km="70" data-min-price="5000">Внедорожник</option>
+              <option value="6" data-base-price="4000" data-per-km="80" data-min-price="6500">Премиум класс</option>
+              <option value="7" data-base-price="4500" data-per-km="90" data-min-price="7000">Спорт класс</option>
+              <option value="8" data-base-price="3500" data-per-km="75" data-min-price="6000">Микроавтобус</option>
+              <option value="9" data-base-price="5000" data-per-km="100" data-min-price="8000">Коммерческий транспорт</option>
+              <option value="10" data-base-price="5500" data-per-km="120" data-min-price="9000">Лёгкая спецтехника до 5 тонн</option>
+            </select>
+          </div>
+
+          <!-- Категория -->
+          <div class="col-lg-4 g-mb-20">
+            <div class="g-pb-10 g-font-size-16 g-color-black">Выберите категорию</div>
+            <select class="custom-select g-height-55 g-px-15 g-color-black g-font-size-16 g-font-weight-600 g-brd-gray-light-v3 g-rounded-7 clt_cat--js" id="clt_cat" name="clt_cat">
+              <option value="1">Седан до 2 тонн</option>
+              <option value="2">Седан до 3 тонн</option>
+            </select>
+          </div>
+
+          <!-- Заблокированные колёса -->
+          <div class="col-lg-4 g-mb-20">
+            <div class="g-pb-10 g-font-size-16 g-color-black">Заблокированных колёс</div>
+            <select class="custom-select g-height-55 g-px-15 g-color-black g-font-size-16 g-font-weight-600 g-brd-gray-light-v3 g-rounded-7 clt_wheels--js" id="clt_wheels" name="clt_wheels" data-price="1500">
+              <option value="0" selected>0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Карта + расстояние -->
+        <div class="row">
+          <div class="col-lg-8 g-mb-20">
+            <div id="map_map" class="w-100" style="height:300px;"></div>
+          </div>
+          <div class="col-lg-4 g-mb-20">
+            <div class="g-pb-10 g-font-size-16 g-color-black">Расстояние, км</div>
+            <input type="text" class="form-control g-height-55 g-font-size-16 g-rounded-7 clt_km--js" name="distance" readonly value="0">
+          </div>
+        </div>
+
+        <!-- Дополнительные параметры -->
+        <div class="g-pb-15 g-color-black g-font-size-20 g-font-weight-600">Дополнительные параметры</div>
+        <div class="row">
+          <div class="col-md-4"><label class="u-check g-pl-25"><input type="checkbox" name="extra[]" value="no_hook" data-price="500" class="clt_extra--js"> Нет буксировочного крюка</label></div>
+          <div class="col-md-4"><label class="u-check g-pl-25"><input type="checkbox" name="extra[]" value="need_boost" data-price="600" class="clt_extra--js"> Необходимо прикурить авто</label></div>
+          <div class="col-md-4"><label class="u-check g-pl-25"><input type="checkbox" name="extra[]" value="steering_locked" data-price="700" class="clt_extra--js"> Заблокирован руль</label></div>
+          <div class="col-md-4"><label class="u-check g-pl-25"><input type="checkbox" name="extra[]" value="underground" data-price="1000" class="clt_extra--js"> ТС в подземном паркинге</label></div>
+          <div class="col-md-4"><label class="u-check g-pl-25"><input type="checkbox" name="extra[]" value="low_clearance" data-price="800" class="clt_extra--js"> Клиренс менее 15 см</label></div>
+          <div class="col-md-4"><label class="u-check g-pl-25"><input type="checkbox" name="extra[]" value="row_parking" data-price="500" class="clt_extra--js"> Автомобиль в ряду</label></div>
+        </div>
+
+        <hr class="g-my-20">
+
+        <!-- Контактные данные -->
+        <h4>Контактные данные</h4>
+        <div class="row">
+          <div class="col-md-6 col-lg-4 g-mb-15">
+            <input class="form-control g-height-55 g-font-size-16 g-color-black g-brd-gray-light-v3 g-rounded-7" type="text" name="f_name" placeholder="Ваше имя" required>
+          </div>
+          <div class="col-md-6 col-lg-4 g-mb-15">
+            <input class="form-control g-height-55 g-font-size-16 g-color-black g-brd-gray-light-v3 g-rounded-7" type="tel" name="f_phone" placeholder="+7(___)___-__-__" required>
+          </div>
+        </div>
+
+        <!-- Дополнительные опции -->
+        <div class="form-check g-mb-10">
+          <input type="checkbox" class="form-check-input clt_datetime--js" id="with_datetime">
+          <label class="form-check-label" for="with_datetime">Заказать на точную дату/время</label>
+        </div>
+        <div id="datetime_block" class="row g-mt-10" style="display:none;">
+          <div class="col-md-6 g-mb-10"><input type="date" class="form-control g-height-55 g-rounded-7" name="order_date"></div>
+          <div class="col-md-6 g-mb-10"><input type="time" class="form-control g-height-55 g-rounded-7" name="order_time"></div>
+        </div>
+
+        <div class="form-check g-mb-10">
+          <input type="checkbox" class="form-check-input clt_additional--js" id="with_additional_phone">
+          <label class="form-check-label" for="with_additional_phone">Указать дополнительный номер</label>
+        </div>
+        <div id="additional_phone_block" class="row g-mt-10" style="display:none;">
+          <div class="col-md-6 g-mb-10"><input type="text" class="form-control g-height-55 g-rounded-7" name="extra_name" placeholder="Доп. имя"></div>
+          <div class="col-md-6 g-mb-10"><input type="tel" class="form-control g-height-55 g-rounded-7" name="extra_phone" placeholder="Доп. телефон"></div>
+        </div>
+
+        <!-- Итог -->
+        <div class="row g-mb-15 g-mt-20">
+          <div class="col-md-6 col-lg-4 g-mb-20 g-mt-minus-3">
+            <div class="g-min-height-60 g-font-size-18 g-color-gray-dark-v1">
+              Стоимость эвакуации:<br> 
+              <span class="g-nowrap"><strong class="clt_sum--js g-font-size-26">0</strong> руб.</span>
+              <s class="d-none clt_old--js">0</s>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-8 g-mb-20">
+            <textarea class="form-control g-rounded-7" name="f_comment" placeholder="Комментарий"></textarea>
+          </div>
+        </div>
+
+        <!-- Кнопка -->
+        <button type="submit" class="btn btn-danger g-font-weight-600">ОФОРМИТЬ ЗАЯВКУ</button>
+        <div class="form-feedback g-mt-15"></div>
+      </form>
     </div>
+  </div>
+</div>
 
     <!-- Additional Content Section -->
     <div class="g-py-30 g-py-50--lg">
@@ -539,48 +641,212 @@
             </form>
         </div>
     </div>
-    <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const items = document.querySelectorAll("#photo-gallery .photo-item");
-    const loadMoreBtn = document.getElementById("load-more-btn");
-    let visibleCount = 6;
-
-    // скрываем все кроме первых 6
-    items.forEach((item, index) => {
-        if (index >= visibleCount) {
-            item.classList.add("d-none");
-        }
-    });
-
-    loadMoreBtn.addEventListener("click", function () {
-        visibleCount += 6; // каждый раз добавляем по 6
-        items.forEach((item, index) => {
-            if (index < visibleCount) {
-                item.classList.remove("d-none");
-            }
-        });
-
-        // Если все фото показаны — скрываем кнопку
-        if (visibleCount >= items.length) {
-            loadMoreBtn.style.display = "none";
-        }
-    });
-});
-</script>
-
 <script>
-$(document).ready(function () {
-    // Инициализация Slick (если ещё не инициализирован)
-    $('.js-carousel').slick(); // если ты используешь стандартную инициализацию
+(function($){
+  "use strict";
 
-    // Инициализация Fancybox после того как слайдер готов
-    $('.js-carousel').on('init', function() {
-        $("[data-fancybox='video-review']").fancybox({
-            type: 'iframe',
-            youtube: { controls: 1, showinfo: 0 }
-        });
+  // --- UTILS ---
+  function showFormMessage($form, text, ok){
+      var $box = $form.find('.form-feedback');
+      if(!$box.length){
+          $box = $('<div class="form-feedback" style="margin-top:10px;"></div>');
+          $form.append($box);
+      }
+      $box.css({
+          'padding': '10px',
+          'border-radius': '6px',
+          'color': ok ? '#155724' : '#721c24',
+          'background-color': ok ? '#d4edda' : '#f8d7da',
+          'border': ok ? '1px solid #c3e6cb' : '1px solid #f5c6cb',
+          'font-weight': '600'
+      }).text(text).show();
+      if(ok){
+          setTimeout(function(){ $box.fadeOut(); }, 4000);
+      }
+  }
+
+  $(document).ready(function(){
+
+    // ====== Показ/скрытие доп. блоков ======
+    $(".clt_datetime--js").on("change", function(){
+      $("#datetime_block").slideToggle(this.checked);
     });
-});
-</script>
 
+    $(".clt_additional--js").on("change", function(){
+      $("#additional_phone_block").slideToggle(this.checked);
+    });
+
+    // ====== Калькулятор ======
+    const DEFAULTS = {
+      basePrice_vk1: 2000,
+      basePrice_vk2: 3000,
+      perKm_vk1: 50,
+      perKm_vk2: 80,
+      minPrice_vk1: 4000,
+      minPrice_vk2: 6000,
+      wheelPrice: 1500
+    };
+
+    function parseNumber(str){
+      if(typeof str === 'number') return str;
+      if(!str) return 0;
+      return parseFloat(String(str).replace(/\s+/g,'').replace(/,/g,'.')) || 0;
+    }
+
+    function recalcCalculator($form){
+      var vk = parseInt($form.find('#clt_vk').val() || 1);
+      var selectedVid = $form.find('#clt_vid option:selected');
+      var basePrice = parseNumber(selectedVid.data('base-price')) || (vk===2 ? DEFAULTS.basePrice_vk2 : DEFAULTS.basePrice_vk1);
+      var perKm = parseNumber(selectedVid.data('per-km')) || (vk===2 ? DEFAULTS.perKm_vk2 : DEFAULTS.perKm_vk1);
+      var minPrice = parseNumber(selectedVid.data('min-price')) || (vk===2 ? DEFAULTS.minPrice_vk2 : DEFAULTS.minPrice_vk1);
+
+      var km = parseNumber($form.find(".clt_km--js").val());
+
+      var extras = 0;
+      $form.find("input[type='checkbox'][data-price].clt_extra--js").each(function(){
+        if($(this).is(":checked")){
+          extras += parseNumber($(this).data("price"));
+        }
+      });
+
+      var wheels = parseNumber($form.find('#clt_wheels').val());
+      var wheelExtra = wheels * DEFAULTS.wheelPrice;
+
+      extras += wheelExtra;
+
+      var sum = basePrice + (perKm * km) + extras;
+      if(sum < minPrice) sum = minPrice;
+      sum = Math.ceil(sum / 100) * 100;
+
+      $form.find(".clt_sum--js").text(sum.toLocaleString());
+
+      return { total: sum };
+    }
+
+    // Слушатели изменений
+    $(document).on('change keyup input', '.clt_vid--js, .clt_cat--js, .clt_wheels--js, .clt_km--js, .clt_extra--js, .clt_vk--js', function(){
+      var $form = $(this).closest(".clt_form");
+      recalcCalculator($form);
+    });
+
+    $(".clt_form").each(function(){ recalcCalculator($(this)); });
+
+    // AJAX-отправка формы калькулятора
+    $(document).on("submit", ".clt_form", function(e){
+      e.preventDefault();
+      var $form = $(this);
+      var calc = recalcCalculator($form);
+      var data = $form.serializeArray();
+      data.push({name: 'calc_total', value: calc.total});
+
+      var csrftoken = document.cookie.match(/csrftoken=([^;]+)/)?.[1] || '';
+
+      var $msgBox = $form.find('.form-feedback');
+      if(!$msgBox.length) $msgBox = $("<div class='form-feedback'/>").appendTo($form);
+      $msgBox.text("Отправка заявки...").css({'color':'#000'});
+
+      $.ajax({
+    url: $form.attr("action") || "{% url 'submit_calculator' %}",
+    method: "POST",
+    data: $.param(data),
+    headers: { "X-CSRFToken": csrftoken },
+    dataType: "json",
+    success: function(resp){
+        if(resp && resp.success){
+            $msgBox.text(resp.message || "Заявка отправлена");
+            $form[0].reset();
+            $("#datetime_block, #additional_phone_block").hide();
+            recalcCalculator($form);
+        } else {
+            $msgBox.text(resp.message || "Ошибка при отправке").css({'color':'#900'});
+        }
+    },
+    error: function(xhr,status,err){
+        console.error("Ошибка отправки:", status, err);
+        $msgBox.text("Ошибка при отправке. Попробуйте позже.").css({'color':'#900'});
+    }
+});
+
+    // ====== Yandex Maps для расчёта расстояния ======
+    ymaps.ready(init);
+    function init(){
+      var myMap = new ymaps.Map("map_map", {
+        center: [55.755864, 37.617698],
+        zoom: 9,
+        controls: ["fullscreenControl"],
+        behaviors: ["default", "scrollZoom", "drag"]
+      });
+
+      var routePanelControl = new ymaps.control.RoutePanel({
+        options: {
+          maxWidth: "280px", 
+          autofocus: false
+        }
+      });
+
+      var zoomControl = new ymaps.control.ZoomControl({
+        options: {
+          size: "small",
+          float: "none",
+          position: {
+            bottom: 45,
+            right: 10
+          }
+        }
+      });
+
+      var trafficControl = new ymaps.control.TrafficControl({ state: {
+        providerKey: "traffic#actual",
+        trafficShown: true
+      }});
+
+      myMap.controls.add(trafficControl);
+      trafficControl.getProvider("traffic#actual").state.set("infoLayerShown", true);
+
+      routePanelControl.routePanel.options.set({
+        types: {auto: true}
+      });
+
+      myMap.controls.add(routePanelControl).add(zoomControl);
+
+      routePanelControl.routePanel.getRouteAsync().then(function (route) {
+        route.model.setParams({results: 1}, true);
+
+        route.model.events.add("requestsuccess", function () {
+          var activeRoute = route.getActiveRoute();
+          if (activeRoute) {
+            var length = activeRoute.properties.get("distance");
+            var km = Math.round(length.value / 1000);
+            if (km < 1) km = 1;
+            $(".clt_km--js").val(km);
+            recalcCalculator($(".clt_form"));
+          }
+        });
+      });
+
+      routePanelControl.routePanel.state.events.add("change", function () {
+        var fromValue = routePanelControl.routePanel.state.get("from");
+        var toValue = routePanelControl.routePanel.state.get("to");
+        if (!fromValue) {
+            $("#f_mesto").val("");
+            $("#f_mesto_cd").val("");
+        } else {
+            if (!toValue) {
+                $("#f_mesto").val(fromValue);
+                $("#f_mesto_cd").val("");
+                $("#f_end").val("");
+                $("#f_end_cd").val("");
+                $(".clt_km--js").prop("readonly", false);
+            }
+        }
+        if (!toValue) {
+            $("#f_end").val("");
+            $("#f_end_cd").val("");
+            $(".clt_km--js").prop("readonly", false);
+        }
+      });
+    }
+  }
+})(jQuery);
+</script>
 {% endblock %}
