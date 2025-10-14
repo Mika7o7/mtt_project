@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="services" id="services">
+    <div class="container services-container">
+        <h2 class="section-title">Наши услуги</h2>
+        <div class="services-grid">
+            <div class="service-item">
+                <h3>Эвакуация легковых автомобилей</h3>
+                <p>Быстрая и безопасная эвакуация легковых автомобилей в любое время суток.</p>
+            </div>
+            <div class="service-item">
+                <h3>Эвакуация спецтехники</h3>
+                <p>Перевозка спецтехники до 5 тонн с использованием профессионального оборудования.</p>
+            </div>
+            <div class="service-item">
+                <h3>Услуги манипулятора</h3>
+                <p>Погрузка и транспортировка грузов с помощью крана-манипулятора.</p>
+            </div>
+            <div class="service-item">
+                <h3>Межгород</h3>
+                <p>Эвакуация автомобилей на дальние расстояния по выгодным тарифам.</p>
+            </div>
+        </div>
+        <a href="#order" class="btn-order">Заказать услугу</a>
+    </div>
+</section>
+{% endblock %}

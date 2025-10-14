@@ -5,21 +5,18 @@ urlpatterns = [
     path('', views.test, name='home'),
     path('about/', views.about, name='about'),
     path('services/', views.services, name='services'),
-    path('contacts/', views.contacts, name='contacts'),
-    path('moscow_services/', views.moscow_services, name='moscow_services'),
-    path('airport/', views.airport, name='airport'),
-    path('passenger/', views.passenger, name='passenger'),
-    path('districts/', views.districts, name='districts'),
-    path('metro/', views.metro, name='metro'),
-    path('zelenograd/', views.zelenograd, name='zelenograd'),
-    path('novomoskovskiy/', views.novomoskovskiy, name='novomoskovskiy'),
-    path('troick/', views.troick, name='troick'),
-    path('privacy_policy/', views.privacy_policy, name='privacy_policy'),
-    path('online_payment/', views.online_payment, name='online_payment'),
-    path('cookies_policy/', views.cookies_policy, name='cookies_policy'),
-    path('uslugi/', views.uslugi, name='uslugi'),
+    path('company/', views.company, name='company'),
+    path('prices/', views.prices, name='prices'),
+    path('gallery/', views.gallery, name='gallery'),
+    path('calculator/', views.calculator, name='calculator'),
+
+    # path('cookies_policy/', views.cookies_policy, name='cookies_policy'),
+    # path('uslugi/', views.uslugi, name='uslugi'),
     path('submit_form/', views.submit_form, name='submit_form'),
-    path('submit_calculator/', views.submit_calculator, name='submit_calculator'),
+    path('send_callback/', views.send_callback, name='send_callback'),
+    path('send_callback_question/', views.send_callback_question, name='send_callback_question'),
+
+    
 
     
 
