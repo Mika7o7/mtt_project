@@ -1478,6 +1478,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    color: #000;
   }
 
   .form-label {
@@ -1496,6 +1497,7 @@ body {
     background: #fff;
     height: 50px;
     transition: border-color 0.2s;
+    color: #000;
   }
 
   .form-input {
@@ -1505,6 +1507,8 @@ body {
   .form-input:focus {
     outline: none;
     border-color: #dc3545;
+    color: #000;
+  
   }
 
   .form-input[readonly] {
@@ -1899,6 +1903,7 @@ body {
     font-size: 10px;
     height: 40px;
     padding: 6px 8px;
+    color: #000;
   }
 
   .form-input {
