@@ -212,7 +212,7 @@ body {
     transition: background 0.4s ease;
 }
 .hero-container:hover {
-    background: rgba(255, 0, 21, 0.679); /* мягкий красный с прозрачностью */
+    background: rgba(212, 211, 211, 0.9);
 }
 
 /* Текст */
@@ -235,10 +235,10 @@ body {
 }
 
 /* Меняем цвет текста при наведении */
-.hero-container:hover .hero-text h1,
+/* .hero-container:hover .hero-text h1,
 .hero-container:hover .hero-text h2 {
     color: #fff;
-}
+} */
 
 /* Кнопка */
 .hero-btn {
@@ -438,22 +438,28 @@ body {
 /* ===== Адаптив для телефонов ===== */
 @media (max-width: 768px) {
   .how-to-order {
-    padding: 40px 20px;
+    padding: 40px 10px;
   }
-  /* Заголовок секции */
+
   .how-to-order .section-title {
     font-size: 22px;
   }
 
-  /* Карточки — 2 в ряд */
+  /* Делаем карусель */
   .cards {
-    flex-direction: column;
-    align-items: center;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory; /* включаем прилипающий скролл */
+    -webkit-overflow-scrolling: touch; /* плавность для iOS */
+    gap: 15px;
+    padding-bottom: 10px;
   }
 
   .card {
-    width: 90%;
-    height: 250px;
+    width: 80%;
+    height: 260px;
+    flex: 0 0 auto;
+    scroll-snap-align: center; /* прилипаем к центру при скролле */
   }
 
   .card .icon {
@@ -462,25 +468,177 @@ body {
   }
 
   .card h3 {
-    font-size: 12px;
+    font-size: 14px;
     margin-bottom: 5px;
   }
 
   .card p {
-    font-size: 10px;
+    font-size: 12px;
   }
 
-  /* Кнопка снизу */
+  /* Убираем hover-анимацию (не нужна на телефонах) */
+  .card:hover img {
+    transform: none;
+  }
+  .card:hover .overlay {
+    opacity: 1;
+  }
+
   .btn-contact {
     font-size: 12px;
     padding: 8px 16px;
-    margin-top: 20px;
+    margin-top: 10px;
+  }
+
+  /* Прячем скроллбар, но оставляем прокрутку */
+  .cards::-webkit-scrollbar {
+    display: none;
+  }
+  .cards {
+    scrollbar-width: none;
+  }
+
+  .how-to-order .cards {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 15px !important;
+    padding-bottom: 10px !important;
+    justify-content: flex-start !important;
+  }
+
+  .how-to-order .cards::-webkit-scrollbar {
+    display: none;
+  }
+  .how-to-order .cards {
+    scrollbar-width: none;
+  }
+
+  .how-to-order .card {
+    flex: 0 0 80% !important;
+    scroll-snap-align: center !important;
+    height: 260px !important;
   }
 }
 
+/* ===== Эвакуатор любого транспорта ===== */
+.transport-section {
+  background: rgba(240, 240, 240, 0.9);
+  padding: 80px 20px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.transport-section .section-title {
+  font-size: 32px;
+  color: #000000;
+  font-weight: 700;
+  margin-bottom: 40px;
+  text-transform: uppercase;
+}
+
+/* Контейнер со скроллом */
+.transport-scroll {
+  display: flex;
+  gap: 25px;
+  scroll-behavior: smooth;
+  padding-bottom: 15px;
+}
+
+.transport-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.transport-scroll::-webkit-scrollbar-thumb {
+  background-color: #585857;
+  border-radius: 10px;
+}
+
+.transport-card {
+  flex: 0 0 250px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-align: center;
+  padding: 20px;
+}
+
+.transport-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 6px 20px rgba(164, 164, 164, 0.4);
+}
+
+.transport-card img {
+  width: 100%;
+  height: 160px;
+  border-radius: 15px;
+  object-fit: cover;
+  margin-bottom: 15px;
+}
+
+.transport-card h3 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+/* .btn-order {
+  background: #ff7f27;
+  color: #fff;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-order:hover {
+  background: #e66d10;
+} */
+
+/* ===== Адаптив (все устройства остаются со скроллом) ===== */
+@media (max-width: 768px) {
+
+  .transport-scroll {
+    overflow-x: auto;
+  }
+
+  .transport-card:hover {
+    transform: none;
+    box-shadow: 0 3px 6px rgba(61, 61, 61, 0.4);
+  }
+
+  .transport-section {
+    padding: 50px 15px;
+  }
+
+  .transport-section .section-title {
+    font-size: 22px;
+    margin-bottom: 25px;
+  }
+
+  .transport-card img {
+    height: 130px;
+  }
+
+  .transport-card h3 {
+    font-size: 14px;
+  }
+
+  /* .btn-order {
+    font-size: 12px;
+    padding: 8px 18px;
+  } */
+}
+
+
 /* ===== Почему выбрать нас ===== */
 .why-choose-us {
-  background: #ffe6cc; /* мягкий оранжевый */
+  background: rgba(240, 240, 240, 0.9);
   padding: 80px 20px;
   text-align: center;
 }
@@ -495,12 +653,11 @@ body {
 }
 
 .why-choose-us .section-title {
-  color: #fff;
+  color: #000000;
   font-size: 36px;
   font-weight: 700;
   margin-bottom: 10px;
   text-transform: uppercase;
-  /* text-shadow: 0 2px 5px rgba(70, 70, 68, 0.763); */
 }
 
 /* Карточки */
@@ -520,17 +677,18 @@ body {
   padding: 30px 20px;
   box-shadow: 0 4px 15px rgba(75, 75, 75, 0.039);
   transition: transform 0.3s, box-shadow 0.3s;
+  flex-shrink: 0; /* чтобы не сжимались в карусели */
 }
 
 .why-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 6px 20px rgba(255, 165, 0, 0.4);
+  box-shadow: 0 3px 5px rgba(102, 101, 100, 0.4);
 }
 
 .why-card .icon {
   font-size: 45px;
   margin-bottom: 20px;
-  color: #ff7f27; /* оранжевая иконка */
+  color: #d1d0d0; /* оранжевая иконка */
 }
 
 .why-card h3 {
@@ -546,43 +704,154 @@ body {
 
 /* ===== Адаптив для телефонов ===== */
 @media (max-width: 768px) {
-
   .why-choose-us {
-    padding: 50px 20px ;
-  }
-  /* Заголовок секции */
-  .why-choose-us .section-title {
-    font-size: 22px; /* уменьшенный размер */
+    padding: 50px 10px;
   }
 
-  /* Контейнер карточек */
+  .why-choose-us .section-title {
+    font-size: 22px;
+  }
+
+  /* превращаем блок в горизонтальную карусель */
   .why-cards {
-    flex-wrap: wrap;       /* разрешаем перенос */
-    gap: 15px;             /* уменьшенный gap */
-    justify-content: center;
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 15px !important;
+    padding-bottom: 10px !important;
+    justify-content: flex-start !important;
+  }
+
+  .why-cards::-webkit-scrollbar {
+    display: none;
+  }
+  .why-cards {
+    scrollbar-width: none;
   }
 
   .why-card {
-    width: 90%;
-    min-height: auto;
+    flex: 0 0 80% !important;
+    scroll-snap-align: center !important;
+    min-height: 140px !important;
+    width: 20px;
+    
   }
 
-  /* Иконка */
+  .why-card:hover {
+    transform: none;
+  }
+
   .why-card .icon {
     font-size: 30px;
     margin-bottom: 10px;
   }
 
-  /* Заголовок карточки */
   .why-card h3 {
     font-size: 14px;
     margin-bottom: 5px;
   }
 
-  /* Текст карточки */
   .why-card p {
     font-size: 12px;
     line-height: 1.3;
+  }
+}
+
+/* ===== Секция с текстом и картинкой ===== */
+.info-section {
+  background: rgba(240, 240, 240, 0.9);
+  padding: 80px 20px;
+}
+
+.info-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: nowrap;
+}
+
+.info-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.info-image img {
+  width: 100%;
+  max-width: 480px;
+  border-radius: 20px;
+  object-fit: cover;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.info-image img:hover {
+  transform: scale(1.05);
+}
+
+.info-text {
+  flex: 1;
+  text-align: left;
+  color: #333;
+}
+
+.info-text h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #000000;
+}
+
+.info-text p {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 25px;
+  color: #444;
+}
+
+.info-text .btn-contact {
+  border-color: #000000;
+  color: #000000;
+}
+
+.info-text .btn-contact:hover {
+  background: #1D4ED8;
+  color: #fff;
+}
+
+/* ===== Адаптив для телефонов ===== */
+@media (max-width: 768px) {
+  .info-container {
+    flex-direction: column;
+    gap: 25px;
+    text-align: center;
+  }
+
+  .info-image img {
+    max-width: 80%;
+  }
+
+  .info-text {
+    text-align: center;
+  }
+
+  .info-text h2 {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+
+  .info-text p {
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+
+  .info-text .btn-contact {
+    font-size: 12px;
+    padding: 8px 18px;
   }
 }
 
@@ -600,7 +869,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
+  /* text-align: center; */
   width: 100%;
 }
 
@@ -1851,14 +2120,11 @@ body {
 
 /* 📱 Адаптив */
 @media (max-width: 992px) {
-  .cards {
-    flex-wrap: wrap;
-  }
-
-  .why-cards {
+  
+  /* .why-cards {
     flex-wrap: wrap;
     justify-content: center;
-  }
+  } */
 
   .works-gallery {
     grid-template-columns: repeat(2, 1fr);
@@ -2258,3 +2524,4 @@ body {
     font-size: 12px;
   }
 }
+

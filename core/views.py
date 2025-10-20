@@ -1,6 +1,8 @@
 from django.shortcuts import render
-from .models import MetaData, HeroSection, District, OrderStep, FormConfig, VideoReview, Photo, Price, Service, WhyChooseUs, FAQ, Rating, CalculatorOption
-
+from .models import (
+    HeroSection, HowToOrderStep, TransportType,
+    WhyChooseUs, InfoSection, PriceItem, WorkPhoto, FAQ, Rating
+)
 
 import requests
 from django.http import JsonResponse
@@ -99,40 +101,6 @@ def submit_form(request):
 
 
 
-# @csrf_exempt  # если оставляешь csrf в форме, можно убрать csrf_exempt
-# def submit_form(request):
-#     if request.method == "POST":
-#         name = request.POST.get("f_name", "").strip()
-#         phone = request.POST.get("f_phone", "").strip()
-#         auto = request.POST.get("f_auto", "").strip()
-#         # можно добавить валидацию: если нет телефона — вернуть ошибку
-#         if not phone:
-#             return JsonResponse({"success": False, "message": "Укажите, пожалуйста, телефон."})
-
-#         message = (
-#             "🚨 <b>Новая заявка с сайта</b>\n\n"
-#             f"👤 Имя: {name or '—'}\n"
-#             f"📞 Телефон: {phone}\n"
-#             f"🚗 Авто: {auto or '—'}"
-#         )
-
-#         url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-#         payload = {
-#             "chat_id": TELEGRAM_CHAT_ID,
-#             "text": message,
-#             "parse_mode": "HTML",
-#         }
-#         try:
-#             r = requests.post(url, data=payload, timeout=5)
-#             r.raise_for_status()
-#             return JsonResponse({"success": True, "message": "Спасибо! Заявка отправлена."})
-#         except Exception as e:
-#             # логируй e
-#             return JsonResponse({"success": False, "message": "Не удалось отправить сообщение в Telegram."})
-
-#     return JsonResponse({"success": False, "message": "Некорректный запрос"}, status=400)
-
-
 @csrf_exempt  # если ты используешь CSRF в форме — убери этот декоратор
 def send_callback(request):
     if request.method != "POST":
@@ -203,40 +171,39 @@ def send_callback_question(request):
     return JsonResponse({"success": True, "message": "Спасибо! Ваш вопрос отправлен."})
 
 
+
 def index(request):
     """
     Renders the index page with data for all sections.
     """
-    metadata = MetaData.objects.get(page='moscow_services')
-    hero = HeroSection.objects.get(page='moscow_services')
-    districts = District.objects.all()
-    order_steps = OrderStep.objects.all()
-    form_configs = FormConfig.objects.all()
-    video_reviews = VideoReview.objects.all()
-    photos = Photo.objects.all()
-    prices = Price.objects.all()
-    services = Service.objects.all()
+    hero = HeroSection.objects.first()
+    order_steps = HowToOrderStep.objects.all()
+    transports = TransportType.objects.all()
+    info = InfoSection.objects.first()
+    prices = PriceItem.objects.all()
     why_choose_us = WhyChooseUs.objects.all()
-    faqs = FAQ.objects.all()[:6]
-    rating = Rating.objects.get(page='moscow_services')
-    calculator_options = CalculatorOption.objects.all()
+    photos = WorkPhoto.objects.all()
+    faqs = FAQ.objects.filter(is_active=True)[:6]
+    rating = Rating.objects.first()  # если есть модель Rating
+
+
+    # Создаём список звезд для шаблона
+    rating_stars = list(range(1, 6))  # [1, 2, 3, 4, 5]
+
 
     context = {
-        'metadata': metadata,
         'hero': hero,
-        'districts': districts,
         'order_steps': order_steps,
-        'form_configs': form_configs,
-        'video_reviews': video_reviews,
-        'photos': photos,
+        'transports': transports,
+        'info': info,
         'prices': prices,
-        'services': services,
         'why_choose_us': why_choose_us,
+        'photos': photos,
         'faqs': faqs,
         'rating': rating,
-        'calculator_options': calculator_options,
+        'rating_stars': rating_stars,
     }
-    return render(request, 'index.html', context)
+    return render(request, 'test.html', context)
 
 def test(request):
     return render(request, 'test.html')
