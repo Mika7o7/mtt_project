@@ -2,7 +2,7 @@
 from django.contrib import admin
 from .models import (
     HeroSection, HowToOrderStep, TransportType,
-    WhyChooseUs, InfoSection, PriceItem, WorkPhoto, FAQ, Rating
+    WhyChooseUs, InfoSection, PriceItem, WorkPhoto, FAQ, Rating, Article
 )
 
 # ==== Кастомный админ-сайт ====
@@ -30,6 +30,10 @@ class CustomAdminSite(admin.AdminSite):
             "Rating"
         ]
 
+        article_order = [
+            "Article",
+        ]
+
         # ==== Главная страница ====
         main_models = []
         for app in app_list:
@@ -37,6 +41,14 @@ class CustomAdminSite(admin.AdminSite):
                 for model in app['models']:
                     if model['object_name'] == model_name:
                         main_models.append(model)
+
+        # ==== Статья страница ====
+        article_models = []
+        for app in app_list:
+            for model_name in article_order:
+                for model in app['models']:
+                    if model['object_name'] == model_name:
+                        article_models.append(model)
 
         # ==== Создаём все группы ====
         new_app_list = [
@@ -62,9 +74,7 @@ class CustomAdminSite(admin.AdminSite):
             {
                 "name": "Статья",
                 "app_label": "core",
-                "models": [
-                    # TODO: добавить модели для раздела "Статья"
-                ]
+                "models": article_models
             },
             {
                 "name": "Цены",
@@ -145,3 +155,8 @@ class FAQAdmin(admin.ModelAdmin):
 @admin.register(Rating, site=custom_admin_site)
 class RatingAdmin(admin.ModelAdmin):
     list_display = ("page", "stars", "votes")
+
+@admin.register(Article, site=custom_admin_site)
+class ArticleAdmin(admin.ModelAdmin):
+    list_display = ("title", "text", "date")
+

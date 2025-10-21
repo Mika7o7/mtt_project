@@ -1,7 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import (
     HeroSection, HowToOrderStep, TransportType,
-    WhyChooseUs, InfoSection, PriceItem, WorkPhoto, FAQ, Rating
+    WhyChooseUs, InfoSection, PriceItem, WorkPhoto, FAQ, Rating, Article
 )
 
 import requests
@@ -214,8 +214,13 @@ def services(request):
 def about(request):
     return render(request, 'about.html')
 
-def company(request):
-    return render(request, 'company.html')
+def article_list(request):
+    articles = Article.objects.all()
+    return render(request, 'articles.html', {'articles': articles})
+
+def article_detail(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    return render(request, 'article_detail.html', {'article': article})
 
 def prices(request):
     return render(request, 'prices.html')

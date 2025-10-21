@@ -128,3 +128,18 @@ class Rating(models.Model):
     class Meta:
         verbose_name = "Рейтинг страницы"
         verbose_name_plural = "Рейтинги страниц"
+
+
+# ===== ARTICLE =====
+class Article(models.Model):
+    title = models.CharField(max_length=255)
+    text = models.TextField()
+    date = models.DateField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-date']
+        verbose_name = "Статья"
+        verbose_name_plural = "Статьи"
+
+    def __str__(self):
+        return self.title

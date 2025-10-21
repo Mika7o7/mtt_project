@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="article-detail" id="article-detail">
+    <div class="articles-detal-container">
+        <a href="{% url 'articles' %}" class="article-back">← Назад к статьям</a>
+
+        <div class="article-full">
+            <div class="article-date">{{ article.date|date:"d.m.Y" }}</div>
+            <h1>{{ article.title }}</h1>
+            <p>{{ article.text|linebreaks }}</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

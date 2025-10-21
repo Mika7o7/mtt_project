@@ -2,28 +2,65 @@
 {% load static %}
 
 {% block content %}
+<!-- <link rel="stylesheet" href="{% static 'assets/css/service.css' %}"> -->
+
+<!-- ===== Секция "Наши услуги" ===== -->
 <section class="services" id="services">
-    <div class="container services-container">
-        <h2 class="section-title">Наши услуги</h2>
-        <div class="services-grid">
-            <div class="service-item">
-                <h3>Эвакуация легковых автомобилей</h3>
-                <p>Быстрая и безопасная эвакуация легковых автомобилей в любое время суток.</p>
-            </div>
-            <div class="service-item">
-                <h3>Эвакуация спецтехники</h3>
-                <p>Перевозка спецтехники до 5 тонн с использованием профессионального оборудования.</p>
-            </div>
-            <div class="service-item">
-                <h3>Услуги манипулятора</h3>
-                <p>Погрузка и транспортировка грузов с помощью крана-манипулятора.</p>
-            </div>
-            <div class="service-item">
-                <h3>Межгород</h3>
-                <p>Эвакуация автомобилей на дальние расстояния по выгодным тарифам.</p>
-            </div>
+  <div class="container">
+    <h2 class="section-title">Наши услуги</h2>
+    <p class="section-subtitle">Мы предлагаем быстрые, надёжные и безопасные решения для любых ситуаций на дороге.</p>
+
+    <div class="services-grid">
+      <div class="service-card">
+        <img src="{% static 'img/service-car.jpg' %}" alt="Эвакуация легковых автомобилей">
+        <div class="service-content">
+          <h3>Эвакуация легковых автомобилей</h3>
+          <p>Быстрая и безопасная эвакуация легковых автомобилей в любое время суток.</p>
         </div>
-        <a href="#order" class="btn-order">Заказать услугу</a>
+      </div>
+
+      <div class="service-card">
+        <img src="{% static 'img/service-tech.jpg' %}" alt="Эвакуация спецтехники">
+        <div class="service-content">
+          <h3>Эвакуация спецтехники</h3>
+          <p>Перевозка спецтехники до 5 тонн с использованием профессионального оборудования.</p>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <img src="{% static 'img/service-crane.jpg' %}" alt="Услуги манипулятора">
+        <div class="service-content">
+          <h3>Услуги манипулятора</h3>
+          <p>Погрузка и транспортировка грузов с помощью крана-манипулятора.</p>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <img src="{% static 'img/service-long.jpg' %}" alt="Межгород">
+        <div class="service-content">
+          <h3>Межгород</h3>
+          <p>Эвакуация автомобилей на дальние расстояния по выгодным тарифам.</p>
+        </div>
+      </div>
     </div>
+
+    <a href="#order" class="btn-order">Заказать услугу</a>
+  </div>
 </section>
+
+<!-- ===== Секция "О компании" ===== -->
+<section class="about-section">
+  <div class="about-container">
+    <div class="about-text">
+      <h2>Почему выбирают нас</h2>
+      <p>Мы работаем по Москве и области круглосуточно. Все наши специалисты проходят обучение и готовы помочь в любой момент.</p>
+      <p>Современные эвакуаторы, быстрая подача и честные цены — это основа нашего сервиса.</p>
+      <a href="#contact" class="btn-learn">Связаться с нами</a>
+    </div>
+    <div class="about-image">
+      <img src="{% static 'img/about.jpg' %}" alt="О компании">
+    </div>
+  </div>
+</section>
+
 {% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="articles" id="articles">
+    <div class="articles-container">
+        <h2 class="section-title">Статьи Автоклуба АНГЕЛ</h2>
+
+
+        {% for article in articles %}
+        <div class="article-card">
+            <div class="article-date">{{ article.date|date:"d.m.Y" }}</div>
+            <h3>{{ article.title }}</h3>
+            <p>
+                {{ article.text|truncatechars:150 }}
+            </p>
+            <a href="{% url 'article_detail' article.id %}" class="article-btn">Читать далее</a>
+        </div>
+        {% endfor %}
+
+        <!-- <div class="article-card">
+            <div class="article-date">10.10.2025</div>
+            <h3>🚗 В автопарке «Ангела» пополнение!</h3>
+            <p>
+                Мы продолжаем обновлять наш автопарк – теперь в команде появилась новая Citroën Berlingo!
+                Автомобиль уже прошёл фирменную оклейку и готов выезжать на помощь нашим клиентам...
+            </p>
+            <a href="{% url 'article_detail' 1 %}" class="article-btn">Читать далее</a>
+        </div>
+
+        <div class="article-card">
+            <div class="article-date">22.08.2025</div>
+            <h3>🚙 Ещё один «ангел» на дорогах!</h3>
+            <p>
+                Наш автопарк пополнился ещё одной новой Citroën Berlingo – стильной, современной и полностью готовой к работе...
+            </p>
+            <a href="{% url 'article_detail' 2 %}" class="article-btn">Читать далее</a>
+        </div> -->
+    </div>
+</section>
+{% endblock %}
