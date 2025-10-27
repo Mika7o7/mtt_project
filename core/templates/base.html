@@ -78,6 +78,28 @@
         <!-- jQuery и маска для ввода -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+        
+
+      <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const megaMenu = document.getElementById('mega-menu');
+  const dropdownToggle = document.getElementById('services-toggle');
+
+  // Открытие меню
+  dropdownToggle.addEventListener('click', () => {
+    megaMenu.classList.toggle('active');
+  });
+
+  // Закрытие при клике на фон
+  megaMenu.addEventListener('click', (e) => {
+    // Если кликнули именно по фону, а не по контейнеру внутри
+    if (e.target === megaMenu) {
+      megaMenu.classList.remove('active');
+    }
+  });
+});
+</script>
+
 
         <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -432,6 +454,8 @@
             });
         
         })(jQuery);
+
+    
     </script>
     {% endblock %}
 </body>

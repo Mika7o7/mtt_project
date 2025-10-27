@@ -4,26 +4,92 @@
     <div class="logo">
       <a href="/"><img src="{% static 'assets/apple-touch-icon.png' %}" alt="Лого"></a>
     </div>
-
     <div class="burger" id="burger">
       <span></span>
       <span></span>
       <span></span>
     </div>
-
     <nav class="nav-menu" id="nav-menu">
       <ul>
         <li><a href="/services">Наши услуги</a></li>
+        <li class="mega-dropdown">
+          <span class="dropdown-toggle" id="services-toggle">Услуги ▾</span>
+          <div class="main-dropdown-menu" id="mega-menu">
+            <div class="container bg-white">
+              <div class="main-dropdown-menu__row scroll">
+                <!-- Левая колонка с select -->
+                <div class="wrapper">
+                  <div class="fake-button">Работаем 24/7</div>
+                  
+                  <div class="selects">
+                    <select>
+                      <option>Эвакуатор по городам</option>
+                      <option>Балашиха</option>
+                      <option>Химки</option>
+                      <option>Домадедово</option>
+                      <option>Зеленоград</option>
+                    </select>
+                    <select><option>Эвакуатор по округам</option></select>
+                    <select><option>Эвакуатор по метро</option></select>
+                  </div>
+
+                </div>
+
+                <!-- Правая схема 1-2-3-4 -->
+                <div class="main-dropdown-menu-link-group shift-left">
+                  <h3 class="main-dropdown-menu-link__title">Эвакуация</h3>
+                  <div class="main-dropdown-menu-links-wrap">
+                    <ul class="links-col-3">
+                      <li><a href="#">Мототехники</a></li>
+                      <li><a href="#">Спецтехники</a></li>
+                      <li><a href="#">Коммерческого транспорта</a></li>
+                      <li><a href="#">Квадроциклов</a></li>
+                      <li><a href="#">Трактора</a></li>
+                      <li><a href="#">Газели</a></li>
+                      <li><a href="#">Снегоходов</a></li>
+                      <li><a href="#">Погрузчика</a></li>
+                      <li><a href="#">Автобусов</a></li>
+                      <li><a href="#">Внедорожников</a></li>
+                      <li><a href="#">Экскаватора</a></li>
+                      <li><a href="#">Грузовой эвакуатор</a></li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="main-dropdown-menu-link-group bottom-row">
+                  <div class="left">
+                    <h3 class="main-dropdown-menu-link__title">Цены</h3>
+                    <ul>
+                      <li><a href="#">Прайс-лист</a></li>
+                      <li><a href="#">Калькулятор</a></li>
+                    </ul>
+                  </div>
+                  <div class="center">
+                    <h3 class="main-dropdown-menu-link__title">Техническая помощь</h3>
+                    <ul>
+                      <li><a href="#">Замена колеса</a></li>
+                      <li><a href="#">Подвоз топлива</a></li>
+                    </ul>
+                  </div>
+                  <div class="right">
+                    <h3 class="main-dropdown-menu-link__title">Дополнительные услуги</h3>
+                    <ul>
+                      <li><a href="#">Эвакуатор срочно</a></li>
+                      <li><a href="#">Эвакуатор круглосуточно</a></li>
+                      <li><a href="#">Междугородняя Эвакуация</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
         <li><a href="/about">О нас</a></li>
         <li><a href="/articles">Статья</a></li>
         <li><a href="/prices">Цены</a></li>
         <li><a href="/gallery">Галерея</a></li>
         <li><a href="/calculator">Калькулятор</a></li>
-        <li><a href="/#">Оплата</a></li>
-
-        
-
-       
+        <li><a href="#">Оплата</a></li>
       </ul>
       <div class="menu-btn-wrapper">
         <a href="#" class="btn-order">Заказать</a>
@@ -31,3 +97,4 @@
     </nav>
   </div>
 </header>
+
