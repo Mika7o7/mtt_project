@@ -2909,3 +2909,137 @@ body {
     font-size: 14px;
   }
 }
+
+
+/* Основной контейнер секции */
+.order-section {
+  position: relative;
+  color: #fff;
+  text-align: left;
+  padding: 0;
+}
+
+/* Фон и чёрная прозрачная подложка */
+.order-overlay {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 80px 20px;
+}
+
+.order-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65); /* Чёрный прозрачный слой */
+  z-index: 0;
+}
+
+.order-container {
+  position: relative;
+  z-index: 1; /* Чтобы контент был поверх затемнения */
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.order-section h2 {
+  font-size: 2.4rem;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.order-section h2 span {
+  color: #ff4b2b;
+}
+
+.order-subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 25px;
+}
+
+/* Форма */
+.order-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.order-form input {
+  flex: 1 1 auto; /* Инпуты растягиваются */
+  min-width: 180px;
+  padding: 15px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+}
+
+.order-form .btn-send {
+  flex: 0 0 auto; /* Не растягиваем, ширина по содержимому */
+  padding: 15px 30px; /* Можно добавить побольше паддинга */
+  background: #ff4b2b;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.order-form .btn-send:hover {
+  background: #e13d1f;
+}
+
+/* Подпись под формой */
+.order-agreement {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  opacity: 0.9;
+  text-align: right;
+}
+
+.order-agreement a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Контактная часть */
+.order-contact {
+  margin-top: 25px;
+}
+
+.order-phone {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.order-phone a {
+  color: white;
+  font-weight: 700;
+  font-size: 1.6rem;
+}
+
+.order-icons img {
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.order-icons img:hover {
+  opacity: 0.7;
+}
+
+/* Адаптив */
+@media (max-width: 768px) {
+  .order-form {
+    flex-direction: column;
+  }
+  .order-form input,
+  .order-form .btn-send {
+    flex: 1 1 100%;
+  }
+}

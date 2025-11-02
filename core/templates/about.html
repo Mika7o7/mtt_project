@@ -2,6 +2,22 @@
 {% load static %}
 
 {% block content %}
+
+<!-- ===== Info Section ===== -->
+<section class="info-section">
+  <div class="info-container">
+      <div class="info-text">
+          <h2>{{ info.title }}</h2>
+          <p>{{ info.text }}</p>
+          <a href="{{ info.button_link }}" class="btn-contact btn-order">{{ info.button_text }}</a>
+        </div>
+        <div class="info-image">
+          <img src="{{ info.image.url }}" alt="{{ info.title }}">
+        </div>
+  </div>
+</section>
+
+
 <!-- Секция How to Order -->
 <section class="how-to-order">
     <div class="container how-to-order-container">
@@ -44,6 +60,58 @@
     </div>
 </section>
 
+<!-- === Срочный заказ эвакуатора === -->
+<section class="order-section">
+  <div class="order-overlay" style="background-image: url('{% static "images/design/bg/1.jpg" %}');">
+    <div class="order-container">
+
+      <h2><span>Срочный</span> заказ эвакуатора</h2>
+      <p class="order-subtitle">Подача в течение <strong>18 минут</strong>, эвакуация любой сложности</p>
+
+      <form class="order-form" action="#" method="post">
+        {% csrf_token %}
+
+        <input type="text" name="name" placeholder="Ваше имя" required>
+
+        <input type="tel"
+               name="phone"
+               placeholder="+7 (___) ___-__-__"
+               required
+               data-mask="+7 (999) 999 99 99">
+
+        <input type="text" name="car" placeholder="Авто">
+
+        <button type="submit" class="btn-send">Отправить</button>
+      </form>
+
+      <p class="order-agreement">
+        Нажимая на кнопку, Вы даёте согласие на
+        <a href="/privacy/">обработку персональных данных</a>
+      </p>
+
+      <div class="order-contact">
+        <p>Или позвоните нам:</p>
+
+        <div class="order-phone">
+          <a href="tel:+74955131347">+7 (495) 513-13-47</a>
+
+          <div class="order-icons">
+            <a href="https://t.me/evacuator_avto" target="_blank">
+              <img src="{% static '/assets/i/telegram.svg' %}" alt="telegram">
+            </a>
+            <a href="https://wa.me/message/FDTVIC6ZHJJTO1" target="_blank">
+              <img src="{% static '/assets/i/whatsapp.svg' %}" alt="whatsapp">
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
 <!-- Секция Почему выбрать нас -->
 <section class="why-choose-us">
     <div class="container why-choose-container">
@@ -73,8 +141,24 @@
     </div>
 </section>
 
+
+<!-- ===== Work Photos ===== -->
+<section class="works">
+  <div class="container works-container">
+    <h2 class="works-title">Фото наших работ</h2>
+    <div class="works-gallery">
+      {% for photo in photos %}
+        <div class="work-item">
+          <img src="{{ photo.image.url }}" alt="{{ photo.caption }}">
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
 <!-- Секция FAQ -->
-<section class="faq">
+<!-- <section class="faq">
     <div class="faq-container">
         <div class="title-and-button">
             <h2 class="faq-title">Часто задаваемые вопросы</h2>
@@ -101,7 +185,7 @@
             </div>
         </div>
     </div>
-</section>
+</section> -->
 
 
 <div class="rating-section">

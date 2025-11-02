@@ -212,7 +212,15 @@ def services(request):
     return render(request, 'services.html')
 
 def about(request):
-    return render(request, 'about.html')
+    info = InfoSection.objects.first()
+    photos = WorkPhoto.objects.all()
+
+    context = {
+        'info': info,
+        'photos': photos,
+    }
+
+    return render(request, 'about.html', context)
 
 def article_list(request):
     articles = Article.objects.all()
