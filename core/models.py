@@ -143,3 +143,17 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+
+# ===== Metro =====
+class Metro(models.Model):
+    title = models.CharField(max_length=255)
+    text = models.TextField()
+    # date = models.DateField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Метро"
+        verbose_name_plural = "Метро"
+
+    def __str__(self):
+        return self.title

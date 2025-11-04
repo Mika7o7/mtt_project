@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 
 urlpatterns = [
@@ -18,7 +18,8 @@ urlpatterns = [
     path('send_callback_question/', views.send_callback_question, name='send_callback_question'),
 
     
-
+    
+    re_path(r'^oblasti/evakuator-metro/(?P<metro_slug>[\w-]+)/$', views.metro_page, name='metro_page'),
     
 
 

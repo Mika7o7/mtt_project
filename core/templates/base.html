@@ -7,9 +7,11 @@
     <title>{% block title %}Услуги эвакуатора{% endblock %}</title>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <!-- CSS -->
     <link rel="stylesheet" href="{% static 'assets/css/test.css' %}">
     <!-- ICON -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- 3D Model -->
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
@@ -458,5 +460,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
     </script>
     {% endblock %}
+
+    <!-- Кнопка зонить -->
+    <a href="tel:+74999119572" class="call-button" aria-label="Позвонить">
+      <i class="fa fa-phone"></i>
+    </a>
 </body>
 </html>

@@ -3043,3 +3043,509 @@ body {
     flex: 1 1 100%;
   }
 }
+
+
+/* Центрирование основного контейнера */
+.container-pluse {
+  max-width: 1400px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  overflow: visible !important;
+}
+
+/* Сам блок */
+.evacuation-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 300px;
+  background-color: rgba(240, 240, 240, 0.9); /* серый фон */
+  border-radius: 12px;
+  padding: 20px 40px;
+  box-sizing: border-box;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  overflow: visible !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* Левая часть с текстом */
+.evacuation-content {
+  max-width: 50%;
+}
+
+.evacuation-content h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+}
+
+.evacuation-content p {
+  font-size: 16px;
+  margin: 0 0 20px 0;
+}
+
+.callback-btn {
+  background-color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 25px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.callback-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.evacuation-image {
+  position: relative;
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  overflow: visible; /* важно — чтобы картинка могла выходить за границы */
+}
+
+.evacuation-image img {
+  width: 650px;
+  object-fit: contain;
+  position: relative;
+  right: -40px; /* немного сдвигаем за границу вправо */
+  top: -120px; /* чуть поднимаем вверх */
+  z-index: 2; /* чтобы картинка была поверх блока */
+  transition: transform 0.3s ease;
+}
+
+/* Можно добавить лёгкий эффект при наведении */
+.evacuation-image img:hover {
+  transform: scale(1.05);
+}
+
+/* 📱 Адаптив под планшеты и телефоны */
+@media (max-width: 992px) {
+  .evacuation-block {
+    flex-direction: column;
+    text-align: center;
+    height: auto;
+  }
+
+  .evacuation-content {
+    max-width: 100%;
+  }
+
+  .evacuation-image img {
+    width: 80%;
+    height: auto;
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .evacuation-content h2 {
+    font-size: 20px;
+  }
+
+  .evacuation-content p {
+    font-size: 16px;
+  }
+
+  .callback-btn {
+    font-size: 14px;
+    padding: 8px 20px;
+  }
+   .evacuation-image {
+    justify-content: center !important; /* центрируем блок */
+    margin-top: 0;
+  }
+
+  .evacuation-image img {
+    right: 0 !important; /* убираем сдвиг вправо */
+    top: 0 !important;   /* убираем сдвиг вверх */
+    width: 100%;         /* занимаем всю доступную ширину */
+    max-width: 400px;    /* при необходимости ограничиваем */
+    margin-top: 0;
+  }
+
+}
+
+
+.contact-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  max-width: 1400px;
+  margin: 50px auto;
+  background-color: rgba(240, 240, 240, 0.9);
+  
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Левая часть — карта */
+.contact-map {
+  flex: 2;
+  max-width: 800px;
+  min-height: 400px;
+}
+
+/* Правая часть — форма */
+.contact-form {
+  flex: 1;
+  background-color: #e8e8e8;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.contact-form h3 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.contact-form label {
+  margin-top: 10px;
+  color: #606060;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.contact-form input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+.contact-form button {
+  background-color: #d92929;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.contact-form button:hover {
+  background-color: #b92020;
+}
+
+/* 📱 Адаптив для планшетов и телефонов */
+@media (max-width: 600px) {
+  .contact-section {
+    flex-direction: column;
+  }
+
+  .contact-map {
+    min-height: 100px;
+    height: 200px;
+  }
+
+  .contact-form {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .contact-form {
+    flex: 1;
+    background-color: #e8e8e8;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+.contact-form h3 {
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.contact-form label {
+  margin-top: 10px;
+  color: #606060;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 13px;
+  display: none;
+}
+
+.contact-form input {
+  width: 80%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  font-size: 12px;
+}
+
+.contact-form button {
+  background-color: #d92929;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 80%;
+}
+
+}
+
+.metro-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 60px 0;
+  display: flex;
+  justify-content: center; /* центрирует внутренний блок */
+}
+
+.metro-hero-overlay {
+  background: #f6f5fb;
+  border-radius: 20px;
+  overflow: hidden;
+  width: 1400px;
+  max-width: 95%; /* чтобы не ломалось на маленьких экранах */
+  margin: 0 auto; /* центрирование */
+}
+
+.metro-hero-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  max-width: 1400px; /* шире контейнер */
+  margin: 0 auto; /* по центру */
+  padding: 60px 40px;
+  position: relative;
+}
+
+.metro-hero-content {
+  flex: 1;
+  max-width: 600px;
+}
+
+.metro-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: #1a1a1a;
+  white-space: nowrap; /* не переносить строку */
+}
+
+.metro-hero-content p {
+  font-size: 1.1rem;
+  color: #444;
+  margin-bottom: 30px;
+}
+
+.metro-hero-content a {
+  color: #8b2bff;
+  text-decoration: underline;
+}
+
+/* Форма */
+.metro-hero-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.metro-hero-form input {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 1rem;
+}
+
+.metro-hero-form .policy {
+  font-size: 0.85rem;
+  color: #777;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.metro-hero-form .policy a {
+  color: #e13d1f;
+  text-decoration: underline;
+}
+
+.metro-hero-form .btn-send {
+  background: #e13d1f;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 14px;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.metro-hero-form .btn-send:hover {
+  opacity: 0.9;
+}
+
+/* 3D модель */
+.hero-model {
+  flex: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.hero-model .model {
+  width: 100%;
+  max-width: 600px;
+  height: 400px;
+}
+
+/* Адаптив */
+@media (max-width: 1000px) {
+  .metro-title {
+    white-space: normal; /* разрешаем переносы */
+  }
+  .metro-hero-container {
+    flex-direction: column;
+    text-align: center;
+    padding: 40px 20px;
+  }
+  .hero-model .model {
+    height: 300px;
+  }
+}
+
+
+.top-bar {
+  background: #fefefe;
+  color: #000000;
+  font-size: 0.9rem;
+  padding: 8px 0;
+}
+
+.top-bar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.top-bar-left a {
+  color: #ff4b2b;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.top-bar-right a {
+  color: #6f6f6f;
+  font-size: 1.2rem;
+  margin-left: 10px;
+  transition: color 0.3s;
+}
+
+.top-bar-right a:hover {
+  color: #ff4b2b;
+}
+
+/* Кнопка зонить  */
+.call-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #ff4b2b;
+  color: #fff;
+  font-size: 22px;
+  padding: 18px;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  z-index: 999;
+  transition: transform 0.3s, background 0.3s;
+}
+
+.call-button:hover {
+  background: #e13d1f;
+  transform: scale(1.1);
+}
+
+.call-button i {
+  animation: ring 1.5s infinite;
+}
+
+@keyframes ring {
+  0% { transform: rotate(0); }
+  10% { transform: rotate(15deg); }
+  20% { transform: rotate(-15deg); }
+  30% { transform: rotate(10deg); }
+  40% { transform: rotate(-10deg); }
+  50% { transform: rotate(5deg); }
+  60% { transform: rotate(-5deg); }
+  70%, 100% { transform: rotate(0); }
+}
+
+/* --- Адаптив для телефонов --- */
+@media (max-width: 768px) {
+   .top-bar {
+    font-size: 0.5rem;
+    padding: 6px 0;
+  }
+
+  .top-bar-container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+  }
+
+  .top-bar-left {
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+  }
+
+  .top-bar-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 0;
+  }
+
+  .top-bar-right a {
+    font-size: 0.8rem;
+    margin: 0;
+  }
+  /* чтобы кнопка не перекрывала элементы меню и не мешала при скролле */
+  .call-button {
+    bottom: 20px;
+    right: 20px;
+    padding: 14px;
+    font-size: 10px;
+  }
+
+  /* можно сделать чуть меньше анимацию на мобильных */
+  .call-button i {
+    animation: ring 2s infinite;
+  }
+}

@@ -2,7 +2,7 @@
 from django.contrib import admin
 from .models import (
     HeroSection, HowToOrderStep, TransportType,
-    WhyChooseUs, InfoSection, PriceItem, WorkPhoto, FAQ, Rating, Article
+    WhyChooseUs, InfoSection, PriceItem, WorkPhoto, FAQ, Rating, Article, Metro
 )
 
 # ==== Кастомный админ-сайт ====
@@ -27,7 +27,8 @@ class CustomAdminSite(admin.AdminSite):
             "PriceItem",
             "WorkPhoto",
             "FAQ",
-            "Rating"
+            "Rating",
+            "Metro"
         ]
 
         article_order = [
@@ -160,3 +161,7 @@ class RatingAdmin(admin.ModelAdmin):
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ("title", "text", "date")
 
+
+@admin.register(Metro, site=custom_admin_site)
+class MetroAdmin(admin.ModelAdmin):
+    list_display = ("title", "text")

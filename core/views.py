@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from .models import (
     HeroSection, HowToOrderStep, TransportType,
-    WhyChooseUs, InfoSection, PriceItem, WorkPhoto, FAQ, Rating, Article
+    WhyChooseUs, InfoSection, PriceItem, WorkPhoto, FAQ, Rating, Article, Metro
 )
 
 import requests
@@ -205,8 +205,6 @@ def index(request):
     }
     return render(request, 'test.html', context)
 
-def test(request):
-    return render(request, 'test.html')
 
 def services(request):
     return render(request, 'services.html')
@@ -238,3 +236,57 @@ def gallery(request):
 
 def calculator(request):
     return render(request, 'calculator.html')
+
+
+def oplata(request):
+    return render(request, 'oplata.html')
+
+
+
+
+def metro_page(request, metro_slug):
+    # Если пришло что-то вроде "evakuator-metro-pervomajskaya"
+    if metro_slug.startswith("evakuator-metro-"):
+        metro_slug = metro_slug.replace("evakuator-metro-", "", 1)
+
+    # Данные по станциям
+    metro_data = {
+        "pervomajskaya": {
+            "title": "Эвакуатор у метро Первомайская",
+            "description": "Закажите эвакуатор в районе Первомайской — быстро, недорого, круглосуточно.",
+        },
+        "babushkinskaya": {
+            "title": "Эвакуатор у метро Бабушкинская",
+            "description": "Эвакуатор у метро Бабушкинская — помощь в любое время суток.",
+        },
+        # можно добавлять сюда другие станции
+    }
+
+    # Получаем данные по slug, если нет — дефолт
+    data = metro_data.get(metro_slug, {
+        "title": f"Эвакуатор у метро {metro_slug.capitalize()}",
+        "description": "Круглосуточный вызов эвакуатора по Москве и области."
+    })
+
+    info = InfoSection.objects.first()
+    prices = PriceItem.objects.all()
+    why_choose_us = WhyChooseUs.objects.all()
+    photos = WorkPhoto.objects.all()
+    faqs = FAQ.objects.filter(is_active=True)[:6]
+    order_steps = HowToOrderStep.objects.all()
+
+
+   
+    context = {
+        "title": data["title"],
+        "description": data["description"],
+        "slug": metro_slug,
+        'order_steps': order_steps,
+        'photos': photos,
+        'info': info,
+        'prices': prices,
+        'why_choose_us': why_choose_us,
+        'faqs': faqs,
+    }
+
+    return render(request, "metro.html", context)

@@ -187,6 +187,48 @@
     </div>
 </section> -->
 
+<div class="container-pluse">
+  <div class="evacuation-block">
+    <div class="evacuation-content">
+      <h2>Остались вопросы или хотите заказать эвакуатор?</h2>
+      <p>Напишите нам</p>
+      <button class="btn-contact btn-order">Обратный звонок</button>
+    </div>
+    <div class="evacuation-image">
+      <img src="{% static '/images/truc_flipped.png' %}" alt="Эвакуатор">
+    </div>
+  </div>
+</div>
+
+
+<section class="contact-section">
+  <div class="contact-map">
+    <!-- Вставь сюда код Яндекс карты -->
+    <iframe
+      src="https://yandex.ru/map-widget/v1/?um=constructor%3Aexample"
+      width="100%"
+      height="100%"
+      frameborder="0"
+    ></iframe>
+  </div>
+
+  <div class="contact-form">
+    <h3>Оставьте заявку</h3>
+    
+    <form id="callbackForm" method="post">
+      {% csrf_token %}
+
+      <label for="name">Имя:</label>
+      <input type="text" id="name" name="name" placeholder="Введите ваше имя" required>
+
+      <label for="phone">Телефон:</label>
+      <input type="tel" id="phone" name="phone" placeholder="+7 (___) ___-__-__" required required data-mask="+7 (999) 999 99 99" autocomplete="off">
+
+      <button type="submit" class="modal-btn">Отправить</button>
+    </form>
+  </div>
+</section>
+
 
 <div class="rating-section">
     <div class="container">
