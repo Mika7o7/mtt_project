@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from .models import (
     HeroSection, HowToOrderStep, TransportType,
-    WhyChooseUs, InfoSection, PriceItem, WorkPhoto, FAQ, Rating, Article, Metro
+    WhyChooseUs, InfoSection, PriceItem, WorkPhoto, FAQ, Rating, Article,
+    District, MetroStation, City
 )
 
 import requests
@@ -101,26 +102,23 @@ def submit_form(request):
 
 
 
-@csrf_exempt  # если ты используешь CSRF в форме — убери этот декоратор
+@csrf_exempt
 def send_callback(request):
     if request.method != "POST":
         return JsonResponse({"success": False, "message": "Только POST"}, status=400)
 
-    # получим поля — изменяй имена если нужно
-    name = request.POST.get("name", "").strip()
+    name = request.POST.get("name", "").strip() or "Не указано"
     phone = request.POST.get("phone", "").strip()
-   
+    agree = request.POST.get("agree_policy", "false")
 
-    # валидация
     if not phone:
         return JsonResponse({"success": False, "message": "Укажите телефон"})
 
-    # Формируем сообщение в Telegram
     message = (
-        "🚗 <b>Заявка на звонок</b>\n"
-        f"👤 Имя: {name or '—'}\n"
-        f"📞 Телефон: {phone}\n"
-      
+        "НОВАЯ ЗАЯВКА\n\n"
+        f"Имя: {name}\n"
+        f"Телефон: {phone}\n"
+        f"Согласен с политикой: {agree}"
     )
 
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
@@ -205,9 +203,153 @@ def index(request):
     }
     return render(request, 'test.html', context)
 
+# ДЕТАЛЬНАЯ СТРАНИЦА — РАБОТАЕТ СРАЗУ
+def transport_detail(request, slug):
+    transport = get_object_or_404(TransportType, slug=slug)
+    
+    context = {
+        'transport': transport,
+        'gallery': transport.gallery.all()[:12],           # фотки из галереи
+        'prices': PriceItem.objects.all(),
+        'faqs': FAQ.objects.filter(is_active=True)[:10],
+    }
+    return render(request, 'transport_detail.html', context)
+
+# def city_detail(request, slug):
+#     city = get_object_or_404(City, slug=slug)
+#     # Остальное — как в metro_detail и district_detail
+
+#     # Всё то же самое, что и на других страницах
+#     order_steps = HowToOrderStep.objects.all()
+#     transports = TransportType.objects.all()
+#     info = InfoSection.objects.first()
+#     prices = PriceItem.objects.all()
+#     why_choose_us = WhyChooseUs.objects.all()
+#     photos = WorkPhoto.objects.all()
+#     faqs = FAQ.objects.filter(is_active=True)[:6]
+#     rating = Rating.objects.first()
+#     rating_stars = list(range(1, 6))
+
+ 
+#     context = {
+#         'city': city,
+#         'order_steps': order_steps,
+#         'transports': transports,
+#         'info': info,
+#         'prices': prices,
+#         'why_choose_us': why_choose_us,
+#         'photos': photos,
+#         'faqs': faqs,
+#         'rating': rating,
+#         'rating_stars': rating_stars,
+#         # ... остальные блоки
+#     }
+#     return render(request, 'city_detail.html', context)
 
 def services(request):
     return render(request, 'services.html')
+
+def district_list(request):
+    districts = District.objects.all()
+    return render(request, 'district_list.html', {'districts': districts})
+
+# def district_detail(request, slug):
+#     order_steps = HowToOrderStep.objects.all()
+#     transports = TransportType.objects.all()
+#     info = InfoSection.objects.first()
+#     prices = PriceItem.objects.all()
+#     why_choose_us = WhyChooseUs.objects.all()
+#     photos = WorkPhoto.objects.all()
+#     faqs = FAQ.objects.filter(is_active=True)[:6]
+#     rating = Rating.objects.first()
+#     rating_stars = list(range(1, 6))
+#     district = get_object_or_404(District, slug=slug)
+
+#     context = {
+#         'order_steps': order_steps,
+#         'transports': transports,
+#         'info': info,
+#         'prices': prices,
+#         'why_choose_us': why_choose_us,
+#         'photos': photos,
+#         'faqs': faqs,
+#         'rating': rating,
+#         'rating_stars': rating_stars,
+#         'district': district
+#     }
+#     return render(request, 'district_detail.html', context)
+
+def metro_list(request):
+    stations = MetroStation.objects.select_related('district').all()
+    return render(request, 'metro_list.html', {'stations': stations})
+
+# def metro_detail(request, slug):
+#     station = get_object_or_404(MetroStation, slug=slug)
+    
+#     # Всё то же самое, что и на других страницах
+#     order_steps = HowToOrderStep.objects.all()
+#     transports = TransportType.objects.all()
+#     info = InfoSection.objects.first()
+#     prices = PriceItem.objects.all()
+#     why_choose_us = WhyChooseUs.objects.all()
+#     photos = WorkPhoto.objects.all()
+#     faqs = FAQ.objects.filter(is_active=True)[:6]
+#     rating = Rating.objects.first()
+#     rating_stars = list(range(1, 6))
+
+#     context = {
+#         'station': station,
+#         'order_steps': order_steps,
+#         'transports': transports,
+#         'info': info,
+#         'prices': prices,
+#         'why_choose_us': why_choose_us,
+#         'photos': photos,
+#         'faqs': faqs,
+#         'rating': rating,
+#         'rating_stars': rating_stars,
+#     }
+#     return render(request, 'metro_detail.html', context)
+
+# УНИВЕРСАЛЬНЫЙ ВЬЮХ ДЛЯ ВСЕХ ЛОКАЦИЙ
+def location_detail(request, slug):
+    # Пробуем найти в трёх моделях по очереди
+    location = None
+    location_type = None
+
+    if District.objects.filter(slug=slug).exists():
+        location = get_object_or_404(District, slug=slug)
+        location_type = 'district'
+    elif MetroStation.objects.filter(slug=slug).exists():
+        location = get_object_or_404(MetroStation, slug=slug)
+        location_type = 'metro'
+    elif City.objects.filter(slug=slug).exists():
+        location = get_object_or_404(City, slug=slug)
+        location_type = 'city'
+    else:
+        raise Http404("Локация не найдена")
+
+    # Общие данные для всех страниц
+    context = {
+        'location': location,
+        'location_type': location_type,  # ← для логики в шаблоне
+
+        'order_steps': HowToOrderStep.objects.all(),
+        'transports': TransportType.objects.all(),
+        'info': InfoSection.objects.first(),
+        'prices': PriceItem.objects.all(),
+        'why_choose_us': WhyChooseUs.objects.all(),
+        'photos': WorkPhoto.objects.all(),
+        'faqs': FAQ.objects.filter(is_active=True)[:6],
+        'rating': Rating.objects.first(),
+        'rating_stars': list(range(1, 6)),
+    }
+
+    return render(request, 'location_detail.html', context)
+
+
+def payment(request):
+    return render(request, 'payment.html')
 
 def about(request):
     info = InfoSection.objects.first()
@@ -242,51 +384,3 @@ def oplata(request):
     return render(request, 'oplata.html')
 
 
-
-
-def metro_page(request, metro_slug):
-    # Если пришло что-то вроде "evakuator-metro-pervomajskaya"
-    if metro_slug.startswith("evakuator-metro-"):
-        metro_slug = metro_slug.replace("evakuator-metro-", "", 1)
-
-    # Данные по станциям
-    metro_data = {
-        "pervomajskaya": {
-            "title": "Эвакуатор у метро Первомайская",
-            "description": "Закажите эвакуатор в районе Первомайской — быстро, недорого, круглосуточно.",
-        },
-        "babushkinskaya": {
-            "title": "Эвакуатор у метро Бабушкинская",
-            "description": "Эвакуатор у метро Бабушкинская — помощь в любое время суток.",
-        },
-        # можно добавлять сюда другие станции
-    }
-
-    # Получаем данные по slug, если нет — дефолт
-    data = metro_data.get(metro_slug, {
-        "title": f"Эвакуатор у метро {metro_slug.capitalize()}",
-        "description": "Круглосуточный вызов эвакуатора по Москве и области."
-    })
-
-    info = InfoSection.objects.first()
-    prices = PriceItem.objects.all()
-    why_choose_us = WhyChooseUs.objects.all()
-    photos = WorkPhoto.objects.all()
-    faqs = FAQ.objects.filter(is_active=True)[:6]
-    order_steps = HowToOrderStep.objects.all()
-
-
-   
-    context = {
-        "title": data["title"],
-        "description": data["description"],
-        "slug": metro_slug,
-        'order_steps': order_steps,
-        'photos': photos,
-        'info': info,
-        'prices': prices,
-        'why_choose_us': why_choose_us,
-        'faqs': faqs,
-    }
-
-    return render(request, "metro.html", context)

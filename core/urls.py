@@ -10,6 +10,14 @@ urlpatterns = [
     path('prices/', views.prices, name='prices'),
     path('gallery/', views.gallery, name='gallery'),
     path('calculator/', views.calculator, name='calculator'),
+    path('transport/<slug:slug>/', views.transport_detail, name='transport_detail'),
+    path('okrug/', views.district_list, name='district_list'),
+    path('metro/', views.metro_list, name='metro_list'),
+    path('payment/', views.payment, name='payment'),
+
+    path('district/<slug:slug>/', views.location_detail, name='district_detail'),
+    path('metro/<slug:slug>/', views.location_detail, name='metro_detail'),
+    path('city/<slug:slug>/', views.location_detail, name='city_detail'),
 
     # path('cookies_policy/', views.cookies_policy, name='cookies_policy'),
     # path('uslugi/', views.uslugi, name='uslugi'),
@@ -18,8 +26,6 @@ urlpatterns = [
     path('send_callback_question/', views.send_callback_question, name='send_callback_question'),
 
     
-    
-    re_path(r'^oblasti/evakuator-metro/(?P<metro_slug>[\w-]+)/$', views.metro_page, name='metro_page'),
     
 
 

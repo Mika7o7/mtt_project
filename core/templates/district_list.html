@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Эвакуатор по округам Москвы — цены и выезд{% endblock %}
+
+{% block content %}
+
+<section class="districts">
+    <h1>Эвакуация машин по округам Москвы</h1>
+
+    <!-- ОДИН ОБЩИЙ ГРИД НА ВСЕ ОКРУГА -->
+    <div class="district-grid">
+        {% for d in districts %}
+        <a href="{% url 'district_detail' d.slug %}" class="district-link">
+            <div class="district-card">
+                <img src="{{ d.image.url }}" alt="{{ d.name }}">
+                <span>({{ d.short_name }}) {{ d.name }}</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+
+
+
+<section class="contact-section">
+  <div class="contact-map">
+    <!-- Вставь сюда код Яндекс карты -->
+    <iframe
+      src="https://yandex.ru/map-widget/v1/?um=constructor%3Aexample"
+      width="100%"
+      height="100%"
+      frameborder="0"
+    ></iframe>
+  </div>
+
+  <div class="contact-form">
+    <h3>Оставьте заявку</h3>
+    <form class="contact-form" novalidate>
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Ваше имя">
+        <input type="tel" name="phone" placeholder="+7 (___) ___ __ __" 
+               required data-mask="+7 (999) 999 99 99">
+
+        <label class="policy-checkbox">
+          <span style="text-decoration: none;">Согласен с <a href="/policy" style="text-decoration: none; color: #999 !important;" target="_blank">политикой конфиденциальности</a> и <a href="/personal-data" style="text-decoration: none; color: #999 !important;" target="_blank">обработкой данных</a></span>
+        </label>
+
+        
+        <button type="submit">Отправить</button>
+        <div class="form-message"></div>
+    </form>
+</div>
+</section>
+{% endblock %}

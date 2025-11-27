@@ -31,85 +31,115 @@
     </div>
     <nav class="nav-menu" id="nav-menu">
       <ul>
-        <li><a href="/services">Наши услуги</a></li>
+        <li><a href="/okrug">По округам</a></li>
         <li class="mega-dropdown">
-          <span class="dropdown-toggle" id="services-toggle">Услуги ▾</span>
-          <div class="main-dropdown-menu" id="mega-menu">
-            <div class="container bg-white">
-              <div class="main-dropdown-menu__row scroll">
-                <!-- Левая колонка с select -->
+    <span class="dropdown-toggle" id="services-toggle">Услуги ▾</span>
+    <div class="main-dropdown-menu" id="mega-menu">
+        <div class="container bg-white">
+            <div class="main-dropdown-menu__row scroll">
+
+                <!-- Левая колонка — теперь всё как настоящий селект -->
                 <div class="wrapper">
-                  <div class="fake-button">Работаем 24/7</div>
-                  
-                  <div class="selects">
-                    <select>
-                      <option>Эвакуатор по городам</option>
-                      <option>Балашиха</option>
-                      <option>Химки</option>
-                      <option>Домадедово</option>
-                      <option>Зеленоград</option>
-                    </select>
-                    <select><option>Эвакуатор по округам</option></select>
-                    <select><option>Эвакуатор по метро</option></select>
-                  </div>
+                    <div class="fake-button">Работаем 24/7</div>
+                    <div class="selects">
 
+                        <!-- ГОРОДА МО — теперь тоже как селект! -->
+                        <div class="fake-select">
+                            <div class="fake-select__title">Эвакуатор по городам МО</div>
+                            <div class="fake-select__list">
+                                {% for city in cities %}
+                                    <a href="{% url 'city_detail' city.slug %}">
+                                        {{ city.name }}
+                                        {% if city.distance_from_mkad > 0 %}
+                                            <small class="text-gray-500">({{ city.distance_from_mkad }} км от МКАД)</small>
+                                        {% endif %}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- ОКРУГА -->
+                        <div class="fake-select">
+                            <div class="fake-select__title">Эвакуатор по округам</div>
+                            <div class="fake-select__list">
+                                {% for d in districts %}
+                                    <a href="{% url 'district_detail' d.slug %}">
+                                        {{ d.short_name }} — {{ d.name }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- МЕТРО -->
+                        <div class="fake-select">
+                            <div class="fake-select__title">Эвакуатор у метро</div>
+                            <div class="fake-select__list">
+                                {% for station in metro_stations %}
+                                    <a href="{% url 'metro_detail' station.slug %}">
+                                        {{ station.name }}
+                                        {% if station.line %}
+                                            <small class="text-gray-500">({{ station.line }})</small>
+                                        {% endif %}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
 
-                <!-- Правая схема 1-2-3-4 -->
+                <!-- Правая колонка — Эвакуация (используем transports из контекста) -->
                 <div class="main-dropdown-menu-link-group shift-left">
-                  <h3 class="main-dropdown-menu-link__title">Эвакуация</h3>
-                  <div class="main-dropdown-menu-links-wrap">
-                    <ul class="links-col-3">
-                      <li><a href="oblasti/evakuator-metro/evakuator-metro-pervomajskaya/">Мототехники</a></li>
-                      <li><a href="oblasti/evakuator-metro/evakuator-metro-pervomajskaya/">Спецтехники</a></li>
-                      <li><a href="#">Коммерческого транспорта</a></li>
-                      <li><a href="#">Квадроциклов</a></li>
-                      <li><a href="#">Трактора</a></li>
-                      <li><a href="#">Газели</a></li>
-                      <li><a href="#">Снегоходов</a></li>
-                      <li><a href="#">Погрузчика</a></li>
-                      <li><a href="#">Автобусов</a></li>
-                      <li><a href="#">Внедорожников</a></li>
-                      <li><a href="#">Экскаватора</a></li>
-                      <li><a href="#">Грузовой эвакуатор</a></li>
-                    </ul>
-                  </div>
+                    <h3 class="main-dropdown-menu-link__title">Эвакуация</h3>
+                    <div class="main-dropdown-menu-links-wrap">
+                        <ul class="links-col-3">
+                            {% for t in transports %}
+                                <li>
+                                    <a href="{% url 'transport_detail' t.slug %}">
+                                        {{ t.name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
 
+                <!-- Нижняя строка — Цены, Техпомощь, Доп.услуги (оставил как было) -->
                 <div class="main-dropdown-menu-link-group bottom-row">
-                  <div class="left">
-                    <h3 class="main-dropdown-menu-link__title">Цены</h3>
-                    <ul>
-                      <li><a href="#">Прайс-лист</a></li>
-                      <li><a href="#">Калькулятор</a></li>
-                    </ul>
-                  </div>
-                  <div class="center">
-                    <h3 class="main-dropdown-menu-link__title">Техническая помощь</h3>
-                    <ul>
-                      <li><a href="#">Замена колеса</a></li>
-                      <li><a href="#">Подвоз топлива</a></li>
-                    </ul>
-                  </div>
-                  <div class="right">
-                    <h3 class="main-dropdown-menu-link__title">Дополнительные услуги</h3>
-                    <ul>
-                      <li><a href="#">Эвакуатор срочно</a></li>
-                      <li><a href="#">Эвакуатор круглосуточно</a></li>
-                      <li><a href="#">Междугородняя Эвакуация</a></li>
-                    </ul>
-                  </div>
+                    <div class="left">
+                        <h3 class="main-dropdown-menu-link__title">Цены</h3>
+                        <ul>
+                            <li><a href="/prices">Прайс-лист</a></li>
+                            <li><a href="/calculator">Калькулятор</a></li>
+                        </ul>
+                    </div>
+                    <div class="center">
+                        <h3 class="main-dropdown-menu-link__title">Техническая помощь</h3>
+                        <ul>
+                            <li><a href="#">Замена колеса</a></li>
+                            <li><a href="#">Подвоз топлива</a></li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <h3 class="main-dropdown-menu-link__title">Дополнительные услуги</h3>
+                        <ul>
+                            <li><a href="#">Эвакуатор срочно</a></li>
+                            <li><a href="#">Эвакуатор круглосуточно</a></li>
+                            <li><a href="#">Междугородняя эвакуация</a></li>
+                        </ul>
+                    </div>
                 </div>
-              </div>
+
             </div>
-          </div>
-        </li>
+        </div>
+    </div>
+</li>
         <li><a href="/about">О нас</a></li>
         <li><a href="/articles">Статья</a></li>
         <li><a href="/prices">Цены</a></li>
         <li><a href="/gallery">Галерея</a></li>
         <li><a href="/calculator">Калькулятор</a></li>
-        <li><a href="#">Оплата</a></li>
+        <li><a href="/payment">Оплата</a></li>
       </ul>
       <div class="menu-btn-wrapper">
         <a href="#" class="btn-order">Заказать</a>

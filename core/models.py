@@ -34,10 +34,34 @@ class HowToOrderStep(models.Model):
 
 
 # ===== TRANSPORT TYPES =====
+# class TransportType(models.Model):
+#     name = models.CharField("Название типа", max_length=100)
+#     image = models.ImageField("Фото транспорта", upload_to="transport/")
+#     button_text = models.CharField("Текст кнопки", max_length=50, default="Заказать")
+
+#     def __str__(self):
+#         return self.name
+
+#     class Meta:
+#         verbose_name = "Тип транспорта"
+#         verbose_name_plural = "Типы транспорта"
+
 class TransportType(models.Model):
     name = models.CharField("Название типа", max_length=100)
-    image = models.ImageField("Фото транспорта", upload_to="transport/")
-    button_text = models.CharField("Текст кнопки", max_length=50, default="Заказать")
+    slug = models.SlugField(
+        "ЧПУ (например: legkovye)", 
+        max_length=100, 
+        blank=True,      # ← обязательно!
+        null=True,       # ← обязательно!
+        unique=True      # ← можно оставить, НО только с blank=True, null=True
+    )
+    image = models.ImageField("Главное фото", upload_to="transport/")
+    description = models.TextField("Полное описание", blank=True)
+    icon = models.ImageField("Иконка", upload_to="transport/icons/", blank=True, null=True)
+    button_text = models.CharField("Текст кнопки", max_length=50, default="Заказать эвакуатор")
+    gallery = models.ManyToManyField('WorkPhoto', blank=True, related_name='transport_gallery')
+    price_from = models.DecimalField("Цена от", max_digits=8, decimal_places=0, default=2500)
+    features = models.TextField("Особенности", blank=True)
 
     def __str__(self):
         return self.name
@@ -143,17 +167,88 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
-
-
-# ===== Metro =====
-class Metro(models.Model):
-    title = models.CharField(max_length=255)
-    text = models.TextField()
-    # date = models.DateField(auto_now_add=True)
+# ===== ГОРОДА МО (новая модель) =====
+class City(models.Model):
+    name = models.CharField("Название города", max_length=100)  # например: Химки
+    slug = models.SlugField(
+        "ЧПУ (khimki)",
+        max_length=100,
+        blank=True,
+        null=True,
+        unique=True
+    )
+    
+    # Новые поля — как ты хотел
+    info_name = models.CharField("Заголовок страницы (H1)", max_length=150, blank=True,
+                                help_text="Например: Эвакуатор в Химках — недорого и быстро")
+    info_description = models.TextField("SEO-описание для детальной страницы", blank=True)
+    
+    image = models.ImageField("Фото города", upload_to="cities/", blank=True, null=True)
+    population = models.CharField("Население", max_length=50, blank=True)
+    distance_from_mkad = models.PositiveIntegerField("Расстояние от МКАД, км", default=0)
 
     class Meta:
-        verbose_name = "Метро"
-        verbose_name_plural = "Метро"
+        verbose_name = "Город МО"
+        verbose_name_plural = "Города МО"
+        ordering = ['name']
 
     def __str__(self):
-        return self.title
+        return self.name
+
+
+# ===== МЕТРО — обновлено =====
+class MetroStation(models.Model):
+    name = models.CharField("Название станции", max_length=100)
+    slug = models.SlugField(
+        "ЧПУ (salarevo)",
+        max_length=100,
+        blank=True,
+        null=True,
+        unique=True
+    )
+    line = models.CharField("Линия метро", max_length=100, blank=True)
+    line_color = models.CharField("Цвет линии (hex)", max_length=7, default="#FF0000", blank=True)
+
+    # ← НОВЫЕ ПОЛЯ!
+    info_name = models.CharField("Заголовок страницы (H1)", max_length=150, blank=True,
+                                help_text="Например: Эвакуатор у метро Саларьево — от 2500 ₽")
+    info_description = models.TextField("SEO-описание для детальной страницы", blank=True)
+
+    class Meta:
+        verbose_name = "Станция метро"
+        verbose_name_plural = "Станции метро"
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
+# ===== ОКРУГА — обновлено =====
+class District(models.Model):
+    name = models.CharField("Название округа", max_length=100)
+    slug = models.SlugField(
+        "ЧПУ (vao)",
+        max_length=100,
+        blank=True,
+        null=True,
+        unique=True
+    )
+    short_name = models.CharField("Короткое название", max_length=20)
+
+    # ← НОВЫЕ ПОЛЯ!
+    info_name = models.CharField("Заголовок страницы (H1)", max_length=150, blank=True,
+                                help_text="Например: Эвакуатор в ВАО — Восточный округ Москвы")
+    info_description = models.TextField("SEO-описание для детальной страницы", blank=True)
+
+    image = models.ImageField("Фото округа", upload_to="districts/", blank=True, null=True)
+    price_note = models.CharField("Особенности цен", max_length=200, blank=True)
+    metro_count = models.PositiveIntegerField("Кол-во станций метро", default=0)
+    population = models.CharField("Население", max_length=50, blank=True)
+
+    class Meta:
+        verbose_name = "Округ Москвы"
+        verbose_name_plural = "Округа Москвы"
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name

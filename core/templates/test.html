@@ -108,17 +108,24 @@
 
 
 <!-- ===== Transport Types ===== -->
+<!-- ===== Transport Types ===== -->
 <section class="transport-section">
-  <h2 class="section-title">Эвакуатор любого транспорта</h2>
-  <div class="transport-scroll">
-    {% for t in transports %}
-      <div class="transport-card">
-        <img src="{{ t.image.url }}" alt="{{ t.name }}">
-        <h3>{{ t.name }}</h3>
-        <button class="btn-order">{{ t.button_text }}</button>
-      </div>
-    {% endfor %}
-  </div>
+    <h2 class="section-title">Эвакуатор любого транспорта</h2>
+    <div class="transport-scroll">
+        {% for t in transports %}
+        <div class="transport-card">
+                  <a href="{% url 'transport_detail' t.slug %}" class="transport-card-link">
+                    {% if t.icon %}
+                        <img src="{{ t.icon.url }}" alt="{{ t.name }}">
+                    {% else %}
+                        <img src="{{ t.image.url }}" alt="{{ t.name }}">
+                    {% endif %}
+                  </a>
+                    <h3>{{ t.name }}</h3>
+                    <button class="btn-order">{{ t.button_text }}</button>
+                </div>
+        {% endfor %}
+    </div>
 </section>
 
 <!-- Секция Эвакуатор любого транспорта -->

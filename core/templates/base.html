@@ -41,6 +41,10 @@
       <label for="form-label">Телефон</label>
       <input type="tel" id="phone" name="phone" class="modal-input" placeholder="+7 (___) ___ __ __" required data-mask="+7 (999) 999 99 99" autocomplete="off">
 
+      <label class="policy-checkbox">
+          <span style="text-decoration: none; font-size: 12px;">Согласен с <a href="/policy" style="text-decoration: none; font-size: 12px !important; color: #999 !important;" target="_blank">политикой конфиденциальности</a> и <a href="/personal-data" style="text-decoration: none; font-size: 12px !important; color: #999 !important;" target="_blank">обработкой данных</a></span>
+      </label>
+
       <button type="submit" class="modal-btn">Отправить</button>
       <p class="modal-message" id="formMessage"></p>
     </form>
@@ -64,7 +68,179 @@
 </div>
 {% endblock %}
 
+
+
+
+
+
 <body>
+<!-- ФИНАЛЬНАЯ ВЕРСИЯ — СПРАВА НА ВСЕХ УСТРОЙСТВАХ, БЕЗ КРЕСТИКА, МАЛЕНЬКИЕ НА ТЕЛЕФОНЕ -->
+<div class="sbp-side-panels">
+
+    <!-- 1. СБП -->
+    <a href="/payment" class="side-panel sbp">
+        <div class="panel-icon">
+            <img src="{% static 'images/qr.png' %}" class="content-qr" alt="СБП">
+        </div>
+        <div class="panel-content">
+            <div class="content-text">
+                ОПЛАТИТЬ<br><span>ЧЕРЕЗ СБП</span>
+            </div>
+        </div>
+    </a>
+
+    <!-- 2. Калькулятор -->
+    <a href="/calculator" class="side-panel calc">
+        <div class="panel-icon">
+            <img src="{% static 'images/calculator.png' %}" class="content-qr" alt="Калькулятор">
+        </div>
+        <div class="panel-content">
+            <div class="content-text">РАССЧИТАТЬ<br><span>СТОИМОСТЬ</span></div>
+        </div>
+    </a>
+
+    <!-- 3. Telegram -->
+    <a href="https://t.me/+79991119572" class="side-panel telegram">
+        <div class="panel-icon">
+            <img src="{% static 'images/telegram.png' %}" class="content-qr" alt="Telegram">
+        </div>
+        <div class="panel-content">
+            <div class="content-text">TELEGRAM</div>
+        </div>
+    </a>
+
+    <!-- 4. WhatsApp -->
+    <a href="https://wa.me/79991119572" class="side-panel whatsapp">
+        <div class="panel-icon">
+            <img src="{% static 'images/whatsapp.png' %}" class="content-qr" alt="WhatsApp">
+        </div>
+        <div class="panel-content">
+            <div class="content-text">WHATSAPP</div>
+        </div>
+    </a>
+
+</div>
+
+<style>
+.sbp-side-panels {
+    position: fixed;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    z-index: 9999;
+    font-family: 'Inter', sans-serif;
+}
+
+.side-panel {
+    width: 320px;
+    height: 68px;
+    background: #0d3b66;
+    border-radius: 34px 0 0 34px;
+    display: flex;
+    align-items: center;
+    color: white;
+    box-shadow: 0 8px 25px rgba(13,59,102,0.4);
+    cursor: pointer;
+    transition: transform 0.65s cubic-bezier(.22,1,.36,1);
+    transform: translateX(252px);
+    overflow: hidden;
+    text-decoration: none !important;
+}
+
+.side-panel:hover {
+    transform: translateX(0);
+}
+
+/* Цвета по брендам */
+.side-panel.sbp,
+.side-panel.calc     { background: #0d3b66; }   /* тёмно-синий */
+.side-panel.telegram { background: #0088cc; }   /* небесно-синий */
+.side-panel.whatsapp { background: #25d366; }   /* зелёный */
+
+/* Иконка */
+.panel-icon {
+    width: 66px;
+    height: 66px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    margin-left: 6px;
+}
+
+.content-qr {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+}
+
+.panel-content {
+    padding-left: 16px;
+    font-weight: 900;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.content-text span {
+    font-size: 11px;
+    display: block;
+    opacity: 0.9;
+}
+
+/* УБРАН КРЕСТИК НАВСЕГДА */
+
+/* ТЕЛЕФОН — МАЛЕНЬКИЕ, СПРАВА, КАК НА КОМПЕ */
+@media (max-width: 768px) {
+    .sbp-side-panels {
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        gap: 10px;
+    }
+
+    .side-panel {
+        width: 210px;
+        height: 34px;
+        border-radius: 27px 0 0 27px;
+        transform: translateX(186px);
+    }
+
+    .side-panel:hover {
+        transform: translateX(0);
+    }
+
+    .panel-icon {
+        width: 32px;
+        height: 32px;
+        margin-left: 5px;
+    }
+
+    .content-qr {
+        width: 22px;
+        height: 22px;
+    }
+
+    .panel-content {
+        padding-left: 12px;
+        font-size: 8px;
+    }
+
+    .content-text span {
+        font-size: 8px;
+    }
+}
+</style>
+
+
+
+
     {% block header %}
         {% include 'header.html' %}
     {% endblock %}
@@ -85,11 +261,14 @@
       <script>
 document.addEventListener('DOMContentLoaded', () => {
   const megaMenu = document.getElementById('mega-menu');
+  const burgerx = document.getElementById('burger');
   const dropdownToggle = document.getElementById('services-toggle');
 
   // Открытие меню
   dropdownToggle.addEventListener('click', () => {
     megaMenu.classList.toggle('active');
+    burgerx.style.display = "none";
+
   });
 
   // Закрытие при клике на фон
@@ -97,6 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Если кликнули именно по фону, а не по контейнеру внутри
     if (e.target === megaMenu) {
       megaMenu.classList.remove('active');
+      burgerx.style.display = "flex";
     }
   });
 });
@@ -104,22 +284,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         <script>
-        document.addEventListener("DOMContentLoaded", () => {
-          const burger = document.getElementById("burger");
-          const menu = document.getElementById("nav-menu");
-            
-          burger.addEventListener("click", () => {
-            burger.classList.toggle("active");
-            menu.classList.toggle("active");
-          });
-      
-          document.querySelectorAll("#nav-menu a").forEach(link => {
-            link.addEventListener("click", () => {
-              burger.classList.remove("active");
-              menu.classList.remove("active");
-            });
-          });
+       document.addEventListener("DOMContentLoaded", () => {
+    const burger     = document.getElementById("burger");
+    const menu       = document.getElementById("nav-menu");
+    const sidePanels = document.querySelector(".sbp-side-panels"); // правильно!
+
+    if (!burger || !menu || !sidePanels) return; // защита от ошибок
+
+    // Открытие/закрытие бургера
+    burger.addEventListener("click", () => {
+        burger.classList.toggle("active");
+        menu.classList.toggle("active");
+
+        // Скрываем/показываем боковые панели только на телефоне
+        if (window.innerWidth <= 768) {
+            if (menu.classList.contains("active")) {
+                sidePanels.style.opacity = "0";
+                sidePanels.style.visibility = "hidden";
+                sidePanels.style.pointerEvents = "none";
+            } else {
+                sidePanels.style.opacity = "1";
+                sidePanels.style.visibility = "visible";
+                sidePanels.style.pointerEvents = "auto";
+            }
+        }
+    });
+
+    // Закрытие меню по клику на ссылку (мобильная версия)
+    document.querySelectorAll("#nav-menu a").forEach(link => {
+        link.addEventListener("click", () => {
+            burger.classList.remove("active");
+            menu.classList.remove("active");
+
+            // Возвращаем панели при закрытии меню
+            if (window.innerWidth <= 768) {
+                sidePanels.style.opacity = "1";
+                sidePanels.style.visibility = "visible";
+                sidePanels.style.pointerEvents = "auto";
+            }
         });
+    });
+
+    // На всякий случай — при изменении размера окна
+    window.addEventListener("resize", () => {
+        if (window.innerWidth > 768) {
+            sidePanels.style.cssText = ""; // сбрасываем стили на десктопе
+        }
+    });
+});
         // Модального окна Заказать звонок
         document.addEventListener("DOMContentLoaded", () => {
           const modal = document.getElementById("callbackModal");
@@ -230,6 +442,119 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.classList.toggle("active");
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+    // Находим ВСЕ формы с классом .contact-form (или любой другой класс, который ты используешь)
+    document.querySelectorAll('.contact-form').forEach(form => {
+
+        const messageDiv = form.querySelector('.form-message'); // место для ответа
+        const submitBtn  = form.querySelector('button[type="submit"]');
+
+        // При отправке формы
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            // Очищаем старое сообщение и блокируем кнопку
+            if (messageDiv) messageDiv.textContent = '';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Отправляем...';
+            }
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch("{% url 'send_callback' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    if (messageDiv) {
+                        messageDiv.style.color = '#00c853';
+                        messageDiv.textContent = result.message || 'Заявка успешно отправлена!';
+                    }
+                    form.reset();
+                } else {
+                    throw new Error(result.message || 'Ошибка');
+                }
+
+            } catch (err) {
+                if (messageDiv) {
+                    messageDiv.style.color = '#f44336';
+                    messageDiv.textContent = err.message || 'Ошибка при отправке. Попробуйте позже.';
+                }
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Отправить';
+                }
+            }
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+
+   
+    // Обработка ВСЕХ форм с классом .universal-form
+    document.querySelectorAll('.universal-form').forEach(form => {
+        const message = form.querySelector('.form-message');
+        const btn     = form.querySelector('button[type="submit"]');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Очистка
+            if (message) message.textContent = '';
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Отправляем...';
+            }
+
+            const formData = new FormData(form);
+
+            // Принудительно отправляем согласие = true (даже если чекбокс disabled)
+            formData.set('agree_policy', 'true');
+
+            try {
+                const resp = await fetch("{% url 'send_callback' %}", {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': formData.get('csrfmiddlewaretoken') },
+                    body: formData
+                });
+
+                const data = await resp.json();
+
+                if (resp.ok && data.success) {
+                    if (message) {
+                        message.style.color = '#00c853';
+                        message.innerHTML = 'Заявка отправлена!<br>Мы перезвоним вам в ближайшее время';
+                    }
+                    form.reset();
+                } else {
+                    throw new Error(data.message || 'Ошибка');
+                }
+            } catch (err) {
+                if (message) {
+                    message.style.color = '#f44336';
+                    message.textContent = 'Ошибка отправки. Попробуйте позже.';
+                }
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Заказать эвакуатор';
+                }
+            }
+        });
+    });
+});
 
         
         // Yandex map
@@ -457,10 +782,38 @@ document.addEventListener('DOMContentLoaded', () => {
         
         })(jQuery);
 
+        document.querySelectorAll('.fake-select').forEach(select => {
+    const title = select.querySelector('.fake-select__title');
+    title.addEventListener('click', () => {
+        // Закрываем все остальные
+        document.querySelectorAll('.fake-select').forEach(s => {
+            if (s !== select) s.classList.remove('active');
+        });
+        // Переключаем текущий
+        select.classList.toggle('active');
+    });
+});
+
+// Закрываем при клике вне
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.fake-select') && !e.target.closest('#services-toggle')) {
+        document.querySelectorAll('.fake-select').forEach(s => s.classList.remove('active'));
+    }
+});
+
+
     
     </script>
     {% endblock %}
-
+    
+<div class="g-pos-fix g-z-index-4 g-bottom-0 g-left-0 w-100 g-bg-white g-pt-20 g-pb-10 u-shadow-v17 g-color-black g-font-size-14 d-none cookie_div--js">
+			<div class="container-semiboxed">
+				<div class="g-mb-10 g-pr-30--lg">
+					Мы используем файлы cookie. <a href="../politika-cookies/index.html" class="u-link-v1 g-brd-primary">Узнайте подробнее</a>
+				</div>
+				<span class="btn u-btn-primary g-rounded-5 g-py-10 g-mb-10 g-px-40 g-font-size-14 g-font-weight-600 cookie_btn--js">Хорошо</span>
+			</div>
+		</div>
     <!-- Кнопка зонить -->
     <a href="tel:+74999119572" class="call-button" aria-label="Позвонить">
       <i class="fa fa-phone"></i>

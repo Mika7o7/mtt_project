@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ transport.name }} — Эвакуатор в Москве от {{ transport.price_from }} ₽{% endblock %}
+
+{% block content %}
+
+<!-- ====================== HERO СЕКЦИЯ ====================== -->
+<!-- <section class="transport-hero py-16 bg-gradient-to-b from-blue-50 to-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                Эвакуатор {{ transport.name|lower }}
+            </h1>
+            <p class="text-3xl font-bold text-blue-600">
+                от <span class="text-5xl">{{ transport.price_from }}</span> ₽
+            </p>
+            <a href="tel:+79999999999" class="inline-block mt-8 px-10 py-5 bg-blue-600 text-white text-xl font-semibold rounded-lg hover:bg-blue-700 transition shadow-lg">
+                Заказать эвакуатор прямо сейчас
+            </a>
+        </div>
+
+        <div class="flex justify-center">
+            <img src="{{ transport.image.url }}" alt="{{ transport.name }}" class="rounded-xl shadow-2xl max-w-full h-auto max-h-96 object-cover">
+        </div>
+    </div>
+</section> -->
+
+
+<section class="info-section">
+  <div class="info-container">
+    <div class="info-image">
+      <img src="{{ transport.image.url }}" alt="{{ transport.name }}">
+    </div>
+    <div class="info-text">
+      <h1>Эвакуатор {{ transport.name|lower }}</h1>
+      {% if transport.description %}
+            <p>{{ transport.description|safe }}</p>
+            {% else %}
+                <p class="text-xl leading-relaxed text-gray-700">
+                    Круглосуточная эвакуация <strong>{{ transport.name|lower }}</strong> по Москве и Московской области. 
+                    Быстрый выезд в любой район, фиксированные цены, бережная погрузка и доставка без повреждений.
+                </p>
+            {% endif %}
+      <a href="{{ info.button_link }}" class="btn-contact btn-order">Заказать эвакуатор</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================== ЧТО ВХОДИТ ====================== -->
+{% if transport.features %}
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-10">Что входит в услугу</h2>
+        <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-lg p-8">
+            {{ transport.features|linebreaks }}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+<!-- ====================== ГАЛЕРЕЯ ====================== -->
+<!-- {% if gallery %}
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12">
+            Примеры эвакуации {{ transport.name|lower }}
+        </h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {% for photo in gallery %}
+                <div class="group relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition">
+                    <img src="{{ photo.image.url }}" 
+                         alt="{{ photo.caption|default:'Эвакуация транспорта' }}" 
+                         class="w-full h-64 object-cover group-hover:scale-110 transition duration-300">
+                    {% if photo.caption %}
+                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition flex items-end">
+                            <p class="text-white p-4 font-medium opacity-0 group-hover:opacity-100 transition">
+                                {{ photo.caption }}
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %} -->
+
+<section class="works">
+  <div class="container works-container">
+    <h2 class="works-title">Фото наших работ</h2>
+    <div class="works-gallery">
+      {% for photo in gallery %}
+        <div class="work-item">
+          <img src="{{ photo.image.url }}" alt="{{ photo.caption }}">
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ====================== ЦЕНЫ ====================== -->
+<!-- <section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12">
+            Цены на эвакуацию {{ transport.name|lower }}
+        </h2>
+        <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-6">
+            {% for p in prices %}
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
+                    <div class="flex justify-between items-center">
+                        <span class="text-lg font-medium text-gray-800">{{ p.title }}</span>
+                        <strong class="text-2xl text-blue-600">{{ p.price }} ₽</strong>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section> -->
+
+<section class="prices">
+  <div class="container prices-container">
+    <h2 class="prices-title">Цены на эвакуацию {{ transport.name|lower }}</h2>
+    <div class="price-table-wrapper">
+      <table class="price-table">
+        <tbody>
+          {% for price in prices %}
+            <tr>
+              <td>{{ price.title }}</td>
+              <td>{{ price.price }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<br>
+<br>
+<br>
+<br>
+
+<div
+ class="container-pluse">
+  <div class="evacuation-block">
+    <div class="evacuation-content">
+      <h2>Остались вопросы или хотите заказать эвакуатор?</h2>
+      <p>Напишите нам</p>
+      <button class="btn-contact btn-order">Обратный звонок</button>
+    </div>
+    <div class="evacuation-image">
+      <img src="{% static '/images/truc_flipped.png' %}" alt="Эвакуатор">
+    </div>
+  </div>
+</div>
+
+
+<section class="contact-section">
+  <div class="contact-map">
+    <!-- Вставь сюда код Яндекс карты -->
+    <iframe
+      src="https://yandex.ru/map-widget/v1/?um=constructor%3Aexample"
+      width="100%"
+      height="100%"
+      frameborder="0"
+    ></iframe>
+  </div>
+
+  <div class="contact-form">
+    <h3>Оставьте заявку</h3>
+    <form class="contact-form" novalidate>
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Ваше имя">
+        <input type="tel" name="phone" placeholder="+7 (___) ___ __ __" 
+               required data-mask="+7 (999) 999 99 99">
+
+        <label class="policy-checkbox">
+          <span style="text-decoration: none;">Согласен с <a href="/policy" style="text-decoration: none; color: #999 !important;" target="_blank">политикой конфиденциальности</a> и <a href="/personal-data" style="text-decoration: none; color: #999 !important;" target="_blank">обработкой данных</a></span>
+        </label>
+
+        
+        <button type="submit">Отправить</button>
+        <div class="form-message"></div>
+    </form>
+</div>
+</section>
+
+{% endblock %}
