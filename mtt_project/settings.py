@@ -26,8 +26,15 @@ SECRET_KEY = 'django-insecure-nf=lumi^y6#&#0bcf2vo_gx3p7s&p2z!=oyv^&=^74e14uqb6a
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '5.129.193.67',  # твой сервер
+]
 
+# Если хочешь домен потом — просто добавишь
+if not DEBUG:
+    ALLOWED_HOSTS += ['mtt-evakuator.ru', 'www.mtt-evakuator.ru']
 
 # Application definition
 
@@ -121,7 +128,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / "core" / "static",
+    BASE_DIR / "static",
 ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 

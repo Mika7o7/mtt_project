@@ -16,14 +16,14 @@
     <!-- 3D Model -->
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <!-- Three.js и загрузчик GLB -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.161.0/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.161.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="{% static 'assets/js/three/three.min.js' %}"></script>
+    <script src="{% static 'assets/js/three/GLTFLoader.js' %}"></script>
+    <script src="{% static 'assets/js/three/OrbitControls.js' %}"></script>
     <!-- Yandex Maps API -->
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=5502673e-3b79-4dd2-9a03-ea2be0ba2339&suggest_apikey=069cffc7-8ee9-4f85-ab1e-2693ad53af67"></script>
     <!-- Other scripts -->
     <script src="https://unpkg.com/imask"></script>
-    <script src="{% static 'js/calculator.js' %}"></script>
+    <script src="{% static 'assets/js/calculator.js' %}"></script>
     {% block extra_head %}{% endblock %}
 </head>
 
@@ -805,7 +805,7 @@ document.addEventListener('click', (e) => {
     
     </script>
     {% endblock %}
-    
+
 <div class="g-pos-fix g-z-index-4 g-bottom-0 g-left-0 w-100 g-bg-white g-pt-20 g-pb-10 u-shadow-v17 g-color-black g-font-size-14 d-none cookie_div--js">
 			<div class="container-semiboxed">
 				<div class="g-mb-10 g-pr-30--lg">

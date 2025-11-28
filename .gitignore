@@ -1,0 +1,36 @@
+# База данных
+db.sqlite3
+*.sqlite3
+
+# Кэш и собранная статика
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+.DS_Store
+*.log
+
+# Виртуальное окружение
+venv/
+env/
+.venv/
+.env/
+
+# Собранная статика и медиа
+staticfiles/
+media/
+
+# Локальные настройки
+mtt_project/local_settings.py
+mtt_project/settings_local.py
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Миграции (если не хочешь их коммитить — убери эту строку)
+# core/migrations/
