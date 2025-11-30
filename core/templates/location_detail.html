@@ -10,31 +10,47 @@
             <!-- Левая часть: текст + форма -->
             <div class="metro-hero-content">
                 <h1>
-                    {% if location.info_name %}
-                        {{ location.info_name|safe }}
-                    {% else %}
-                        {% if location_type == 'metro' %}
-                            Эвакуатор у метро {{ location.name }}
-                        {% elif location_type == 'district' %}
-                            Эвакуатор {{ location.short_name|default:location.name }} — {{ location.name }}
-                        {% elif location_type == 'city' %}
-                            Эвакуатор в {{ location.name }}{% if location.distance_from_mkad %} — {{ location.distance_from_mkad }} км от МКАД{% endif %}
-                        {% endif %}
-                    {% endif %}
-                </h1>
+                  {% if location.info_name %}
+                      {{ location.info_name|safe }}
+                  {% else %}
+                      {% if location_type == 'metro' %}
+                          Эвакуатор у метро {{ location.name }}
+                      {% elif location_type == 'district' %}
+                          Эвакуатор {{ location.short_name|default:location.name }} — {{ location.name }}
+                      {% elif location_type == 'city' %}
+                          Эвакуатор в {{ location.name }}{% if location.distance_from_mkad %} — {{ location.distance_from_mkad }} км от МКАД{% endif %}
+                      {% elif location_type == 'gruzovoy' %}
+                          {{ location.name }} — от {{ location.price_from }} ₽
+                      {% elif location_type == 'manipulyator' %}
+                          {{ location.name }} — от {{ location.price_from }} ₽
+                      {% elif location_type == 'highway' %}
+                          Эвакуатор по {{ location.name }}
+                      {% else %}
+                          Эвакуатор в Москве и МО
+                      {% endif %}
+                  {% endif %}
+              </h1>
 
-                <!-- Подзаголовок (линия метро / население / расстояние) -->
-                <p class="metro-hero-subtitle">
-                    {% if location_type == 'metro' and location.line %}
-                        {{ location.line }}
-                    {% elif location_type == 'district' and location.population %}
-                        Население: {{ location.population }}
-                    {% elif location_type == 'city' and location.distance_from_mkad %}
-                        {{ location.distance_from_mkad }} км от МКАД • Круглосуточно
-                    {% else %}
-                        Недорогой эвакуатор • Выезд за 20–40 минут
-                    {% endif %}
-                </p>
+              <!-- Подзаголовок (линия метро / население / расстояние / цена / длина шоссе) -->
+              <p class="metro-hero-subtitle">
+                  {% if location.info_name and location_type in 'gruzovoy,manipulyator,highway' %}
+                      Круглосуточный выезд • Москва и область • Работаем 24/7
+                  {% elif location_type == 'metro' and location.line %}
+                      {{ location.line }}
+                  {% elif location_type == 'district' and location.population %}
+                      Население: {{ location.population }}
+                  {% elif location_type == 'city' and location.distance_from_mkad %}
+                      {{ location.distance_from_mkad }} км от МКАД • Круглосуточно
+                  {% elif location_type == 'gruzovoy' %}
+                      Грузоподъёмность до {{ location.weight_max|default:"20" }} т • Выезд за 30–60 мин
+                  {% elif location_type == 'manipulyator' %}
+                      Стрела до {{ location.arrow_length|default:"20" }} м • Груз до 20 тонн
+                  {% elif location_type == 'highway' %}
+                      По всему шоссе • Быстрый выезд из Москвы • Низкие цены
+                  {% else %}
+                      Недорогой эвакуатор • Выезд за 20–40 минут
+                  {% endif %}
+              </p>
                 
                 <!-- Форма заявки (одинаковая везде) -->
                   <form class="universal-form metro-hero-form" novalidate>

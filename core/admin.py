@@ -4,7 +4,7 @@ from .models import (
     HeroSection, HowToOrderStep, TransportType,
     WhyChooseUs, InfoSection, PriceItem, WorkPhoto,
     FAQ, Rating, Article, District, MetroStation,
-    City
+    City, Gruzovoy, Manipulyator, Highway
 )
 
 # ==== КАСТОМНЫЙ АДМИН-САЙТ (ТВОЙ КРАСИВЫЙ ДИЗАЙН) ====
@@ -19,9 +19,10 @@ class CustomAdminSite(admin.AdminSite):
         main_model_order = [
             "HeroSection", "HowToOrderStep", "TransportType",
             "WhyChooseUs", "InfoSection", "PriceItem", "WorkPhoto",
-            "FAQ", "Rating", "District", "MetroStation", "City"
+            "FAQ", "Rating", "District", "MetroStation", "City",
+            "Gruzovoy", "Manipulyator", "Highway"
         ]
-        article_model_order = ["Article"]
+
 
         main_models = []
         for app in app_list:
@@ -29,21 +30,10 @@ class CustomAdminSite(admin.AdminSite):
                 if model['object_name'] in main_model_order:
                     main_models.append(model)
 
-        article_models = []
-        for app in app_list:
-            for model in app.get('models', []):
-                if model['object_name'] in article_model_order:
-                    article_models.append(model)
-
+       
         new_app_list = [
             {"name": "Главная страница", "app_label": "core", "models": main_models},
-            {"name": "Наши услуги", "app_label": "core", "models": []},
-            {"name": "О нас", "app_label": "core", "models": []},
-            {"name": "Статья", "app_label": "core", "models": article_models},
-            {"name": "Цены", "app_label": "core", "models": []},
-            {"name": "Галерея", "app_label": "core", "models": []},
-            {"name": "Калькулятор", "app_label": "core", "models": []},
-            {"name": "Оплата", "app_label": "core", "models": []},
+          
         ]
         return new_app_list
 
@@ -144,4 +134,27 @@ class MetroStationAdmin(admin.ModelAdmin):
 class CityAdmin(admin.ModelAdmin):
     list_display = ("name",)
     search_fields = ("name",)
+    prepopulated_fields = {"slug": ("name",)}
+
+
+@admin.register(Gruzovoy, site=custom_admin_site)
+class GruzovoyAdmin(admin.ModelAdmin):
+    list_display = ("name", "price_from", "weight_max")
+    search_fields = ("name", "info_name")
+    prepopulated_fields = {"slug": ("name",)}
+    list_filter = ("price_from",)
+
+
+@admin.register(Manipulyator, site=custom_admin_site)
+class ManipulyatorAdmin(admin.ModelAdmin):
+    list_display = ("name", "price_from")
+    search_fields = ("name", "info_name")
+    prepopulated_fields = {"slug": ("name",)}
+    list_filter = ("price_from",)
+
+
+@admin.register(Highway, site=custom_admin_site)
+class HighwayAdmin(admin.ModelAdmin):
+    list_display = ("name", "length_km")
+    search_fields = ("name", "info_name")
     prepopulated_fields = {"slug": ("name",)}

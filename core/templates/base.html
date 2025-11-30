@@ -20,10 +20,11 @@
     <script src="{% static 'assets/js/three/GLTFLoader.js' %}"></script>
     <script src="{% static 'assets/js/three/OrbitControls.js' %}"></script>
     <!-- Yandex Maps API -->
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=5502673e-3b79-4dd2-9a03-ea2be0ba2339&suggest_apikey=069cffc7-8ee9-4f85-ab1e-2693ad53af67"></script>
+    <!-- <script src="https://api-maps.yandex.ru/2.1/?apikey=5502673e-3b79-4dd2-9a03-ea2be0ba2339&suggest_apikey=5502673e-3b79-4dd2-9a03-ea2be0ba2339&lang=ru_RU&load=package.full" type="text/javascript"></script> -->
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=069cffc7-8ee9-4f85-ab1e-2693ad53af67&suggest_apikey=069cffc7-8ee9-4f85-ab1e-2693ad53af67"></script>
     <!-- Other scripts -->
     <script src="https://unpkg.com/imask"></script>
-    <script src="{% static 'assets/js/calculator.js' %}"></script>
+    <!-- <script src="{% static 'assets/js/calculator.js' %}"></script> -->
     {% block extra_head %}{% endblock %}
 </head>
 
@@ -257,6 +258,131 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
         
+        <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=5502673e-3b79-4dd2-9a03-ea2be0ba2339&suggest_apikey=069cffc7-8ee9-4f85-ab1e-2693ad53af67"></script>
+	<script>
+		;(function($) {
+			"use strict";
+
+			ymaps.ready(init);
+
+			function init() {
+			
+					var myMap = new ymaps.Map("map_map", {
+						center: [55.755864, 37.617698],
+						zoom: 9,
+						controls: ["fullscreenControl"],
+						behaviors: ["default", "scrollZoom", "drag"]
+					}),
+			
+	
+					// Создадим панель маршрутизации.
+					routePanelControl = new ymaps.control.RoutePanel({
+						options: {
+							maxWidth: "280px", 
+							autofocus: false
+						}
+					}),
+					zoomControl = new ymaps.control.ZoomControl({
+						options: {
+							size: "small",
+							float: "none",
+							position: {
+								bottom: 45,
+								right: 10
+							}
+						}
+					});
+				
+
+
+				// Пробки
+				var trafficControl = new ymaps.control.TrafficControl({ state: {
+					providerKey: "traffic#actual",
+					trafficShown: true
+				}});
+				
+				// Добавим контрол на карту.
+				myMap.controls.add(trafficControl);
+				
+				// Получим ссылку на провайдер пробок "Сейчас" и включим показ инфоточек.
+				trafficControl.getProvider("traffic#actual").state.set("infoLayerShown", true);    
+					
+					
+				// Пользователь сможет построить только автомобильный маршрут.
+				routePanelControl.routePanel.options.set({
+					types: {auto: true}
+				});
+
+
+				
+
+				myMap.controls.add(routePanelControl).add(zoomControl);
+
+				// Маршрут
+				routePanelControl.routePanel.getRouteAsync().then(function (route) {
+		
+					// Число маршрутов
+					route.model.setParams({results: 1}, true);
+
+					// Событие построения маршрута
+					route.model.events.add("requestsuccess", function () {
+
+						var activeRoute = route.getActiveRoute();
+						if (activeRoute) {
+							var length = route.getActiveRoute().properties.get("distance");					
+							var qq = Math.round( length.value / 1000 ); if ( qq < 1 ) { qq = 1; }	
+							$("#f_qq").val(qq); 
+							 $("#f_qq").prop("readonly", true); 
+							SumRez ();
+								
+							const wayPoints   = route.model.getWayPoints();
+							const addresses   = wayPoints.map((point) => point.properties.get("address"));
+							const coordinates = wayPoints.map((point) => point.properties.get("coordinates"));
+
+							$("#f_mesto").val(addresses[0]); 
+							$("#f_end").val(addresses[1]); 
+							
+							$("#f_mesto_cd").val(coordinates[0]); 
+							$("#f_end_cd").val(coordinates[1]); 
+
+						}
+					});
+				});
+
+
+	
+				// Отслеживаем
+				routePanelControl.routePanel.state.events.add("change", function () {
+					var fromValue = routePanelControl.routePanel.state.get("from");
+					var toValue   = routePanelControl.routePanel.state.get("to");
+
+					if (!fromValue) {
+						$("#f_mesto").val(""); 
+						$("#f_mesto_cd").val(""); 
+					}
+					else 
+					{
+						if (!toValue) {
+							$("#f_mesto").val( fromValue ); 
+							$("#f_mesto_cd").val(""); 
+							$("#f_end").val(""); 
+							$("#f_end_cd").val(""); 
+							$("#f_qq").prop("readonly", false);
+						} 
+					}
+
+					if (!toValue) {
+						$("#f_end").val(""); 
+						$("#f_end_cd").val(""); 
+						$("#f_qq").prop("readonly", false);
+					}
+		
+				});
+			
+			}			
+			
+		}(jQuery));
+	</script>
 
       <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -556,210 +682,212 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-        
-        // Yandex map
-        (function($) {
-            "use strict";
-            console.log("Инициализация калькулятора начата");
 
-            // === Проверка наличия контейнера для карты ===
-            if (!document.getElementById("map_map")) {
-                console.warn("Контейнер карты не найден — карта не инициализирована");
-                return;
-            }
+
         
-            // === Проверка Yandex Maps API ===
-            if (typeof ymaps === "undefined") {
-                console.error("Yandex Maps API не загружен");
-                return;
-            }
+        // // Yandex map
+        // (function($) {
+        //     "use strict";
+        //     console.log("Инициализация калькулятора начата");
+
+        //     // === Проверка наличия контейнера для карты ===
+        //     if (!document.getElementById("map")) {
+        //         console.warn("Контейнер карты не найден — карта не инициализирована");
+        //         return;
+        //     }
         
-            ymaps.ready(initMap);
+        //     // === Проверка Yandex Maps API ===
+        //     if (typeof ymaps === "undefined") {
+        //         console.error("Yandex Maps API не загружен");
+        //         return;
+        //     }
         
-            function initMap() {
-                console.log("Инициализация карты Yandex...");
+        //     ymaps.ready(initMap);
+        
+        //     function initMap() {
+        //         console.log("Инициализация карты Yandex...");
             
-                const myMap = new ymaps.Map("map_map", {
-                    center: [55.755864, 37.617698],
-                    zoom: 9,
-                    controls: ["fullscreenControl"],
-                    behaviors: ["default", "scrollZoom", "drag"]
-                });
+        //         const myMap = new ymaps.Map("map_map", {
+        //             center: [55.755864, 37.617698],
+        //             zoom: 9,
+        //             controls: ["fullscreenControl"],
+        //             behaviors: ["default", "scrollZoom", "drag"]
+        //         });
             
-                const routePanelControl = new ymaps.control.RoutePanel({
-                    options: { maxWidth: "280px", autofocus: false }
-                });
+        //         const routePanelControl = new ymaps.control.RoutePanel({
+        //             options: { maxWidth: "280px", autofocus: false }
+        //         });
             
-                const zoomControl = new ymaps.control.ZoomControl({
-                    options: { size: "small", float: "none", position: { bottom: 45, right: 10 } }
-                });
+        //         const zoomControl = new ymaps.control.ZoomControl({
+        //             options: { size: "small", float: "none", position: { bottom: 45, right: 10 } }
+        //         });
             
-                const trafficControl = new ymaps.control.TrafficControl({
-                    state: { providerKey: "traffic#actual", trafficShown: true }
-                });
+        //         const trafficControl = new ymaps.control.TrafficControl({
+        //             state: { providerKey: "traffic#actual", trafficShown: true }
+        //         });
             
-                myMap.controls.add(trafficControl);
-                myMap.controls.add(routePanelControl).add(zoomControl);
-                routePanelControl.routePanel.options.set({ types: { auto: true } });
+        //         myMap.controls.add(trafficControl);
+        //         myMap.controls.add(routePanelControl).add(zoomControl);
+        //         routePanelControl.routePanel.options.set({ types: { auto: true } });
             
-                routePanelControl.routePanel.getRouteAsync()
-                    .then(route => {
-                        route.model.setParams({ results: 1 }, true);
-                        route.model.events.add("requestsuccess", function() {
-                            const activeRoute = route.getActiveRoute();
-                            if (!activeRoute) {
-                                console.warn("Активный маршрут не найден");
-                                return;
-                            }
+        //         routePanelControl.routePanel.getRouteAsync()
+        //             .then(route => {
+        //                 route.model.setParams({ results: 1 }, true);
+        //                 route.model.events.add("requestsuccess", function() {
+        //                     const activeRoute = route.getActiveRoute();
+        //                     if (!activeRoute) {
+        //                         console.warn("Активный маршрут не найден");
+        //                         return;
+        //                     }
                         
-                            const length = activeRoute.properties.get("distance");
-                            let qq = Math.round(length.value / 1000);
-                            if (qq < 1) qq = 1;
-                            $("#f_qq").val(qq).prop("readonly", true);
-                            SumRez();
+        //                     const length = activeRoute.properties.get("distance");
+        //                     let qq = Math.round(length.value / 1000);
+        //                     if (qq < 1) qq = 1;
+        //                     $("#f_qq").val(qq).prop("readonly", true);
+        //                     SumRez();
                         
-                            const wayPoints = route.model.getWayPoints();
-                            const addresses = wayPoints.map(p => p.properties.get("address"));
-                            const coordinates = wayPoints.map(p => p.properties.get("coordinates"));
-                            $("#f_mesto").val(addresses[0] || "");
-                            $("#f_end").val(addresses[1] || "");
-                            $("#f_mesto_cd").val(coordinates[0] || "");
-                            $("#f_end_cd").val(coordinates[1] || "");
-                        });
-                    })
-                    .catch(err => console.error("Ошибка получения маршрута:", err));
+        //                     const wayPoints = route.model.getWayPoints();
+        //                     const addresses = wayPoints.map(p => p.properties.get("address"));
+        //                     const coordinates = wayPoints.map(p => p.properties.get("coordinates"));
+        //                     $("#f_mesto").val(addresses[0] || "");
+        //                     $("#f_end").val(addresses[1] || "");
+        //                     $("#f_mesto_cd").val(coordinates[0] || "");
+        //                     $("#f_end_cd").val(coordinates[1] || "");
+        //                 });
+        //             })
+        //             .catch(err => console.error("Ошибка получения маршрута:", err));
                 
-                routePanelControl.routePanel.state.events.add("change", function() {
-                    const fromValue = routePanelControl.routePanel.state.get("from");
-                    const toValue = routePanelControl.routePanel.state.get("to");
+        //         routePanelControl.routePanel.state.events.add("change", function() {
+        //             const fromValue = routePanelControl.routePanel.state.get("from");
+        //             const toValue = routePanelControl.routePanel.state.get("to");
                 
-                    if (!fromValue) {
-                        $("#f_mesto").val("");
-                        $("#f_mesto_cd").val("");
-                    }
-                    if (!toValue) {
-                        $("#f_end").val("");
-                        $("#f_end_cd").val("");
-                        $("#f_qq").prop("readonly", false).val("");
-                    }
-                });
-            }
+        //             if (!fromValue) {
+        //                 $("#f_mesto").val("");
+        //                 $("#f_mesto_cd").val("");
+        //             }
+        //             if (!toValue) {
+        //                 $("#f_end").val("");
+        //                 $("#f_end_cd").val("");
+        //                 $("#f_qq").prop("readonly", false).val("");
+        //             }
+        //         });
+        //     }
         
-            // === Переключение эвакуатор / манипулятор ===
-            $(".switcher-btn").on("click", function() {
-                $(".switcher-btn").removeClass("active");
-                $(this).addClass("active");
+        //     // === Переключение эвакуатор / манипулятор ===
+        //     $(".switcher-btn").on("click", function() {
+        //         $(".switcher-btn").removeClass("active");
+        //         $(this).addClass("active");
             
-                const vk = $(this).data("vk");
-                $("#clt_vk").val(vk);
+        //         const vk = $(this).data("vk");
+        //         $("#clt_vk").val(vk);
             
-                if (vk == 1) {
-                    // Эвакуатор
-                    $(".clt_div_1--js").removeClass("hidden");
-                    $(".clt_div_2--js").addClass("hidden");
-                } else {
-                    // Манипулятор
-                    $(".clt_div_1--js").addClass("hidden");
-                    $(".clt_div_2--js").removeClass("hidden");
-                }
+        //         if (vk == 1) {
+        //             // Эвакуатор
+        //             $(".clt_div_1--js").removeClass("hidden");
+        //             $(".clt_div_2--js").addClass("hidden");
+        //         } else {
+        //             // Манипулятор
+        //             $(".clt_div_1--js").addClass("hidden");
+        //             $(".clt_div_2--js").removeClass("hidden");
+        //         }
             
-                SumRez();
-            });
+        //         SumRez();
+        //     });
         
-            // === Предзаказ ===
-            $("#clt_predzakaz").on("change", function() {
-                const show = $(this).is(":checked");
-                $(".date-time-row").toggleClass("hidden", !show);
-                if (!show) {
-                    $("#datepickerDefault, #f_time").val("").removeClass("invalid");
-                }
-            });
+        //     // === Предзаказ ===
+        //     $("#clt_predzakaz").on("change", function() {
+        //         const show = $(this).is(":checked");
+        //         $(".date-time-row").toggleClass("hidden", !show);
+        //         if (!show) {
+        //             $("#datepickerDefault, #f_time").val("").removeClass("invalid");
+        //         }
+        //     });
         
-            // === Доп. телефон ===
-            $("#clt_dphone").on("change", function() {
-                const show = $(this).is(":checked");
-                $(".extra-contact-row").toggleClass("hidden", !show);
-                if (!show) {
-                    $("[name=f_name_2], [name=f_phone_2]").val("");
-                }
-            });
+        //     // === Доп. телефон ===
+        //     $("#clt_dphone").on("change", function() {
+        //         const show = $(this).is(":checked");
+        //         $(".extra-contact-row").toggleClass("hidden", !show);
+        //         if (!show) {
+        //             $("[name=f_name_2], [name=f_phone_2]").val("");
+        //         }
+        //     });
         
-            // === Маски ввода ===
-            $('[data-mask]').mask("+7 (999) 999 99 99");
-            $("#datepickerDefault").mask("99.99.9999");
-            $("#f_time").mask("99:99");
+        //     // === Маски ввода ===
+        //     $('[data-mask]').mask("+7 (999) 999 99 99");
+        //     $("#datepickerDefault").mask("99.99.9999");
+        //     $("#f_time").mask("99:99");
         
-            // === Валидация ===
-            function validateForm() {
-                let isValid = true;
-                const name = $("input[name=f_name]").val().trim();
-                const phone = $("input[name=f_phone]").val().trim();
+        //     // === Валидация ===
+        //     function validateForm() {
+        //         let isValid = true;
+        //         const name = $("input[name=f_name]").val().trim();
+        //         const phone = $("input[name=f_phone]").val().trim();
             
-                if (!name) {
-                    $("#name-error").text("Введите ваше имя");
-                    isValid = false;
-                } else $("#name-error").text("");
+        //         if (!name) {
+        //             $("#name-error").text("Введите ваше имя");
+        //             isValid = false;
+        //         } else $("#name-error").text("");
             
-                if (!phone || !/^\+7 \(\d{3}\) \d{3} \d{2} \d{2}$/.test(phone)) {
-                    $("#phone-error").text("Введите корректный номер телефона");
-                    isValid = false;
-                } else $("#phone-error").text("");
+        //         if (!phone || !/^\+7 \(\d{3}\) \d{3} \d{2} \d{2}$/.test(phone)) {
+        //             $("#phone-error").text("Введите корректный номер телефона");
+        //             isValid = false;
+        //         } else $("#phone-error").text("");
             
-                return isValid;
-            }
+        //         return isValid;
+        //     }
         
-            function getCsrfToken() {
-                return $('input[name="csrfmiddlewaretoken"]').val();
-            }
+        //     function getCsrfToken() {
+        //         return $('input[name="csrfmiddlewaretoken"]').val();
+        //     }
         
-            $(document).ready(function() {
+        //     $(document).ready(function() {
             
-            // Показываем модалку
-            function showModal(message) {
-              const modal = document.getElementById("successModal");
-              modal.querySelector(".modal-message").innerText = message;
-              modal.style.display = "flex";
+        //     // Показываем модалку
+        //     function showModal(message) {
+        //       const modal = document.getElementById("successModal");
+        //       modal.querySelector(".modal-message").innerText = message;
+        //       modal.style.display = "flex";
             
-              modal.querySelector(".modal-close").onclick = function() {
-                modal.style.display = "none";
-              };
-            }
+        //       modal.querySelector(".modal-close").onclick = function() {
+        //         modal.style.display = "none";
+        //       };
+        //     }
         
-            // --- Запрет редактирования поля расстояния ---
-            $("#f_qq").on("keydown paste input", function(e) {
-                e.preventDefault();
-                return false;
-            });
+        //     // --- Запрет редактирования поля расстояния ---
+        //     $("#f_qq").on("keydown paste input", function(e) {
+        //         e.preventDefault();
+        //         return false;
+        //     });
         
-            // --- Отправка формы ---
-            $(".clt_form").on("submit", function(e) {
-                e.preventDefault();
+        //     // --- Отправка формы ---
+        //     $(".clt_form").on("submit", function(e) {
+        //         e.preventDefault();
             
-                const formData = new FormData(this);
+        //         const formData = new FormData(this);
             
-                $.ajax({
-                    url: "/submit_form/",
-                    type: "POST",
-                    data: formData,
-                    headers: { "X-CSRFToken": getCsrfToken() },
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        if (response.success) {
-                            showModal("Спасибо! Ваша заявка успешно отправлена. ✅", "Спасибо! Ваша заявка успешно отправлена.");
-                            $(".clt_form")[0].reset();
-                            $(".clt_sum--js").text("0");
-                            $(".date-time-row, .extra-contact-row").addClass("hidden");
-                        } else {
-                            showModal("⚠️ Ошибка", response.message || "Не удалось отправить заявку.");
-                        }
-                    },
-                    error: function() {
-                        showModal("❌ Ошибка", "Произошла ошибка при отправке. Попробуйте позже.");
-                    }
-                });
-            });
-        });
+        //         $.ajax({
+        //             url: "/submit_form/",
+        //             type: "POST",
+        //             data: formData,
+        //             headers: { "X-CSRFToken": getCsrfToken() },
+        //             processData: false,
+        //             contentType: false,
+        //             success: function(response) {
+        //                 if (response.success) {
+        //                     showModal("Спасибо! Ваша заявка успешно отправлена. ✅", "Спасибо! Ваша заявка успешно отправлена.");
+        //                     $(".clt_form")[0].reset();
+        //                     $(".clt_sum--js").text("0");
+        //                     $(".date-time-row, .extra-contact-row").addClass("hidden");
+        //                 } else {
+        //                     showModal("⚠️ Ошибка", response.message || "Не удалось отправить заявку.");
+        //                 }
+        //             },
+        //             error: function() {
+        //                 showModal("❌ Ошибка", "Произошла ошибка при отправке. Попробуйте позже.");
+        //             }
+        //         });
+        //     });
+        // });
             // === Расчет стоимости ===
             function SumRez() {
                 const selected = $(".clt_tip--js:visible").find(":selected");
@@ -780,7 +908,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 $("#clt_vid_1, .clt_tip--js, #clt_koleso, #f_qq, .extra-checkbox input").on("change", SumRez);
             });
         
-        })(jQuery);
+        (jQuery);
 
         document.querySelectorAll('.fake-select').forEach(select => {
     const title = select.querySelector('.fake-select__title');
@@ -806,14 +934,132 @@ document.addEventListener('click', (e) => {
     </script>
     {% endblock %}
 
-<div class="g-pos-fix g-z-index-4 g-bottom-0 g-left-0 w-100 g-bg-white g-pt-20 g-pb-10 u-shadow-v17 g-color-black g-font-size-14 d-none cookie_div--js">
-			<div class="container-semiboxed">
-				<div class="g-mb-10 g-pr-30--lg">
-					Мы используем файлы cookie. <a href="../politika-cookies/index.html" class="u-link-v1 g-brd-primary">Узнайте подробнее</a>
-				</div>
-				<span class="btn u-btn-primary g-rounded-5 g-py-10 g-mb-10 g-px-40 g-font-size-14 g-font-weight-600 cookie_btn--js">Хорошо</span>
-			</div>
-		</div>
+<!-- ИДЕАЛЬНЫЙ COOKIE-БАННЕР 2025: слева внизу, компактный, адаптивный -->
+<div id="cookieBanner" class="cookie-banner">
+  <div class="cookie-content">
+    <div class="cookie-text">
+      Мы используем файлы cookie. 
+      <a href="{% url 'politika-cookies' %}" class="cookie-link">Подробнее</a>
+    </div>
+    <button id="cookieAccept" class="cookie-btn">Хорошо</button>
+  </div>
+</div>
+
+<style>
+  .cookie-banner {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: #c0c1c2;
+    color: rgb(13, 13, 13);
+    padding: 16px 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    z-index: 9999;
+    max-width: 380px;
+    font-size: 14px;
+    line-height: 1.5;
+    transform: translateY(150%);
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+  }
+
+  .cookie-banner.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .cookie-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+
+  .cookie-text {
+    margin: 0;
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .cookie-link {
+    color: #000000;
+    text-decoration: underline;
+    font-weight: 600;
+    font-size: 10px;
+  }
+
+  .cookie-link:hover {
+    color: #595959;
+  }
+
+  .cookie-btn {
+    background: #fd9719;
+    color: #ffffff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.3s;
+  }
+
+  .cookie-btn:hover {
+    background: #6d6d6d;
+    transform: scale(1.05);
+  }
+
+  /* Мобильная версия — баннер по центру снизу */
+  @media (max-width: 768px) {
+    .cookie-banner {
+      left: 50%;
+      transform: translateX(-50%) translateY(150%);
+      bottom: 15px;
+      width: calc(100% - 30px);
+      max-width: none;
+      padding: 18px;
+      text-align: center;
+    }
+    .cookie-content {
+      flex-direction: column;
+      gap: 12px;
+    }
+    .cookie-text {
+      min-width: auto;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const banner = document.getElementById("cookieBanner");
+    const acceptBtn = document.getElementById("cookieAccept");
+
+    // Если уже нажал "Хорошо" — не показываем
+    if (localStorage.getItem("cookiesAccepted") === "true") {
+      return;
+    }
+
+    // Показываем с анимацией через 1 секунду
+    setTimeout(() => {
+      banner.classList.add("show");
+    }, 1000);
+
+    // По клику — скрываем навсегда
+    acceptBtn.addEventListener("click", () => {
+      localStorage.setItem("cookiesAccepted", "true");
+      banner.classList.remove("show");
+      setTimeout(() => {
+        banner.style.display = "none";
+      }, 500);
+    });
+  });
+</script>
+
     <!-- Кнопка зонить -->
     <a href="tel:+74999119572" class="call-button" aria-label="Позвонить">
       <i class="fa fa-phone"></i>

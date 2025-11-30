@@ -252,3 +252,65 @@ class District(models.Model):
 
     def __str__(self):
         return self.name
+
+
+# 1. Грузовые эвакуаторы — отдельная модель
+class Gruzovoy(models.Model):
+    name = models.CharField("Название (например: Грузовой эвакуатор до 10 тонн)", max_length=150)
+    slug = models.SlugField("ЧПУ (gruzovoy-evakuator-do-10-tonn)", max_length=150, unique=True)
+    
+    info_name = models.CharField("Заголовок страницы (H1)", max_length=150, blank=True,
+        help_text="Например: Грузовой эвакуатор в Москве и области — от 8000 ₽")
+    info_description = models.TextField("SEO-описание для детальной страницы", blank=True)
+    image = models.ImageField("Фото грузового эвакуатора", upload_to="gruzovoy/", blank=True, null=True)
+    price_from = models.PositiveIntegerField("Цена от, руб", default=8000)
+    weight_max = models.PositiveIntegerField("Макс. вес авто, тонн", default=10)
+
+    class Meta:
+        verbose_name = "Грузовой эвакуатор"
+        verbose_name_plural = "Грузовые эвакуаторы"
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
+# 2. Манипуляторы — отдельная модель
+class Manipulyator(models.Model):
+    name = models.CharField("Название (например: Эвакуатор с манипулятором)", max_length=150)
+    slug = models.SlugField("ЧПУ (manipulyator)", max_length=150, unique=True)
+    
+    info_name = models.CharField("Заголовок страницы (H1)", max_length=150, blank=True,
+        help_text="Например: Эвакуатор с краном-манипулятором в Москве")
+    info_description = models.TextField("SEO-описание для детальной страницы", blank=True)
+    image = models.ImageField("Фото манипулятора", upload_to="manipulyator/", blank=True, null=True)
+    price_from = models.PositiveIntegerField("Цена от, руб", default=12000)
+    arrow_length = models.CharField("Длина стрелы", max_length=30, blank=True)
+
+    class Meta:
+        verbose_name = "Эвакуатор-манипулятор"
+        verbose_name_plural = "Эвакуаторы-манипуляторы"
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
+# 3. Шоссе — отдельная модель
+class Highway(models.Model):
+    name = models.CharField("Название шоссе", max_length=100)  # Дмитровское шоссе
+    slug = models.SlugField("ЧПУ (dmitrovskoe-shosse)", max_length=120, unique=True)
+    
+    info_name = models.CharField("Заголовок страницы (H1)", max_length=150, blank=True,
+        help_text="Например: Эвакуатор по Дмитровскому шоссе — быстро и недорого")
+    info_description = models.TextField("SEO-описание для детальной страницы", blank=True)
+    image = models.ImageField("Фото шоссе", upload_to="highways/", blank=True, null=True)
+    length_km = models.PositiveIntegerField("Длина шоссе, км", blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Шоссе"
+        verbose_name_plural = "Шоссе"
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name

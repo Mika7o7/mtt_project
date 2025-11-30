@@ -1,0 +1,22 @@
+User-Agent: *
+Disallow: /boss/
+Disallow: /tpl/
+Disallow: /*?*
+Disallow: */index.php
+Allow: /i/
+
+User-Agent: Yandex
+Disallow: /boss/
+Disallow: /tpl/
+Disallow: /*?*
+Disallow: */index.php
+Allow: /i/
+
+User-Agent: GoogleBot
+Disallow: /boss/
+Disallow: /tpl/
+Disallow: /*?*
+Disallow: */index.php
+Allow: /i/
+
+Sitemap: https://evacuator-avto.ru/sitemap.xml

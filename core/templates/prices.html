@@ -2,29 +2,22 @@
 {% load static %}
 
 {% block content %}
-<section class="prices" id="prices">
-    <div class="container prices-container">
-        <h2 class="prices-title">Тариф "Эвакуатор по округам Москвы"</h2>
-        <div class="price-table-wrapper">
-            <table class="price-table">
-                <tbody>
-                    <tr><td>Эвакуатор для мотоциклов</td><td>от 4000 р.</td></tr>
-                    <tr><td>Эвакуатор для квадроциклов и снегоходов</td><td>от 4000 р.</td></tr>
-                    <tr><td>Эвакуатор для легковых автомобилей</td><td>от 4000 р.</td></tr>
-                    <tr><td>Эвакуатор для спецтехники</td><td>от 4500 р.</td></tr>
-                    <tr><td>Эвакуатор для микроавтобусов</td><td>от 4700 р.</td></tr>
-                    <tr><td>Эвакуатор для тяжёлых внедорожников</td><td>от 4900 р.</td></tr>
-                    <tr><td>Эвакуатор для коммерческого транспорта</td><td>от 5000 р.</td></tr>
-                    <tr><td>Эвакуатор для автомобилей премиум-класса</td><td>от 5000 р.</td></tr>
-                    <tr><td>Эвакуатор для ГАЗели</td><td>от 5000 р.</td></tr>
-                    <tr><td>Эвакуатор для спорткаров</td><td>от 6000 р.</td></tr>
-                    <tr><td>Эвакуатор для грузовых авто от 5 тонн</td><td>от 10000 р.</td></tr>
-                    <tr><td>Эвакуатор по межгороду</td><td>от 45 р. за км</td></tr>
-                </tbody>
-            </table>
-        </div>
-        <!-- <a href="#price-list" class="price-link">Полный прайс-лист →</a> -->
+<section class="prices">
+  <div class="container prices-container">
+    <h2 class="prices-title">Наши тарифы</h2>
+    <div class="price-table-wrapper">
+      <table class="price-table">
+        <tbody>
+          {% for price in prices %}
+            <tr>
+              <td>{{ price.title }}</td>
+              <td>{{ price.price }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+  </div>
 </section>
 
 

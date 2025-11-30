@@ -63,7 +63,7 @@
                             <div class="fake-select__title">Эвакуатор по округам</div>
                             <div class="fake-select__list">
                                 {% for d in districts %}
-                                    <a href="{% url 'district_detail' d.slug %}">
+                                    <a href="{% url 'oblasti' d.slug %}">
                                         {{ d.short_name }} — {{ d.name }}
                                     </a>
                                 {% endfor %}
@@ -81,6 +81,36 @@
                                             <small class="text-gray-500">({{ station.line }})</small>
                                         {% endif %}
                                     </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- ГРУЗОВЫЕ ЭВАКУАТОРЫ -->
+                        <div class="fake-select">
+                            <div class="fake-select__title">Грузовые эвакуаторы</div>
+                            <div class="fake-select__list">
+                                {% for item in gruzovoy_list %}
+                                    <a href="{% url 'gruzovoy_detail' item.slug %}">{{ item.name }}</a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <!-- МАНИПУЛЯТОРЫ -->
+                        <div class="fake-select">
+                            <div class="fake-select__title">Эвакуаторы с манипулятором</div>
+                            <div class="fake-select__list">
+                                {% for item in manipulyator_list %}
+                                    <a href="{% url 'manipulyator_detail' item.slug %}">{{ item.name }}</a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <!-- ШОССЕ -->
+                        <div class="fake-select">
+                            <div class="fake-select__title">Эвакуатор по шоссе</div>
+                            <div class="fake-select__list">
+                                {% for h in highways %}
+                                    <a href="{% url 'highway_detail' h.slug %}">{{ h.name }}</a>
                                 {% endfor %}
                             </div>
                         </div>
@@ -134,9 +164,9 @@
         </div>
     </div>
 </li>
-        <li><a href="/about">О нас</a></li>
+        <li><a href="/o-nas">О нас</a></li>
         <li><a href="/articles">Статья</a></li>
-        <li><a href="/prices">Цены</a></li>
+        <li><a href="/czenyi">Цены</a></li>
         <li><a href="/gallery">Галерея</a></li>
         <li><a href="/calculator">Калькулятор</a></li>
         <li><a href="/payment">Оплата</a></li>

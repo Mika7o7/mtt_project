@@ -3,35 +3,19 @@
 
 {% block content %}
     <!-- Секция Фото наших работ -->
+
 <section class="works">
-    <div class="container works-container">
-        <h2 class="works-title">Фото наших работ</h2>
-        <div class="works-gallery">
-            <div class="work-item"><img src="https://picsum.photos/400/250?1" alt="Работа 1"></div>
-            <div class="work-item"><img src="https://picsum.photos/400/250?2" alt="Работа 2"></div>
-            <div class="work-item"><img src="https://picsum.photos/400/250?3" alt="Работа 3"></div>
-            <div class="work-item"><img src="https://picsum.photos/400/250?4" alt="Работа 4"></div>
-            <div class="work-item"><img src="https://picsum.photos/400/250?5" alt="Работа 5"></div>
-            <div class="work-item"><img src="https://picsum.photos/400/250?6" alt="Работа 6"></div>
-             
-            <div class="work-item"><img src="https://picsum.photos/400/250?1" alt="Работа 1"></div>
-            <div class="work-item"><img src="https://picsum.photos/400/250?2" alt="Работа 2"></div>
-            <div class="work-item"><img src="https://picsum.photos/400/250?3" alt="Работа 3"></div>
-            <div class="work-item"><img src="https://picsum.photos/400/250?4" alt="Работа 4"></div>
-            <div class="work-item"><img src="https://picsum.photos/400/250?5" alt="Работа 5"></div>
-            <div class="work-item"><img src="https://picsum.photos/400/250?6" alt="Работа 6"></div>
-
-            <div class="work-item"><img src="https://picsum.photos/400/250?1" alt="Работа 1"></div>
-            <div class="work-item"><img src="https://picsum.photos/400/250?2" alt="Работа 2"></div>
-            <div class="work-item"><img src="https://picsum.photos/400/250?3" alt="Работа 3"></div>
-            <div class="work-item"><img src="https://picsum.photos/400/250?4" alt="Работа 4"></div>
-            <div class="work-item"><img src="https://picsum.photos/400/250?5" alt="Работа 5"></div>
-            <div class="work-item"><img src="https://picsum.photos/400/250?6" alt="Работа 6"></div>
-            
+  <div class="container works-container">
+    <h2 class="works-title">Фото наших работ</h2>
+    <div class="works-gallery">
+      {% for photo in photos %}
+        <div class="work-item">
+          <img src="{{ photo.image.url }}" alt="{{ photo.caption }}">
         </div>
+      {% endfor %}
     </div>
+  </div>
 </section>
-
 
 
 <section class="contact-section">

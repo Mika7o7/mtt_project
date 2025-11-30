@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from .models import (
     HeroSection, HowToOrderStep, TransportType,
     WhyChooseUs, InfoSection, PriceItem, WorkPhoto, FAQ, Rating, Article,
-    District, MetroStation, City
+    District, MetroStation, City, Gruzovoy, Manipulyator, Highway
 )
 
 import requests
@@ -182,13 +182,7 @@ def index(request):
     why_choose_us = WhyChooseUs.objects.all()
     photos = WorkPhoto.objects.all()
     faqs = FAQ.objects.filter(is_active=True)[:6]
-    rating = Rating.objects.first()  # если есть модель Rating
-
-
-    # Создаём список звезд для шаблона
-    rating_stars = list(range(1, 6))  # [1, 2, 3, 4, 5]
-
-
+   
     context = {
         'hero': hero,
         'order_steps': order_steps,
@@ -198,8 +192,6 @@ def index(request):
         'why_choose_us': why_choose_us,
         'photos': photos,
         'faqs': faqs,
-        'rating': rating,
-        'rating_stars': rating_stars,
     }
     return render(request, 'test.html', context)
 
@@ -215,36 +207,6 @@ def transport_detail(request, slug):
     }
     return render(request, 'transport_detail.html', context)
 
-# def city_detail(request, slug):
-#     city = get_object_or_404(City, slug=slug)
-#     # Остальное — как в metro_detail и district_detail
-
-#     # Всё то же самое, что и на других страницах
-#     order_steps = HowToOrderStep.objects.all()
-#     transports = TransportType.objects.all()
-#     info = InfoSection.objects.first()
-#     prices = PriceItem.objects.all()
-#     why_choose_us = WhyChooseUs.objects.all()
-#     photos = WorkPhoto.objects.all()
-#     faqs = FAQ.objects.filter(is_active=True)[:6]
-#     rating = Rating.objects.first()
-#     rating_stars = list(range(1, 6))
-
- 
-#     context = {
-#         'city': city,
-#         'order_steps': order_steps,
-#         'transports': transports,
-#         'info': info,
-#         'prices': prices,
-#         'why_choose_us': why_choose_us,
-#         'photos': photos,
-#         'faqs': faqs,
-#         'rating': rating,
-#         'rating_stars': rating_stars,
-#         # ... остальные блоки
-#     }
-#     return render(request, 'city_detail.html', context)
 
 def services(request):
     return render(request, 'services.html')
@@ -253,67 +215,27 @@ def district_list(request):
     districts = District.objects.all()
     return render(request, 'district_list.html', {'districts': districts})
 
-# def district_detail(request, slug):
-#     order_steps = HowToOrderStep.objects.all()
-#     transports = TransportType.objects.all()
-#     info = InfoSection.objects.first()
-#     prices = PriceItem.objects.all()
-#     why_choose_us = WhyChooseUs.objects.all()
-#     photos = WorkPhoto.objects.all()
-#     faqs = FAQ.objects.filter(is_active=True)[:6]
-#     rating = Rating.objects.first()
-#     rating_stars = list(range(1, 6))
-#     district = get_object_or_404(District, slug=slug)
-
-#     context = {
-#         'order_steps': order_steps,
-#         'transports': transports,
-#         'info': info,
-#         'prices': prices,
-#         'why_choose_us': why_choose_us,
-#         'photos': photos,
-#         'faqs': faqs,
-#         'rating': rating,
-#         'rating_stars': rating_stars,
-#         'district': district
-#     }
-#     return render(request, 'district_detail.html', context)
 
 def metro_list(request):
     stations = MetroStation.objects.select_related('district').all()
     return render(request, 'metro_list.html', {'stations': stations})
 
-# def metro_detail(request, slug):
-#     station = get_object_or_404(MetroStation, slug=slug)
-    
-#     # Всё то же самое, что и на других страницах
-#     order_steps = HowToOrderStep.objects.all()
-#     transports = TransportType.objects.all()
-#     info = InfoSection.objects.first()
-#     prices = PriceItem.objects.all()
-#     why_choose_us = WhyChooseUs.objects.all()
-#     photos = WorkPhoto.objects.all()
-#     faqs = FAQ.objects.filter(is_active=True)[:6]
-#     rating = Rating.objects.first()
-#     rating_stars = list(range(1, 6))
+# Грузовой
+def gruzovoy_detail(request, slug):
+    item = get_object_or_404(Gruzovoy, slug=slug)
+    return render(request, 'metro_list.html', {'item': item})
 
-#     context = {
-#         'station': station,
-#         'order_steps': order_steps,
-#         'transports': transports,
-#         'info': info,
-#         'prices': prices,
-#         'why_choose_us': why_choose_us,
-#         'photos': photos,
-#         'faqs': faqs,
-#         'rating': rating,
-#         'rating_stars': rating_stars,
-#     }
-#     return render(request, 'metro_detail.html', context)
+# Манипулятор
+def manipulyator_detail(request, slug):
+    item = get_object_or_404(Manipulyator, slug=slug)
+    return render(request, 'metro_list.html', {'item': item})
 
-# УНИВЕРСАЛЬНЫЙ ВЬЮХ ДЛЯ ВСЕХ ЛОКАЦИЙ
+# Шоссе
+def highway_detail(request, slug):
+    item = get_object_or_404(Highway, slug=slug)
+    return render(request, 'metro_list.html', {'item': item})
+
 def location_detail(request, slug):
-    # Пробуем найти в трёх моделях по очереди
     location = None
     location_type = None
 
@@ -326,14 +248,21 @@ def location_detail(request, slug):
     elif City.objects.filter(slug=slug).exists():
         location = get_object_or_404(City, slug=slug)
         location_type = 'city'
+    elif Gruzovoy.objects.filter(slug=slug).exists():
+        location = get_object_or_404(Gruzovoy, slug=slug)
+        location_type = 'gruzovoy'
+    elif Manipulyator.objects.filter(slug=slug).exists():
+        location = get_object_or_404(Manipulyator, slug=slug)
+        location_type = 'manipulyator'
+    elif Highway.objects.filter(slug=slug).exists():
+        location = get_object_or_404(Highway, slug=slug)
+        location_type = 'highway'
     else:
-        raise Http404("Локация не найдена")
+        raise Http404("Страница не найдена")
 
-    # Общие данные для всех страниц
     context = {
         'location': location,
-        'location_type': location_type,  # ← для логики в шаблоне
-
+        'location_type': location_type,
         'order_steps': HowToOrderStep.objects.all(),
         'transports': TransportType.objects.all(),
         'info': InfoSection.objects.first(),
@@ -341,12 +270,9 @@ def location_detail(request, slug):
         'why_choose_us': WhyChooseUs.objects.all(),
         'photos': WorkPhoto.objects.all(),
         'faqs': FAQ.objects.filter(is_active=True)[:6],
-        'rating': Rating.objects.first(),
-        'rating_stars': list(range(1, 6)),
+       
     }
-
     return render(request, 'location_detail.html', context)
-
 
 def payment(request):
     return render(request, 'payment.html')
@@ -358,6 +284,8 @@ def about(request):
     context = {
         'info': info,
         'photos': photos,
+        'order_steps': HowToOrderStep.objects.all(),
+        'why_choose_us': WhyChooseUs.objects.all(),
     }
 
     return render(request, 'about.html', context)
@@ -371,10 +299,14 @@ def article_detail(request, pk):
     return render(request, 'article_detail.html', {'article': article})
 
 def prices(request):
-    return render(request, 'prices.html')
+    prices = PriceItem.objects.all()
+
+    return render(request, 'prices.html', {"prices": prices})
 
 def gallery(request):
-    return render(request, 'gallery.html')
+    photos = WorkPhoto.objects.all()
+
+    return render(request, 'gallery.html', {"photos": photos})
 
 def calculator(request):
     return render(request, 'calculator.html')
