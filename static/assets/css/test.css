@@ -9,9 +9,11 @@ body {
 }
 /* Логотип */
 .logo img {
-  width: 60px;
-  height: 60px;
-}
+    width: 75px;
+    height: 75px;
+  }
+
+
 
 /* === Fake button === */
 .fake-button {
@@ -480,8 +482,8 @@ body {
 .how-to-order-container {
   display: flex;
   flex-direction: column; /* вертикальный стек: заголовок -> карточки -> кнопка */
-  align-items: center;    /* всё по центру */
-  gap: 30px;              /* отступы между блоками */
+  align-items: center; /* всё по центру */
+  gap: 30px; /* отступы между блоками */
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
@@ -496,17 +498,41 @@ body {
   text-align: center;
 }
 
-
-/* Карточки */
-.cards {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  flex-wrap: nowrap;
-  margin-bottom: 40px; /* чтобы кнопка не прилипала */
+/* Карусель — добавлено для авто-прокрутки */
+.carousel-wrapper {
+  overflow: hidden;
+  width: 100%;
+  margin-bottom: 40px;
+  cursor: grab;
+  user-select: none;
+  -webkit-overflow-scrolling: touch;
 }
 
+.carousel-wrapper:active {
+  cursor: grabbing;
+}
+
+.cards {
+  display: flex;
+  gap: 20px;
+  animation: scroll 40s linear infinite; /* авто-прокрутка */
+  width: max-content;
+}
+
+.carousel-wrapper:hover .cards {
+  animation-play-state: paused; /* пауза при hover */
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%); /* половина — потому что дублировали карточки */
+  }
+}
+
+/* Карточки */
 .card {
   position: relative;
   width: 300px;
@@ -582,9 +608,6 @@ body {
   color: #fff;
 }
 
-
-
-
 /* ===== Адаптив для телефонов ===== */
 @media (max-width: 768px) {
   .how-to-order {
@@ -595,21 +618,33 @@ body {
     font-size: 22px;
   }
 
-  /* Делаем карусель */
+  /* Карусель на телефоне */
   .cards {
     display: flex;
     overflow-x: auto;
-    scroll-snap-type: x mandatory; /* включаем прилипающий скролл */
-    -webkit-overflow-scrolling: touch; /* плавность для iOS */
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
     gap: 15px;
     padding-bottom: 10px;
   }
 
   .card {
-    width: 80%;
+    width: 80vw;
+    max-width: 250px;
     height: 260px;
     flex: 0 0 auto;
-    scroll-snap-align: center; /* прилипаем к центру при скролле */
+    scroll-snap-align: center;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+
+  /* Главное исправление: картинка точно по размеру карточки */
+  .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* заполняет карточку, обрезая лишнее, но красиво */
+    object-position: center; /* центр картинки всегда в центре */
+    display: block;
   }
 
   .card .icon {
@@ -626,10 +661,11 @@ body {
     font-size: 12px;
   }
 
-  /* Убираем hover-анимацию (не нужна на телефонах) */
+  /* Hover-эффекты на телефоне (touch) */
   .card:hover img {
     transform: none;
   }
+
   .card:hover .overlay {
     opacity: 1;
   }
@@ -640,10 +676,11 @@ body {
     margin-top: 10px;
   }
 
-  /* Прячем скроллбар, но оставляем прокрутку */
+  /* Прячем скроллбар */
   .cards::-webkit-scrollbar {
     display: none;
   }
+
   .cards {
     scrollbar-width: none;
   }
@@ -661,6 +698,7 @@ body {
   .how-to-order .cards::-webkit-scrollbar {
     display: none;
   }
+
   .how-to-order .cards {
     scrollbar-width: none;
   }
@@ -787,6 +825,7 @@ body {
 
 
 /* ===== Почему выбрать нас ===== */
+/* Секция Why Choose Us */
 .why-choose-us {
   background: rgba(240, 240, 240, 0.9);
   padding: 80px 20px;
@@ -810,14 +849,41 @@ body {
   text-transform: uppercase;
 }
 
-/* Карточки */
-.why-cards {
-  display: flex;
-  justify-content: center;
-  flex-wrap: nowrap;
-  gap: 30px;
+/* Карусель */
+.carousel-wrapper {
+  overflow: hidden;
+  width: 100%;
+  margin-bottom: 40px;
+  cursor: grab;
+  user-select: none;
+  -webkit-overflow-scrolling: touch;
 }
 
+.carousel-wrapper:active {
+  cursor: grabbing;
+}
+
+.why-cards {
+  display: flex;
+  gap: 30px;
+  animation: scroll 20s linear infinite;
+  width: max-content;
+}
+
+.carousel-wrapper:hover .why-cards {
+  animation-play-state: paused;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Карточки */
 .why-card {
   background: #fff;
   color: #333;
@@ -827,7 +893,7 @@ body {
   padding: 30px 20px;
   box-shadow: 0 4px 15px rgba(75, 75, 75, 0.039);
   transition: transform 0.3s, box-shadow 0.3s;
-  flex-shrink: 0; /* чтобы не сжимались в карусели */
+  flex-shrink: 0;
 }
 
 .why-card:hover {
@@ -838,7 +904,7 @@ body {
 .why-card .icon {
   font-size: 45px;
   margin-bottom: 20px;
-  color: #d1d0d0; /* оранжевая иконка */
+  color: #d1d0d0;
 }
 
 .why-card h3 {
@@ -862,7 +928,11 @@ body {
     font-size: 22px;
   }
 
-  /* превращаем блок в горизонтальную карусель */
+  /* Карусель на телефоне — свайп + авто-прокрутка */
+  .carousel-wrapper {
+    overflow-x: auto;
+  }
+
   .why-cards {
     display: flex !important;
     overflow-x: auto !important;
@@ -871,17 +941,19 @@ body {
     gap: 15px !important;
     padding-bottom: 10px !important;
     justify-content: flex-start !important;
+    animation-duration: 5s; /* авто-прокрутка работает и на телефоне */
   }
 
   .why-cards::-webkit-scrollbar {
     display: none;
   }
+
   .why-cards {
     scrollbar-width: none;
   }
 
   .why-card {
-    flex: 0 0 80% !important;
+    flex: 0 0 40% !important;
     scroll-snap-align: center !important;
     min-height: 140px !important;
     width: 20px;
@@ -1779,8 +1851,8 @@ body {
   font-weight: 600;
 }
 .footer-logo img {
-  width: 60px;
-  height: 60px;
+  width: 75px;
+  height: 75px;
 }
 
 /* Меню футера */
@@ -2298,6 +2370,11 @@ body {
   .calculator-title {
     font-size: 22px;
     text-align: center;
+  }
+
+  .logo img {
+    width: 75px;
+    height: 75px;
   }
 
   /* Переключатели */
@@ -3634,6 +3711,14 @@ body {
     gap: 1px;
   }
 
+  .top-bar-left span {
+    font-size: 0.6rem;
+  }
+
+  .top-bar-left a {
+    font-size: 0.7rem;
+  }
+
   .top-bar-right {
     display: flex;
     align-items: center;
@@ -3766,3 +3851,6 @@ body {
       font-size: 14px;
     } 
 }
+
+
+

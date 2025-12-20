@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Услуги эвакуатора{% endblock %}</title>
+    <meta name="description" content="Эвакуаторная служба МТТ осуществляет круглосуточное эвакуирование транспортных средств пода. Мы предлагаем оперативную помощь всей территории при поломках, авариях, а также перевозку легковых автомобилей и мотоциклов. Наша команда профессионалов готова прийти на помощь в любое время суток. Мы гарантируем безопасную и надежную перевозку вашего автомобиля, а также доступные цены и индивидуальный подход к каждому клиенту. Звоните нам по телефону +74994441740 или оставьте заявку на сайте."/>
+    <meta name="keywords" content="Эвакуатор Москва, Трезвый водитель, Грузовой эвакуатор, Автомобильная помощь, Эвакуация авто, Специализированный эвакуатор, Эвакуация в любое время суток, Техническая помощь на дороге, Быстрая эвакуация, Цены на эвакуацию"/>
+
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     
@@ -21,10 +24,11 @@
     <script src="{% static 'assets/js/three/OrbitControls.js' %}"></script>
     <!-- Yandex Maps API -->
     <!-- <script src="https://api-maps.yandex.ru/2.1/?apikey=5502673e-3b79-4dd2-9a03-ea2be0ba2339&suggest_apikey=5502673e-3b79-4dd2-9a03-ea2be0ba2339&lang=ru_RU&load=package.full" type="text/javascript"></script> -->
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=069cffc7-8ee9-4f85-ab1e-2693ad53af67&suggest_apikey=069cffc7-8ee9-4f85-ab1e-2693ad53af67"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=bfca9f71-28f1-4b45-b981-571090675b98&suggest_apikey=bfca9f71-28f1-4b45-b981-571090675b98"></script>
     <!-- Other scripts -->
     <script src="https://unpkg.com/imask"></script>
     <!-- <script src="{% static 'assets/js/calculator.js' %}"></script> -->
+     
     {% block extra_head %}{% endblock %}
 </head>
 
@@ -124,75 +128,80 @@
 
 <style>
 .sbp-side-panels {
-    position: fixed;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    z-index: 9999;
-    font-family: 'Inter', sans-serif;
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 9999;
+  font-family: 'Inter', sans-serif;
+  transition: right 0.65s cubic-bezier(.22,1,.36,1); /* плавное выдвижение всего контейнера */
+  right: -252px; /* по умолчанию полностью скрыт (320px ширина - 68px видимая иконка = 252px скрыто) */
 }
+
+
 
 .side-panel {
-    width: 320px;
-    height: 68px;
-    background: #0d3b66;
-    border-radius: 34px 0 0 34px;
-    display: flex;
-    align-items: center;
-    color: white;
-    box-shadow: 0 8px 25px rgba(13,59,102,0.4);
-    cursor: pointer;
-    transition: transform 0.65s cubic-bezier(.22,1,.36,1);
-    transform: translateX(252px);
-    overflow: hidden;
-    text-decoration: none !important;
+  position: relative; /* важно для независимого движения */
+  width: 320px;
+  height: 68px;
+  background: #0d3b66;
+  border-radius: 34px 0 0 34px;
+  display: flex;
+  align-items: center;
+  color: white;
+  box-shadow: 0 8px 25px rgba(13,59,102,0.4);
+  cursor: pointer;
+  transition: right 0.65s cubic-bezier(.22,1,.36,1);
+  right: 0px; /* по умолчанию скрыта, видна только иконка (320 - 68 = 252) */
+  overflow: hidden;
+  text-decoration: none !important;
 }
 
+/* Каждая панель выдвигается отдельно при hover на неё */
 .side-panel:hover {
-    transform: translateX(0);
+  right: 252px;
 }
 
 /* Цвета по брендам */
 .side-panel.sbp,
-.side-panel.calc     { background: #0d3b66; }   /* тёмно-синий */
-.side-panel.telegram { background: #0088cc; }   /* небесно-синий */
-.side-panel.whatsapp { background: #25d366; }   /* зелёный */
+.side-panel.calc { background: #0d3b66; }
+.side-panel.telegram { background: #0088cc; }
+.side-panel.whatsapp { background: #25d366; }
 
 /* Иконка */
 .panel-icon {
-    width: 66px;
-    height: 66px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255,255,255,0.15);
-    border-radius: 50%;
-    margin-left: 6px;
+  width: 66px;
+  height: 66px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  margin-left: 6px;
 }
 
 .content-qr {
-    width: 42px;
-    height: 42px;
-    object-fit: contain;
-    filter: brightness(0) invert(1);
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
 }
 
 .panel-content {
-    padding-left: 16px;
-    font-weight: 900;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
+  padding-left: 16px;
+  font-weight: 900;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
 }
 
 .content-text span {
-    font-size: 11px;
-    display: block;
-    opacity: 0.9;
+  font-size: 11px;
+  display: block;
+  opacity: 0.9;
 }
 
 /* УБРАН КРЕСТИК НАВСЕГДА */
@@ -200,7 +209,7 @@
 /* ТЕЛЕФОН — МАЛЕНЬКИЕ, СПРАВА, КАК НА КОМПЕ */
 @media (max-width: 768px) {
     .sbp-side-panels {
-        right: 8px;
+        right: -160px;
         top: 50%;
         transform: translateY(-50%);
         gap: 10px;
@@ -210,11 +219,11 @@
         width: 210px;
         height: 34px;
         border-radius: 27px 0 0 27px;
-        transform: translateX(186px);
+        transform: translateX(10px);
     }
 
     .side-panel:hover {
-        transform: translateX(0);
+        transform: translateX(148px);
     }
 
     .panel-icon {
@@ -932,6 +941,7 @@ document.addEventListener('click', (e) => {
 
     
     </script>
+
     {% endblock %}
 
 <!-- ИДЕАЛЬНЫЙ COOKIE-БАННЕР 2025: слева внизу, компактный, адаптивный -->
@@ -1061,8 +1071,36 @@ document.addEventListener('click', (e) => {
 </script>
 
     <!-- Кнопка зонить -->
-    <a href="tel:+74999119572" class="call-button" aria-label="Позвонить">
+    <a href="tel:+74958373850" class="call-button" aria-label="Позвонить">
       <i class="fa fa-phone"></i>
     </a>
+
+    <script type="text/javascript" src="https://www.l2.io/ip.js?var=userip"></script>
+<script type="text/javascript" >
+    (function (d, w, c) {
+        (w[c] = w[c] || []).push(function() {
+            try {
+                w.yaCounter51382240 = new Ya.Metrika2({
+                    id:51382240,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true,
+                    webvisor:true,
+                    params:{'ip': userip}
+                });
+            } catch(e) { }
+        });
+        var n = d.getElementsByTagName("script")[0],
+            s = d.createElement("script"),
+            f = function () { n.parentNode.insertBefore(s, n); };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = "https://mc.yandex.ru/metrika/tag.js";
+        if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f, false);
+        } else { f(); }
+    })(document, window, "yandex_metrika_callbacks2");
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/51382240" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 </body>
 </html>

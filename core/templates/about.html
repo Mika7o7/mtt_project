@@ -18,11 +18,15 @@
 </section>
 
 
+<!-- ===== How To Order ===== -->
 <section class="how-to-order">
   <div class="container how-to-order-container">
     <h2 class="section-title">Как заказать услугу</h2>
-    <div class="cards">
-      {% for step in order_steps %}
+
+    <!-- Карусель -->
+    <div class="carousel-wrapper">
+      <div class="cards">
+        {% for step in order_steps %}
         <div class="card">
           <img src="{{ step.image.url }}" alt="{{ step.title }}">
           <div class="overlay">
@@ -31,8 +35,22 @@
             <p>{{ step.description }}</p>
           </div>
         </div>
-      {% endfor %}
+        {% endfor %}
+
+        <!-- Дублируем для бесконечной прокрутки -->
+        {% for step in order_steps %}
+        <div class="card">
+          <img src="{{ step.image.url }}" alt="{{ step.title }}">
+          <div class="overlay">
+            <div class="icon">{{ step.icon }}</div>
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.description }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
     </div>
+
     <a href="#" class="btn-contact btn-order">Связаться с нами</a>
   </div>
 </section>
@@ -89,22 +107,34 @@
 </section>
 
 
-<!-- Секция Почему выбрать нас -->
+<!-- ===== Why Choose Us ===== -->
 <section class="why-choose-us">
   <div class="container why-choose-container">
     <h2 class="section-title">Почему выбрать нас</h2>
-    <div class="why-cards">
-      {% for item in why_choose_us %}
+
+    <!-- Карусель -->
+    <div class="carousel-wrapper">
+      <div class="why-cards">
+        {% for item in why_choose_us %}
         <div class="why-card">
           <div class="icon">{{ item.icon }}</div>
           <h3>{{ item.title }}</h3>
           <p>{{ item.description }}</p>
         </div>
-      {% endfor %}
+        {% endfor %}
+
+        <!-- Дублируем для бесконечной прокрутки -->
+        {% for item in why_choose_us %}
+        <div class="why-card">
+          <div class="icon">{{ item.icon }}</div>
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.description }}</p>
+        </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
 </section>
-
 
 <!-- ===== Work Photos ===== -->
 <section class="works">

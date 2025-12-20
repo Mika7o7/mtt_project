@@ -34,7 +34,7 @@ ALLOWED_HOSTS = [
 
 # Если хочешь домен потом — просто добавишь
 if not DEBUG:
-    ALLOWED_HOSTS += ['mtt-evakuator.ru', 'www.mtt-evakuator.ru']
+    ALLOWED_HOSTS += ['whiterabbite.store', 'www.whiterabbite.store']
 
 # Application definition
 
