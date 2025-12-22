@@ -2739,12 +2739,13 @@ body {
 /* ===== Мобильная адаптация ===== */
 @media (max-width: 480px) {
   .modal-content {
-    width: 90%;
+    width: 70%;
     padding: 20px 15px;
     border-radius: 12px;
+    font-size: 12px;
   }
   .modal-title {
-    font-size: 18px;
+    font-size: 15px;
     margin-bottom: 15px;
   }
   .modal-input {

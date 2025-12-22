@@ -129,6 +129,7 @@
 <style>
 .sbp-side-panels {
   position: fixed;
+  right: -250px; /* фиксируем контейнер на месте */
   top: 50%;
   transform: translateY(-50%);
   display: flex;
@@ -136,14 +137,10 @@
   gap: 14px;
   z-index: 9999;
   font-family: 'Inter', sans-serif;
-  transition: right 0.65s cubic-bezier(.22,1,.36,1); /* плавное выдвижение всего контейнера */
-  right: -252px; /* по умолчанию полностью скрыт (320px ширина - 68px видимая иконка = 252px скрыто) */
 }
 
-
-
 .side-panel {
-  position: relative; /* важно для независимого движения */
+  position: relative;
   width: 320px;
   height: 68px;
   background: #0d3b66;
@@ -153,24 +150,19 @@
   color: white;
   box-shadow: 0 8px 25px rgba(13,59,102,0.4);
   cursor: pointer;
-  transition: right 0.65s cubic-bezier(.22,1,.36,1);
-  right: 0px; /* по умолчанию скрыта, видна только иконка (320 - 68 = 252) */
+  transition: transform 0.65s cubic-bezier(.22,1,.36,1);
+  transform: translateX(0px); /* по умолчанию скрыта, видна только иконка */
   overflow: hidden;
   text-decoration: none !important;
+  pointer-events: none; /* панель не ловит события (чтобы не было мигания) */
 }
 
-/* Каждая панель выдвигается отдельно при hover на неё */
 .side-panel:hover {
-  right: 252px;
+  transform: translateX(-250px); /* выдвигается только эта панель */
+  pointer-events: auto; /* становится кликабельной при выдвижении */
 }
 
-/* Цвета по брендам */
-.side-panel.sbp,
-.side-panel.calc { background: #0d3b66; }
-.side-panel.telegram { background: #0088cc; }
-.side-panel.whatsapp { background: #25d366; }
-
-/* Иконка */
+/* Иконка — единственная видимая часть, ловит hover */
 .panel-icon {
   width: 66px;
   height: 66px;
@@ -181,7 +173,16 @@
   background: rgba(255,255,255,0.15);
   border-radius: 50%;
   margin-left: 6px;
+  pointer-events: auto; /* только иконка реагирует на курсор */
+  position: relative;
+  z-index: 1;
 }
+
+/* Цвета по брендам */
+.side-panel.sbp,
+.side-panel.calc { background: #0d3b66; }
+.side-panel.telegram { background: #0088cc; }
+.side-panel.whatsapp { background: #25d366; }
 
 .content-qr {
   width: 42px;
@@ -204,47 +205,43 @@
   opacity: 0.9;
 }
 
-/* УБРАН КРЕСТИК НАВСЕГДА */
-
-/* ТЕЛЕФОН — МАЛЕНЬКИЕ, СПРАВА, КАК НА КОМПЕ */
+/* МОБИЛЬНЫЕ — твои размеры сохранены */
 @media (max-width: 768px) {
-    .sbp-side-panels {
-        right: -160px;
-        top: 50%;
-        transform: translateY(-50%);
-        gap: 10px;
-    }
+  .sbp-side-panels {
+    right: -170px;
+    gap: 10px;
+  }
 
-    .side-panel {
-        width: 210px;
-        height: 34px;
-        border-radius: 27px 0 0 27px;
-        transform: translateX(10px);
-    }
+  .side-panel {
+    width: 210px;
+    height: 44px;
+    border-radius: 27px 0 0 27px;
+    transform: translateX(0px); /* 210 - 44 = 166 */
+  }
 
-    .side-panel:hover {
-        transform: translateX(148px);
-    }
+  .side-panel:hover {
+    transform: translateX(-100px);
+  }
 
-    .panel-icon {
-        width: 32px;
-        height: 32px;
-        margin-left: 5px;
-    }
+  .panel-icon {
+    width: 32px;
+    height: 32px;
+    margin-left: 5px;
+  }
 
-    .content-qr {
-        width: 22px;
-        height: 22px;
-    }
+  .content-qr {
+    width: 22px;
+    height: 22px;
+  }
 
-    .panel-content {
-        padding-left: 12px;
-        font-size: 8px;
-    }
+  .panel-content {
+    padding-left: 12px;
+    font-size: 8px;
+  }
 
-    .content-text span {
-        font-size: 8px;
-    }
+  .content-text span {
+    font-size: 8px;
+  }
 }
 </style>
 
