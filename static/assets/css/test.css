@@ -292,8 +292,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 20px;
-    max-height: 90vh;
     overflow-y: auto;
     margin-bottom: 1.2rem;
   }
