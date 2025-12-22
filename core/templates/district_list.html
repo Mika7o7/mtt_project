@@ -10,7 +10,7 @@
     <!-- ОДИН ОБЩИЙ ГРИД НА ВСЕ ОКРУГА -->
     <div class="district-grid">
         {% for d in districts %}
-        <a href="{% url 'oblasti' d.slug %}" class="district-link">
+        <a href="{% url 'districts' d.slug %}" class="district-link">
             <div class="district-card">
                 <img src="{{ d.image.url }}" alt="{{ d.name }}">
                 <span>({{ d.short_name }}) {{ d.name }}</span>

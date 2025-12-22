@@ -4,7 +4,7 @@ from .models import (
     HeroSection, HowToOrderStep, TransportType,
     WhyChooseUs, InfoSection, PriceItem, WorkPhoto,
     FAQ, Rating, Article, District, MetroStation,
-    City, Gruzovoy, Manipulyator, Highway
+    City, Gruzovoy, Manipulyator, Highway, Region
 )
 
 # ==== КАСТОМНЫЙ АДМИН-САЙТ (ТВОЙ КРАСИВЫЙ ДИЗАЙН) ====
@@ -20,7 +20,7 @@ class CustomAdminSite(admin.AdminSite):
             "HeroSection", "HowToOrderStep", "TransportType",
             "WhyChooseUs", "InfoSection", "PriceItem", "WorkPhoto",
             "FAQ", "Rating", "District", "MetroStation", "City",
-            "Gruzovoy", "Manipulyator", "Highway"
+            "Gruzovoy", "Manipulyator", "Highway", "Region"
         ]
 
 
@@ -157,4 +157,11 @@ class ManipulyatorAdmin(admin.ModelAdmin):
 class HighwayAdmin(admin.ModelAdmin):
     list_display = ("name", "length_km")
     search_fields = ("name", "info_name")
+    prepopulated_fields = {"slug": ("name",)}
+
+
+@admin.register(Region, site=custom_admin_site)
+class RegionAdmin(admin.ModelAdmin):
+    list_display = ("name",)
+    search_fields = ("name",)
     prepopulated_fields = {"slug": ("name",)}

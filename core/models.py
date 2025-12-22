@@ -222,6 +222,30 @@ class MetroStation(models.Model):
     def __str__(self):
         return self.name
 
+# ===== Область — обновлено =====
+class Region(models.Model):
+    name = models.CharField("Название станции", max_length=100)
+    slug = models.SlugField(
+        "ЧПУ (salarevo)",
+        max_length=100,
+        blank=True,
+        null=True,
+        unique=True
+    )
+
+    # ← НОВЫЕ ПОЛЯ!
+    info_name = models.CharField("Заголовок страницы (H1)", max_length=150, blank=True,
+                                help_text="Например: Эвакуатор у метро Саларьево — от 2500 ₽")
+    info_description = models.TextField("SEO-описание для детальной страницы", blank=True)
+
+    class Meta:
+        verbose_name = "Станция область"
+        verbose_name_plural = "Станции область"
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+    
 
 # ===== ОКРУГА — обновлено =====
 class District(models.Model):

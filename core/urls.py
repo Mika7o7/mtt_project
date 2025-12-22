@@ -16,6 +16,7 @@ urlpatterns = [
     path('metro/', views.metro_list, name='metro_list'),
     path('payment/', views.payment, name='payment'),
 
+    path('oblasti/<slug:slug>/', views.location_detail, name='districts'),
     path('oblasti/moskovskaya-oblast/<slug:slug>/', views.location_detail, name='oblasti'),
     path('oblasti/evakuator-metro/<slug:slug>/', views.location_detail, name='metro_detail'),
     path('oblasti/evakuator/<slug:slug>/', views.location_detail, name='city_detail'),

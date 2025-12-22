@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from .models import (
     HeroSection, HowToOrderStep, TransportType,
     WhyChooseUs, InfoSection, PriceItem, WorkPhoto, FAQ, Rating, Article,
-    District, MetroStation, City, Gruzovoy, Manipulyator, Highway
+    District, MetroStation, City, Gruzovoy, Manipulyator, Highway, Region
 )
 
 import requests
@@ -242,6 +242,9 @@ def location_detail(request, slug):
     if District.objects.filter(slug=slug).exists():
         location = get_object_or_404(District, slug=slug)
         location_type = 'district'
+    elif Region.objects.filter(slug=slug).exists():
+        location = get_object_or_404(Region, slug=slug)
+        location_type = 'oblasti'
     elif MetroStation.objects.filter(slug=slug).exists():
         location = get_object_or_404(MetroStation, slug=slug)
         location_type = 'metro'

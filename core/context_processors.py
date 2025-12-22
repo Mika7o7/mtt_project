@@ -1,6 +1,6 @@
 # core/context_processors.py
 
-from .models import MetroStation, District, City, TransportType, Gruzovoy, Manipulyator, Highway
+from .models import MetroStation, District, City, TransportType, Gruzovoy, Manipulyator, Highway, Region
 
 def menu_data(request):
     if request.path.startswith('/admin') or request.path.startswith('/static'):
@@ -9,6 +9,7 @@ def menu_data(request):
     return {
         'metro_stations': MetroStation.objects.only('name', 'slug').order_by('name'),
         'districts': District.objects.only('name', 'slug', 'short_name').order_by('name'),
+        'oblast': Region.objects.only('name', 'slug').order_by('name'),
         'cities': City.objects.only('name', 'slug').order_by('name'),
         'transports': TransportType.objects.only('name', 'slug').order_by('name'),
 
