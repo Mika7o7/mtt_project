@@ -941,11 +941,11 @@ document.addEventListener('click', (e) => {
 
     {% endblock %}
 
-<!-- ИДЕАЛЬНЫЙ COOKIE-БАННЕР 2025: слева внизу, компактный, адаптивный -->
+<!-- ИДЕАЛЬНЫЙ COOKIE-БАННЕР 2025: слева внизу на ПК, по центру снизу на телефоне -->
 <div id="cookieBanner" class="cookie-banner">
   <div class="cookie-content">
     <div class="cookie-text">
-      Мы используем файлы cookie. 
+      Мы используем файлы cookie.
       <a href="{% url 'politika-cookies' %}" class="cookie-link">Подробнее</a>
     </div>
     <button id="cookieAccept" class="cookie-btn">Хорошо</button>
@@ -953,92 +953,106 @@ document.addEventListener('click', (e) => {
 </div>
 
 <style>
+.cookie-banner {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: #c0c1c2;
+  color: rgb(13, 13, 13);
+  padding: 16px 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  z-index: 9999;
+  max-width: 380px;
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(150%);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cookie-banner.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.cookie-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.cookie-text {
+  margin: 0;
+  flex: 1;
+  min-width: 200px;
+}
+
+.cookie-link {
+  color: #000000;
+  text-decoration: underline;
+  font-weight: 600;
+  font-size: 10px;
+}
+
+.cookie-link:hover {
+  color: #595959;
+}
+
+.cookie-btn {
+  background: #fd9719;
+  color: #ffffff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s;
+}
+
+.cookie-btn:hover {
+  background: #6d6d6d;
+  transform: scale(1.05);
+}
+
+/* === МОБИЛЬНАЯ ВЕРСИЯ — по центру снизу === */
+@media (max-width: 768px) {
   .cookie-banner {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    background: #c0c1c2;
-    color: rgb(13, 13, 13);
-    padding: 16px 20px;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    z-index: 9999;
-    max-width: 380px;
-    font-size: 14px;
-    line-height: 1.5;
-    transform: translateY(150%);
-    opacity: 0;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
+    left: 50%;
+    right: auto;
+    bottom: 15px;
+    width: calc(100% - 30px);
+    max-width: none;
+    padding: 18px 20px;
+    text-align: center;
+    transform: translateX(-50%) translateY(150%); /* центрирование по X + анимация */
   }
 
   .cookie-banner.show {
-    transform: translateY(0);
-    opacity: 1;
+    transform: translateX(-50%) translateY(0);
   }
 
   .cookie-content {
-    display: flex;
+    flex-direction: column;
+    gap: 14px;
     align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    flex-wrap: wrap;
   }
 
   .cookie-text {
-    margin: 0;
-    flex: 1;
-    min-width: 200px;
-  }
-
-  .cookie-link {
-    color: #000000;
-    text-decoration: underline;
-    font-weight: 600;
-    font-size: 10px;
-  }
-
-  .cookie-link:hover {
-    color: #595959;
+    min-width: auto;
   }
 
   .cookie-btn {
-    background: #fd9719;
-    color: #ffffff;
-    border: none;
-    padding: 10px 24px;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 14px;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.3s;
+    width: 100%;
+    max-width: 250px;
   }
-
-  .cookie-btn:hover {
-    background: #6d6d6d;
-    transform: scale(1.05);
-  }
-
-  /* Мобильная версия — баннер по центру снизу */
-  @media (max-width: 768px) {
-    .cookie-banner {
-      left: 50%;
-      transform: translateX(-50%) translateY(150%);
-      bottom: 15px;
-      width: calc(100% - 30px);
-      max-width: none;
-      padding: 18px;
-      text-align: center;
-    }
-    .cookie-content {
-      flex-direction: column;
-      gap: 12px;
-    }
-    .cookie-text {
-      min-width: auto;
-    }
-  }
+}
 </style>
 
 <script>
