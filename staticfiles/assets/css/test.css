@@ -9,9 +9,11 @@ body {
 }
 /* Логотип */
 .logo img {
-  width: 60px;
-  height: 60px;
-}
+    width: 75px;
+    height: 75px;
+  }
+
+
 
 /* === Fake button === */
 .fake-button {
@@ -66,44 +68,50 @@ body {
 .main-dropdown-menu__row {
   background: #fff;
   border-radius: 16px;
-  max-width: 1440px;
+  max-width: 1240px;
+  max-height: 80vh;
   margin: 0 auto;
   padding: 28px 48px;
   display: grid;
-  grid-template-columns: 300px 1fr; /* Левая колонка + правая схема */
-  grid-template-rows: auto auto;
-  gap: 40px;
-  align-items: center; /* вертикальное центрирование колонок */
+  grid-template-columns: 300px 1fr; /* Левая колонка + правая */
+  grid-template-rows: auto min-content; /* вторая строка минимальной высоты */
+  gap: 15px 40px; /* вертикальный gap уменьшен до 15px (было 20px) */
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
-/* Левая колонка (wrapper) */
+/* Левая колонка */
 .wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: center; /* вертикальное центрирование содержимого */
-  gap: 20px;               /* расстояние между кнопкой и селектами */
+  justify-content: flex-start; /* прижимаем к верху */
+  gap: 20px;
 }
 
 /* Верхняя правая колонка "Эвакуация" */
 .shift-left {
   grid-column: 2;
   grid-row: 1;
-  align-self: start; /* прижата к верху */
+  align-self: start;
+  margin-bottom: 60; /* убираем лишний отступ снизу */
 }
 
-/* Нижний ряд: left / center / right */
+/* Нижний ряд — минимальный отступ сверху */
 .bottom-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-column: 2;
   grid-row: 2;
-  gap: 40px;
+  gap: 20px;
+  margin-top: 0; /* убираем отступ сверху */
+  padding-top: 0;
 }
 
 .bottom-row .left,
 .bottom-row .center,
 .bottom-row .right {
-  text-align: left; /* выравнивание по левому краю */
+  text-align: left;
 }
 
 .bottom-row h3.main-dropdown-menu-link__title {
@@ -271,7 +279,7 @@ body {
   }
   .nav-menu.active{right:0;}
   .nav-menu ul{flex-direction:column;gap:10px;text-align:center;}
-  .nav-menu ul li a{color:#fff;font-size:16px;font-weight:500;text-decoration:none;transition:all 0.2s ease;}
+  .nav-menu ul li a{color:#fff;font-size:14px;font-weight:500;text-decoration:none;transition:all 0.2s ease;}
   .nav-menu ul li a:hover{color:#ffb347; transform:translateX(5px);}
   .nav-menu .menu-btn-wrapper{margin-top:30px;text-align:center;}
   .nav-menu .menu-btn-wrapper .btn-order{
@@ -283,9 +291,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 20px;
-    max-height: 90vh;
     overflow-y: auto;
+    margin-bottom: 1.2rem;
   }
   .main-dropdown-menu.active {
     background: #dc3545; /* серый прозрачный фон на телефоне */
@@ -303,6 +310,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    margin-bottom: 1.2rem;
   }
 
   .bottom-row .left,
@@ -324,14 +332,23 @@ body {
   }
 
   .wrapper {
-    align-items: center;
-    justify-content: flex-start; /* кнопка и селекты сверху */
+    display: flex;	  
+    
+    
     gap: 20px;
   }
 
   .links-col-3 {
     grid-template-columns: 1fr; /* Эвакуация по одной колонке */
     gap: 10px 0;
+    
+  }
+}
+
+@media (min-width: 769px) {
+  .burger,
+  .burger.active {
+    display: none !important;
   }
 }
 
@@ -480,8 +497,8 @@ body {
 .how-to-order-container {
   display: flex;
   flex-direction: column; /* вертикальный стек: заголовок -> карточки -> кнопка */
-  align-items: center;    /* всё по центру */
-  gap: 30px;              /* отступы между блоками */
+  align-items: center; /* всё по центру */
+  gap: 30px; /* отступы между блоками */
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
@@ -496,17 +513,41 @@ body {
   text-align: center;
 }
 
-
-/* Карточки */
-.cards {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  flex-wrap: nowrap;
-  margin-bottom: 40px; /* чтобы кнопка не прилипала */
+/* Карусель — добавлено для авто-прокрутки */
+.carousel-wrapper {
+  overflow: hidden;
+  width: 100%;
+  margin-bottom: 40px;
+  cursor: grab;
+  user-select: none;
+  -webkit-overflow-scrolling: touch;
 }
 
+.carousel-wrapper:active {
+  cursor: grabbing;
+}
+
+.cards {
+  display: flex;
+  gap: 20px;
+  animation: scroll 40s linear infinite; /* авто-прокрутка */
+  width: max-content;
+}
+
+.carousel-wrapper:hover .cards {
+  animation-play-state: paused; /* пауза при hover */
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%); /* половина — потому что дублировали карточки */
+  }
+}
+
+/* Карточки */
 .card {
   position: relative;
   width: 300px;
@@ -582,9 +623,6 @@ body {
   color: #fff;
 }
 
-
-
-
 /* ===== Адаптив для телефонов ===== */
 @media (max-width: 768px) {
   .how-to-order {
@@ -595,21 +633,33 @@ body {
     font-size: 22px;
   }
 
-  /* Делаем карусель */
+  /* Карусель на телефоне */
   .cards {
     display: flex;
     overflow-x: auto;
-    scroll-snap-type: x mandatory; /* включаем прилипающий скролл */
-    -webkit-overflow-scrolling: touch; /* плавность для iOS */
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
     gap: 15px;
     padding-bottom: 10px;
   }
 
   .card {
-    width: 80%;
+    width: 80vw;
+    max-width: 250px;
     height: 260px;
     flex: 0 0 auto;
-    scroll-snap-align: center; /* прилипаем к центру при скролле */
+    scroll-snap-align: center;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+
+  /* Главное исправление: картинка точно по размеру карточки */
+  .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* заполняет карточку, обрезая лишнее, но красиво */
+    object-position: center; /* центр картинки всегда в центре */
+    display: block;
   }
 
   .card .icon {
@@ -626,10 +676,11 @@ body {
     font-size: 12px;
   }
 
-  /* Убираем hover-анимацию (не нужна на телефонах) */
+  /* Hover-эффекты на телефоне (touch) */
   .card:hover img {
     transform: none;
   }
+
   .card:hover .overlay {
     opacity: 1;
   }
@@ -640,10 +691,11 @@ body {
     margin-top: 10px;
   }
 
-  /* Прячем скроллбар, но оставляем прокрутку */
+  /* Прячем скроллбар */
   .cards::-webkit-scrollbar {
     display: none;
   }
+
   .cards {
     scrollbar-width: none;
   }
@@ -661,6 +713,7 @@ body {
   .how-to-order .cards::-webkit-scrollbar {
     display: none;
   }
+
   .how-to-order .cards {
     scrollbar-width: none;
   }
@@ -787,6 +840,7 @@ body {
 
 
 /* ===== Почему выбрать нас ===== */
+/* Секция Why Choose Us */
 .why-choose-us {
   background: rgba(240, 240, 240, 0.9);
   padding: 80px 20px;
@@ -810,14 +864,41 @@ body {
   text-transform: uppercase;
 }
 
-/* Карточки */
-.why-cards {
-  display: flex;
-  justify-content: center;
-  flex-wrap: nowrap;
-  gap: 30px;
+/* Карусель */
+.carousel-wrapper {
+  overflow: hidden;
+  width: 100%;
+  margin-bottom: 40px;
+  cursor: grab;
+  user-select: none;
+  -webkit-overflow-scrolling: touch;
 }
 
+.carousel-wrapper:active {
+  cursor: grabbing;
+}
+
+.why-cards {
+  display: flex;
+  gap: 30px;
+  animation: scroll 20s linear infinite;
+  width: max-content;
+}
+
+.carousel-wrapper:hover .why-cards {
+  animation-play-state: paused;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Карточки */
 .why-card {
   background: #fff;
   color: #333;
@@ -827,7 +908,7 @@ body {
   padding: 30px 20px;
   box-shadow: 0 4px 15px rgba(75, 75, 75, 0.039);
   transition: transform 0.3s, box-shadow 0.3s;
-  flex-shrink: 0; /* чтобы не сжимались в карусели */
+  flex-shrink: 0;
 }
 
 .why-card:hover {
@@ -838,7 +919,7 @@ body {
 .why-card .icon {
   font-size: 45px;
   margin-bottom: 20px;
-  color: #d1d0d0; /* оранжевая иконка */
+  color: #d1d0d0;
 }
 
 .why-card h3 {
@@ -862,7 +943,11 @@ body {
     font-size: 22px;
   }
 
-  /* превращаем блок в горизонтальную карусель */
+  /* Карусель на телефоне — свайп + авто-прокрутка */
+  .carousel-wrapper {
+    overflow-x: auto;
+  }
+
   .why-cards {
     display: flex !important;
     overflow-x: auto !important;
@@ -871,17 +956,19 @@ body {
     gap: 15px !important;
     padding-bottom: 10px !important;
     justify-content: flex-start !important;
+    animation-duration: 5s; /* авто-прокрутка работает и на телефоне */
   }
 
   .why-cards::-webkit-scrollbar {
     display: none;
   }
+
   .why-cards {
     scrollbar-width: none;
   }
 
   .why-card {
-    flex: 0 0 80% !important;
+    flex: 0 0 40% !important;
     scroll-snap-align: center !important;
     min-height: 140px !important;
     width: 20px;
@@ -1779,8 +1866,8 @@ body {
   font-weight: 600;
 }
 .footer-logo img {
-  width: 60px;
-  height: 60px;
+  width: 75px;
+  height: 75px;
 }
 
 /* Меню футера */
@@ -2300,6 +2387,11 @@ body {
     text-align: center;
   }
 
+  .logo img {
+    width: 75px;
+    height: 75px;
+  }
+
   /* Переключатели */
   .switcher-group {
     display: flex;
@@ -2662,12 +2754,13 @@ body {
 /* ===== Мобильная адаптация ===== */
 @media (max-width: 480px) {
   .modal-content {
-    width: 90%;
+    width: 70%;
     padding: 20px 15px;
     border-radius: 12px;
+    font-size: 12px;
   }
   .modal-title {
-    font-size: 18px;
+    font-size: 15px;
     margin-bottom: 15px;
   }
   .modal-input {
@@ -2944,83 +3037,61 @@ body {
 
 
 /* Список */
-/* Fake select — раскрывающиеся списки в левой колонке */
-.fake-select {
-  margin-bottom: 10px;
-}
-
-.fake-select__title {
-  background: #f5f5f5;
-  padding: 12px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 15px;
-  transition: background 0.3s;
-}
-
-.fake-select__title:hover {
-  background: #eee;
-}
-
 .fake-select__list {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease;
-  background: #e9ecef;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    background: #e9ecef;
 }
 
 .fake-select.active .fake-select__list {
-  max-height: 220px;
-  overflow-y: auto;
-  padding: 8px 0;
-  background: #e9ecef;
+    max-height: 220px;
+    overflow-y: auto;
+    padding: 8px 0;
+    background: #e9ecef;
 }
 
 /* Ссылки — по умолчанию серый текст */
 .fake-select__list a {
-  display: block;
-  padding: 11px 20px;
-  color: #444 !important; /* серый текст */
-  font-size: 15px; /* десктоп */
-  text-decoration: none;
-  transition: all 0.25s ease;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    display: block;
+    padding: 11px 20px;
+    color: #444 !important;             /* ← СЕРЫЙ, а не белый! */
+    font-size: 15px;                    /* десктоп */
+    text-decoration: none;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* НА ТЕЛЕФОНАХ — ещё меньше текст + больше читаемости */
+@media (max-width: 768px) {
+    .fake-select__list a {
+        font-size: 10px !important;     /* ← 14px как просил */
+        padding: 12px 18px;
+    }
 }
 
 /* Ховер — чёрный текст + серый фон */
 .fake-select__list a:hover {
-  background: #d9d9d9;
-  color: #000 !important;
-  padding-left: 28px;
+    background: #d9d9d9;
+    color: #000 !important;
+    padding-left: 28px;
 }
 
 /* Скроллбар */
 .fake-select__list::-webkit-scrollbar {
-  width: 5px;
+    width: 5px;
 }
-
 .fake-select__list::-webkit-scrollbar-track {
-  background: #ddd;
+    background: #ddd;
 }
-
 .fake-select__list::-webkit-scrollbar-thumb {
-  background: #999;
-  border-radius: 3px;
+    background: #999;
+    border-radius: 3px;
 }
-
 .fake-select__list::-webkit-scrollbar-thumb:hover {
-  background: #777;
-}
-
-/* НА ТЕЛЕФОНАХ — ещё меньше текст */
-@media (max-width: 768px) {
-  .fake-select__list a {
-    font-size: 12px !important;
-    padding: 12px 18px;
-  }
+    background: #777;
 }
 
 /* Адаптивность */
@@ -3656,6 +3727,14 @@ body {
     gap: 1px;
   }
 
+  .top-bar-left span {
+    font-size: 0.6rem;
+  }
+
+  .top-bar-left a {
+    font-size: 0.7rem;
+  }
+
   .top-bar-right {
     display: flex;
     align-items: center;
@@ -3788,3 +3867,6 @@ body {
       font-size: 14px;
     } 
 }
+
+
+

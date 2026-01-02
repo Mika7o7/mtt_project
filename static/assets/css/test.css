@@ -76,7 +76,6 @@ body {
   grid-template-columns: 300px 1fr; /* Левая колонка + правая */
   grid-template-rows: auto min-content; /* вторая строка минимальной высоты */
   gap: 15px 40px; /* вертикальный gap уменьшен до 15px (было 20px) */
-  align-items: start;
   overflow-y: auto;
   overflow-x: hidden;
   box-sizing: border-box;
@@ -333,8 +332,9 @@ body {
   }
 
   .wrapper {
-    align-items: center;
-    justify-content: flex-start; /* кнопка и селекты сверху */
+    display: flex;	  
+    
+    
     gap: 20px;
   }
 
