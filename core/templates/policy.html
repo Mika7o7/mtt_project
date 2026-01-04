@@ -1,27 +1,15 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
-{% block title %}Эвакуатор по округам Москвы — цены и выезд{% endblock %}
 
 {% block content %}
 
-<section class="districts">
-    <h1>Эвакуация машин по округам Москвы</h1>
 
-    <!-- ОДИН ОБЩИЙ ГРИД НА ВСЕ ОКРУГА -->
-    <div class="district-grid">
-        {% for d in districts %}
-        <a href="{% url 'districts' d.slug %}" class="district-link">
-            <div class="district-card">
-                <img src="{{ d.image.url }}" alt="{{ d.name }}">
-                <span>({{ d.short_name }}) {{ d.name }}</span>
-            </div>
-        </a>
-        {% endfor %}
-    </div>
+<section class="contact-section">
+  <div>
+    <h2 style="text-align: center;">some Title</h2>
+    <p style="padding: 20px; text-align: center;">some text Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sint magnam rem reprehenderit voluptatem error molestias recusandae? Est temporibus aliquid necessitatibus tenetur fugit quos ex sapiente reprehenderit! Itaque minima explicabo possimus.</p>
+  </div>
 </section>
-
-
-
 
 <section class="contact-section">
   <div class="contact-map">

@@ -98,8 +98,7 @@ def submit_form(request):
         return JsonResponse({"success": True, "message": "Спасибо! Ваша заявка успешно отправлена."})
     except Exception as e:
         print("Ошибка Telegram:", e)
-        return JsonResponse({"success": False, "message": "Не удалось отправить сообщение в Telegram."})
-
+        return JsonResponse({"success": False, "message": "Не удалось отправить сообщение."})
 
 
 @csrf_exempt
@@ -168,7 +167,8 @@ def send_callback_question(request):
 
     return JsonResponse({"success": True, "message": "Спасибо! Ваш вопрос отправлен."})
 
-
+def policy(request):
+    return render(request, 'policy.html')
 
 def index(request):
     """
@@ -193,7 +193,7 @@ def index(request):
         'photos': photos,
         'faqs': faqs,
     }
-    return render(request, 'test.html', context)
+    return render(request, 'index.html', context)
 
 # ДЕТАЛЬНАЯ СТРАНИЦА — РАБОТАЕТ СРАЗУ
 def transport_detail(request, slug):
