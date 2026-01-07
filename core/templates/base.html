@@ -18,13 +18,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- 3D Model -->
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-    <!-- Three.js и загрузчик GLB -->
-    <script src="{% static 'assets/js/three/three.min.js' %}"></script>
-    <script src="{% static 'assets/js/three/GLTFLoader.js' %}"></script>
-    <script src="{% static 'assets/js/three/OrbitControls.js' %}"></script>
+    
     <!-- Yandex Maps API -->
-    <!-- <script src="https://api-maps.yandex.ru/2.1/?apikey=5502673e-3b79-4dd2-9a03-ea2be0ba2339&suggest_apikey=5502673e-3b79-4dd2-9a03-ea2be0ba2339&lang=ru_RU&load=package.full" type="text/javascript"></script> -->
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=bfca9f71-28f1-4b45-b981-571090675b98&suggest_apikey=bfca9f71-28f1-4b45-b981-571090675b98"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=bfca9f71-28f1-4b45-b981-571090675b98&lang=ru_RU"></script>
     <!-- Other scripts -->
     <script src="https://unpkg.com/imask"></script>
     <!-- <script src="{% static 'assets/js/calculator.js' %}"></script> -->
@@ -47,7 +43,7 @@
       <input type="tel" id="phone" name="phone" class="modal-input" placeholder="+7 (___) ___ __ __" required data-mask="+7 (999) 999 99 99" autocomplete="off">
 
       <label class="policy-checkbox">
-          <span style="text-decoration: none; font-size: 12px;">Согласен с <a href="/policy" style="text-decoration: none; font-size: 12px !important; color: #999 !important;" target="_blank">политикой конфиденциальности</a> и <a href="/personal-data" style="text-decoration: none; font-size: 12px !important; color: #999 !important;" target="_blank">обработкой данных</a></span>
+          <span style="text-decoration: none; font-size: 12px;">Согласен с <a href="/policy" style="text-decoration: none; font-size: 12px !important; color: #999 !important;" target="_blank">политикой конфиденциальности</a> и <a href="/policy" style="text-decoration: none; font-size: 12px !important; color: #999 !important;" target="_blank">обработкой данных</a></span>
       </label>
 
       <button type="submit" class="modal-btn">Отправить</button>
@@ -105,7 +101,7 @@
     </a>
 
     <!-- 3. Telegram -->
-    <a href="https://t.me/+79991119572" class="side-panel telegram">
+    <a href="https://t.me/mttevakuator1" class="side-panel telegram">
         <div class="panel-icon">
             <img src="{% static 'images/telegram.png' %}" class="content-qr" alt="Telegram">
         </div>
@@ -115,7 +111,7 @@
     </a>
 
     <!-- 4. WhatsApp -->
-    <a href="https://wa.me/79991119572" class="side-panel whatsapp">
+    <a href="https://wa.me/79263140455" class="side-panel whatsapp">
         <div class="panel-icon">
             <img src="{% static 'images/whatsapp.png' %}" class="content-qr" alt="WhatsApp">
         </div>
@@ -264,7 +260,6 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
         
-        <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=5502673e-3b79-4dd2-9a03-ea2be0ba2339&suggest_apikey=069cffc7-8ee9-4f85-ab1e-2693ad53af67"></script>
 	<script>
 		;(function($) {
 			"use strict";
@@ -411,6 +406,115 @@ document.addEventListener('DOMContentLoaded', () => {
       burgerx.style.display = "flex";
     }
   });
+});
+$(document).ready(function() {
+    // IMask — маски для всех полей
+    var phoneMask = IMask(document.getElementById('phone'), {
+        mask: '+7 (000) 000 00 00'
+    });
+
+    var dateMask = IMask(document.getElementById('datepickerDefault'), {
+        mask: '00.00.0000',
+        lazy: false
+    });
+
+    var timeMask = IMask(document.getElementById('f_time'), {
+        mask: '00:00',
+        lazy: false
+    });
+
+    // Переключение Эвакуатор / Манипулятор
+    $('.switcher-btn').click(function() {
+        $('.switcher-btn').removeClass('active');
+        $(this).addClass('active');
+
+        var vk = $(this).data('vk');
+        $('#clt_vk').val(vk);
+
+        $('.clt_div_1--js, .clt_div_2--js').addClass('hidden');
+        if (vk == 1) {
+            $('.clt_div_1--js').removeClass('hidden');
+        } else {
+            $('.clt_div_2--js').removeClass('hidden');
+        }
+
+        SumRez(); // Пересчитываем стоимость
+    });
+
+    // Показ/скрытие даты и времени
+    $('#clt_predzakaz').change(function() {
+        if ($(this).is(':checked')) {
+            $('.date-time-row').removeClass('hidden').hide().slideDown(300);
+        } else {
+            $('.date-time-row').slideUp(300, function() {
+                $(this).addClass('hidden');
+            });
+        }
+    });
+
+    // Показ/скрытие доп. имени и телефона
+    $('#clt_dphone').change(function() {
+        if ($(this).is(':checked')) {
+            $('.extra-contact-row').removeClass('hidden').hide().slideDown(300);
+        } else {
+            $('.extra-contact-row').slideUp(300, function() {
+                $(this).addClass('hidden');
+            });
+        }
+    });
+
+    // Отправка формы без перезагрузки
+    $('#calculatorForm').on('submit', function(e) {
+        e.preventDefault();
+
+        var form = $(this);
+        var submitBtn = form.find('.submit-btn');
+        var formMessage = $('#formMessage'); // если есть в форме
+
+        // Отключаем кнопку
+        submitBtn.prop('disabled', true).text('Отправляем...');
+
+        $.ajax({
+            url: form.attr('action') || "{% url 'submit_form' %}", // ← ТВОЙ URL
+            type: 'POST',
+            data: form.serialize(),
+            headers: {
+                'X-CSRFToken': form.find('input[name="csrfmiddlewaretoken"]').val()
+            },
+            success: function(response) {
+                if (response.success) {
+                    // Показываем модалку успеха
+                    $('#successMessage').text(response.message || 'Заявка успешно отправлена!');
+                    // Делаем видимой + центрируем
+                    $('#successModal')
+                        .css('display', 'flex')  // ← КЛЮЧЕВОЕ: display: flex
+                        .hide()                   // Сначала скрываем для плавности
+                        .fadeIn(400);             // Плавное появление
+
+                    // Авто-закрытие через 5 секунд
+                    setTimeout(function() {
+                        $('#successModal').fadeOut(300);
+                    }, 5000);
+                  
+                    form[0].reset(); // Очистка формы
+                } else {
+                    alert('Ошибка: ' + (response.message || 'Неизвестная ошибка'));
+                }
+            },
+            error: function(xhr) {
+                var errMsg = xhr.responseJSON ? xhr.responseJSON.message : 'Ошибка соединения';
+                alert('Ошибка: ' + errMsg);
+            },
+            complete: function() {
+                submitBtn.prop('disabled', false).text('ОФОРМИТЬ ЗАЯВКУ');
+            }
+        });
+    });
+
+    // Закрытие модалки успеха
+    $('#successModal .modal-close, #successModal .modal-btn').click(function() {
+        $('#successModal').fadeOut(300);
+    });
 });
 </script>
 
@@ -632,6 +736,65 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+$(document).ready(function() {
+    // === Маски IMask ===
+    IMask(document.getElementById('phone'), {
+        mask: '+7 (000) 000 00 00'
+    });
+
+    IMask(document.getElementById('datepickerDefault'), {
+        mask: '00.00.0000'
+    });
+
+    IMask(document.getElementById('f_time'), {
+        mask: '00:00'
+    });
+
+    // === Переключение Эвакуатор / Манипулятор ===
+    $('.switcher-btn').click(function() {
+        $('.switcher-btn').removeClass('active');
+        $(this).addClass('active');
+
+        var vk = $(this).data('vk');
+        $('#clt_vk').val(vk);
+
+        $('.clt_div_1--js, .clt_div_2--js').addClass('hidden');
+        if (vk == 1) {
+            $('.clt_div_1--js').removeClass('hidden');
+        } else {
+            $('.clt_div_2--js').removeClass('hidden');
+        }
+
+        SumRez(); // Пересчёт стоимости
+    });
+
+    // === Показ/скрытие даты и времени ===
+    $('#clt_predzakaz').change(function() {
+        if ($(this).is(':checked')) {
+            $('.date-time-row').removeClass('hidden').hide().slideDown(300);
+        } else {
+            $('.date-time-row').slideUp(300, function() {
+                $(this).addClass('hidden');
+            });
+        }
+    });
+
+    // === Показ/скрытие доп. имени и телефона ===
+    $('#clt_dphone').change(function() {
+        if ($(this).is(':checked')) {
+            $('.extra-contact-row').removeClass('hidden').hide().slideDown(300);
+        } else {
+            $('.extra-contact-row').slideUp(300, function() {
+                $(this).addClass('hidden');
+            });
+        }
+    });
+
+    
+
+   
+});
+
 document.addEventListener('DOMContentLoaded', function() {
 
    
@@ -691,209 +854,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         
-        // // Yandex map
-        // (function($) {
-        //     "use strict";
-        //     console.log("Инициализация калькулятора начата");
-
-        //     // === Проверка наличия контейнера для карты ===
-        //     if (!document.getElementById("map")) {
-        //         console.warn("Контейнер карты не найден — карта не инициализирована");
-        //         return;
-        //     }
-        
-        //     // === Проверка Yandex Maps API ===
-        //     if (typeof ymaps === "undefined") {
-        //         console.error("Yandex Maps API не загружен");
-        //         return;
-        //     }
-        
-        //     ymaps.ready(initMap);
-        
-        //     function initMap() {
-        //         console.log("Инициализация карты Yandex...");
-            
-        //         const myMap = new ymaps.Map("map_map", {
-        //             center: [55.755864, 37.617698],
-        //             zoom: 9,
-        //             controls: ["fullscreenControl"],
-        //             behaviors: ["default", "scrollZoom", "drag"]
-        //         });
-            
-        //         const routePanelControl = new ymaps.control.RoutePanel({
-        //             options: { maxWidth: "280px", autofocus: false }
-        //         });
-            
-        //         const zoomControl = new ymaps.control.ZoomControl({
-        //             options: { size: "small", float: "none", position: { bottom: 45, right: 10 } }
-        //         });
-            
-        //         const trafficControl = new ymaps.control.TrafficControl({
-        //             state: { providerKey: "traffic#actual", trafficShown: true }
-        //         });
-            
-        //         myMap.controls.add(trafficControl);
-        //         myMap.controls.add(routePanelControl).add(zoomControl);
-        //         routePanelControl.routePanel.options.set({ types: { auto: true } });
-            
-        //         routePanelControl.routePanel.getRouteAsync()
-        //             .then(route => {
-        //                 route.model.setParams({ results: 1 }, true);
-        //                 route.model.events.add("requestsuccess", function() {
-        //                     const activeRoute = route.getActiveRoute();
-        //                     if (!activeRoute) {
-        //                         console.warn("Активный маршрут не найден");
-        //                         return;
-        //                     }
-                        
-        //                     const length = activeRoute.properties.get("distance");
-        //                     let qq = Math.round(length.value / 1000);
-        //                     if (qq < 1) qq = 1;
-        //                     $("#f_qq").val(qq).prop("readonly", true);
-        //                     SumRez();
-                        
-        //                     const wayPoints = route.model.getWayPoints();
-        //                     const addresses = wayPoints.map(p => p.properties.get("address"));
-        //                     const coordinates = wayPoints.map(p => p.properties.get("coordinates"));
-        //                     $("#f_mesto").val(addresses[0] || "");
-        //                     $("#f_end").val(addresses[1] || "");
-        //                     $("#f_mesto_cd").val(coordinates[0] || "");
-        //                     $("#f_end_cd").val(coordinates[1] || "");
-        //                 });
-        //             })
-        //             .catch(err => console.error("Ошибка получения маршрута:", err));
-                
-        //         routePanelControl.routePanel.state.events.add("change", function() {
-        //             const fromValue = routePanelControl.routePanel.state.get("from");
-        //             const toValue = routePanelControl.routePanel.state.get("to");
-                
-        //             if (!fromValue) {
-        //                 $("#f_mesto").val("");
-        //                 $("#f_mesto_cd").val("");
-        //             }
-        //             if (!toValue) {
-        //                 $("#f_end").val("");
-        //                 $("#f_end_cd").val("");
-        //                 $("#f_qq").prop("readonly", false).val("");
-        //             }
-        //         });
-        //     }
-        
-        //     // === Переключение эвакуатор / манипулятор ===
-        //     $(".switcher-btn").on("click", function() {
-        //         $(".switcher-btn").removeClass("active");
-        //         $(this).addClass("active");
-            
-        //         const vk = $(this).data("vk");
-        //         $("#clt_vk").val(vk);
-            
-        //         if (vk == 1) {
-        //             // Эвакуатор
-        //             $(".clt_div_1--js").removeClass("hidden");
-        //             $(".clt_div_2--js").addClass("hidden");
-        //         } else {
-        //             // Манипулятор
-        //             $(".clt_div_1--js").addClass("hidden");
-        //             $(".clt_div_2--js").removeClass("hidden");
-        //         }
-            
-        //         SumRez();
-        //     });
-        
-        //     // === Предзаказ ===
-        //     $("#clt_predzakaz").on("change", function() {
-        //         const show = $(this).is(":checked");
-        //         $(".date-time-row").toggleClass("hidden", !show);
-        //         if (!show) {
-        //             $("#datepickerDefault, #f_time").val("").removeClass("invalid");
-        //         }
-        //     });
-        
-        //     // === Доп. телефон ===
-        //     $("#clt_dphone").on("change", function() {
-        //         const show = $(this).is(":checked");
-        //         $(".extra-contact-row").toggleClass("hidden", !show);
-        //         if (!show) {
-        //             $("[name=f_name_2], [name=f_phone_2]").val("");
-        //         }
-        //     });
-        
-        //     // === Маски ввода ===
-        //     $('[data-mask]').mask("+7 (999) 999 99 99");
-        //     $("#datepickerDefault").mask("99.99.9999");
-        //     $("#f_time").mask("99:99");
-        
-        //     // === Валидация ===
-        //     function validateForm() {
-        //         let isValid = true;
-        //         const name = $("input[name=f_name]").val().trim();
-        //         const phone = $("input[name=f_phone]").val().trim();
-            
-        //         if (!name) {
-        //             $("#name-error").text("Введите ваше имя");
-        //             isValid = false;
-        //         } else $("#name-error").text("");
-            
-        //         if (!phone || !/^\+7 \(\d{3}\) \d{3} \d{2} \d{2}$/.test(phone)) {
-        //             $("#phone-error").text("Введите корректный номер телефона");
-        //             isValid = false;
-        //         } else $("#phone-error").text("");
-            
-        //         return isValid;
-        //     }
-        
-        //     function getCsrfToken() {
-        //         return $('input[name="csrfmiddlewaretoken"]').val();
-        //     }
-        
-        //     $(document).ready(function() {
-            
-        //     // Показываем модалку
-        //     function showModal(message) {
-        //       const modal = document.getElementById("successModal");
-        //       modal.querySelector(".modal-message").innerText = message;
-        //       modal.style.display = "flex";
-            
-        //       modal.querySelector(".modal-close").onclick = function() {
-        //         modal.style.display = "none";
-        //       };
-        //     }
-        
-        //     // --- Запрет редактирования поля расстояния ---
-        //     $("#f_qq").on("keydown paste input", function(e) {
-        //         e.preventDefault();
-        //         return false;
-        //     });
-        
-        //     // --- Отправка формы ---
-        //     $(".clt_form").on("submit", function(e) {
-        //         e.preventDefault();
-            
-        //         const formData = new FormData(this);
-            
-        //         $.ajax({
-        //             url: "/submit_form/",
-        //             type: "POST",
-        //             data: formData,
-        //             headers: { "X-CSRFToken": getCsrfToken() },
-        //             processData: false,
-        //             contentType: false,
-        //             success: function(response) {
-        //                 if (response.success) {
-        //                     showModal("Спасибо! Ваша заявка успешно отправлена. ✅", "Спасибо! Ваша заявка успешно отправлена.");
-        //                     $(".clt_form")[0].reset();
-        //                     $(".clt_sum--js").text("0");
-        //                     $(".date-time-row, .extra-contact-row").addClass("hidden");
-        //                 } else {
-        //                     showModal("⚠️ Ошибка", response.message || "Не удалось отправить заявку.");
-        //                 }
-        //             },
-        //             error: function() {
-        //                 showModal("❌ Ошибка", "Произошла ошибка при отправке. Попробуйте позже.");
-        //             }
-        //         });
-        //     });
-        // });
+     
             // === Расчет стоимости ===
             function SumRez() {
                 const selected = $(".clt_tip--js:visible").find(":selected");

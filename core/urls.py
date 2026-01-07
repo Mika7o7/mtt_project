@@ -30,13 +30,13 @@ urlpatterns = [
     path('send_callback/', views.send_callback, name='send_callback'),
     path('send_callback_question/', views.send_callback_question, name='send_callback_question'),
     path('politika-cookies/', TemplateView.as_view(template_name='politika-cookies.html'), name='politika-cookies'),
+    path('policy/', views.policy, name='policy'),
 
     
     
 
 
     # path('online-payment/', views.online_payment, name='online_payment'),
-    # path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
     # path('cookies-policy/', views.cookies_policy, name='cookies_policy'),
     # Add other URL patterns
 ]
