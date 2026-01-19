@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block title %}{{ page_info.meta_title }}{% endblock %}
+{% block meta_description %} {{ page_info.meta_description }} {% endblock %}
+{% block meta_keywords %} {{ page_info.meta_keywords }} {% endblock %}
 
 {% block content %}
 <!-- Секция Калькулятор -->

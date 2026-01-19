@@ -2,7 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from .models import (
     HeroSection, HowToOrderStep, TransportType,
     WhyChooseUs, InfoSection, PriceItem, WorkPhoto, FAQ, Rating, Article,
-    District, MetroStation, City, Gruzovoy, Manipulyator, Highway, Region
+    District, MetroStation, City, Gruzovoy, Manipulyator, Highway, Region,
+    AboutPage, ArticlePage, PricePage, GalleryPage, CalculatorPage,
 )
 
 import requests
@@ -285,19 +286,28 @@ def payment(request):
 def about(request):
     info = InfoSection.objects.first()
     photos = WorkPhoto.objects.all()
+    aboutpage = AboutPage.objects.first()
 
     context = {
         'info': info,
+        'page_info': aboutpage,
         'photos': photos,
         'order_steps': HowToOrderStep.objects.all(),
         'why_choose_us': WhyChooseUs.objects.all(),
     }
 
     return render(request, 'about.html', context)
+ 
 
 def article_list(request):
     articles = Article.objects.all()
-    return render(request, 'articles.html', {'articles': articles})
+    articlepage = ArticlePage.objects.first()
+
+    context = {
+        "articles": articles,
+        "page_info": articlepage, 
+    }
+    return render(request, 'articles.html', context)
 
 def article_detail(request, pk):
     article = get_object_or_404(Article, pk=pk)
@@ -305,19 +315,35 @@ def article_detail(request, pk):
 
 def prices(request):
     prices = PriceItem.objects.all()
+    pricepage = PricePage.objects.first()
 
-    return render(request, 'prices.html', {"prices": prices})
+    context = {
+        "prices": prices,
+        "page_info": pricepage,
+    }
+
+    return render(request, 'prices.html', context)
 
 def gallery(request):
     photos = WorkPhoto.objects.all()
+    gallerypage = GalleryPage.objects.first()
 
-    return render(request, 'gallery.html', {"photos": photos})
+    context = {
+        "photos": photos,
+        "page_info": gallerypage, 
+    }
+
+    return render(request, 'gallery.html', context)
 
 def calculator(request):
-    return render(request, 'calculator.html')
+    calculatorpage = CalculatorPage.objects.first()
+
+    context = {
+        "page_info": calculatorpage,
+    }
+    return render(request, 'calculator.html', context)
 
 
 def oplata(request):
     return render(request, 'oplata.html')
-
 
