@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Эвакуатор у метро {{ station.name }} — {{ station.line }}{% endblock %}
+{% block title %}{{ location.meta_title }}{% endblock %}
+{% block meta_description %} {{ location.meta_description }} {% endblock %}
+{% block meta_keywords %} {{ location.meta_keywords }} {% endblock %}
+    
+
+
 {% block content %}
 <!-- HERO -->
 <section class="metro-hero">
@@ -33,20 +38,8 @@
 
               <!-- Подзаголовок (линия метро / население / расстояние / цена / длина шоссе) -->
               <p class="metro-hero-subtitle">
-                  {% if location.info_name and location_type in 'gruzovoy,manipulyator,highway' %}
-                      Круглосуточный выезд • Москва и область • Работаем 24/7
-                  {% elif location_type == 'metro' and location.line %}
-                      {{ location.line }}
-                  {% elif location_type == 'district' and location.population %}
-                      Население: {{ location.population }}
-                  {% elif location_type == 'city' and location.distance_from_mkad %}
-                      {{ location.distance_from_mkad }} км от МКАД • Круглосуточно
-                  {% elif location_type == 'gruzovoy' %}
-                      Грузоподъёмность до {{ location.weight_max|default:"20" }} т • Выезд за 30–60 мин
-                  {% elif location_type == 'manipulyator' %}
-                      Стрела до {{ location.arrow_length|default:"20" }} м • Груз до 20 тонн
-                  {% elif location_type == 'highway' %}
-                      По всему шоссе • Быстрый выезд из Москвы • Низкие цены
+                  {% if location %}
+                      {{ location.sub_description }}
                   {% else %}
                       Недорогой эвакуатор • Выезд за 20–40 минут
                   {% endif %}
@@ -391,8 +384,8 @@
       <img src="{{ info.image.url }}" alt="{{ info.title }}">
     </div>
     <div class="info-text">
-      <h2>{{ info.title }}</h2>
-      <p>{{ info.text }}</p>
+      <h2>{{ location.page_title }}</h2>
+      <p>{{ location.page_text }}</p>
       <a href="{{ info.button_link }}" class="btn-contact btn-order">{{ info.button_text }}</a>
     </div>
   </div>

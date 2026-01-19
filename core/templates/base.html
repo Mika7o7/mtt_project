@@ -5,8 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Услуги эвакуатора{% endblock %}</title>
-    <meta name="description" content="Эвакуаторная служба МТТ осуществляет круглосуточное эвакуирование транспортных средств пода. Мы предлагаем оперативную помощь всей территории при поломках, авариях, а также перевозку легковых автомобилей и мотоциклов. Наша команда профессионалов готова прийти на помощь в любое время суток. Мы гарантируем безопасную и надежную перевозку вашего автомобиля, а также доступные цены и индивидуальный подход к каждому клиенту. Звоните нам по телефону +74994441740 или оставьте заявку на сайте."/>
-    <meta name="keywords" content="Эвакуатор Москва, Трезвый водитель, Грузовой эвакуатор, Автомобильная помощь, Эвакуация авто, Специализированный эвакуатор, Эвакуация в любое время суток, Техническая помощь на дороге, Быстрая эвакуация, Цены на эвакуацию"/>
+
+
+    <meta name="description" content="{% block meta_description %}
+    Эвакуаторная служба МТТ осуществляет круглосуточное эвакуирование транспортных средств. Быстрая подача, доступные цены.
+    {% endblock %}">
+    
+    <meta name="keywords" content="{% block meta_keywords %}
+    эвакуатор, эвакуация авто, эвакуатор москва, трезвый водитель
+    {% endblock %}">
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -122,124 +129,7 @@
 
 </div>
 
-<style>
-.sbp-side-panels {
-  position: fixed;
-  right: -250px; /* фиксируем контейнер на месте */
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  z-index: 9999;
-  font-family: 'Inter', sans-serif;
-}
 
-.side-panel {
-  position: relative;
-  width: 320px;
-  height: 68px;
-  background: #0d3b66;
-  border-radius: 34px 0 0 34px;
-  display: flex;
-  align-items: center;
-  color: white;
-  box-shadow: 0 8px 25px rgba(13,59,102,0.4);
-  cursor: pointer;
-  transition: transform 0.65s cubic-bezier(.22,1,.36,1);
-  transform: translateX(0px); /* по умолчанию скрыта, видна только иконка */
-  overflow: hidden;
-  text-decoration: none !important;
-  pointer-events: none; /* панель не ловит события (чтобы не было мигания) */
-}
-
-.side-panel:hover {
-  transform: translateX(-250px); /* выдвигается только эта панель */
-  pointer-events: auto; /* становится кликабельной при выдвижении */
-}
-
-/* Иконка — единственная видимая часть, ловит hover */
-.panel-icon {
-  width: 66px;
-  height: 66px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255,255,255,0.15);
-  border-radius: 50%;
-  margin-left: 6px;
-  pointer-events: auto; /* только иконка реагирует на курсор */
-  position: relative;
-  z-index: 1;
-}
-
-/* Цвета по брендам */
-.side-panel.sbp,
-.side-panel.calc { background: #0d3b66; }
-.side-panel.telegram { background: #0088cc; }
-.side-panel.whatsapp { background: #25d366; }
-
-.content-qr {
-  width: 42px;
-  height: 42px;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-}
-
-.panel-content {
-  padding-left: 16px;
-  font-weight: 900;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-}
-
-.content-text span {
-  font-size: 11px;
-  display: block;
-  opacity: 0.9;
-}
-
-/* МОБИЛЬНЫЕ — твои размеры сохранены */
-@media (max-width: 768px) {
-  .sbp-side-panels {
-    right: -170px;
-    gap: 10px;
-  }
-
-  .side-panel {
-    width: 210px;
-    height: 44px;
-    border-radius: 27px 0 0 27px;
-    transform: translateX(0px); /* 210 - 44 = 166 */
-  }
-
-  .side-panel:hover {
-    transform: translateX(-100px);
-  }
-
-  .panel-icon {
-    width: 32px;
-    height: 32px;
-    margin-left: 5px;
-  }
-
-  .content-qr {
-    width: 22px;
-    height: 22px;
-  }
-
-  .panel-content {
-    padding-left: 12px;
-    font-size: 8px;
-  }
-
-  .content-text span {
-    font-size: 8px;
-  }
-}
-</style>
 
 
 
@@ -913,108 +803,7 @@ document.addEventListener('click', (e) => {
   </div>
 </div>
 
-<style>
-.cookie-banner {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  background: #c0c1c2;
-  color: rgb(13, 13, 13);
-  padding: 16px 20px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  z-index: 9999;
-  max-width: 380px;
-  font-size: 14px;
-  line-height: 1.5;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(150%);
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
-.cookie-banner.show {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.cookie-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-
-.cookie-text {
-  margin: 0;
-  flex: 1;
-  min-width: 200px;
-}
-
-.cookie-link {
-  color: #000000;
-  text-decoration: underline;
-  font-weight: 600;
-  font-size: 10px;
-}
-
-.cookie-link:hover {
-  color: #595959;
-}
-
-.cookie-btn {
-  background: #fd9719;
-  color: #ffffff;
-  border: none;
-  padding: 10px 24px;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 14px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.3s;
-}
-
-.cookie-btn:hover {
-  background: #6d6d6d;
-  transform: scale(1.05);
-}
-
-/* === МОБИЛЬНАЯ ВЕРСИЯ — по центру снизу === */
-@media (max-width: 768px) {
-  .cookie-banner {
-    left: 50%;
-    right: auto;
-    bottom: 15px;
-    width: calc(100% - 30px);
-    max-width: none;
-    padding: 18px 20px;
-    text-align: center;
-    transform: translateX(-50%) translateY(150%); /* центрирование по X + анимация */
-  }
-
-  .cookie-banner.show {
-    transform: translateX(-50%) translateY(0);
-  }
-
-  .cookie-content {
-    flex-direction: column;
-    gap: 14px;
-    align-items: center;
-  }
-
-  .cookie-text {
-    min-width: auto;
-  }
-
-  .cookie-btn {
-    width: 100%;
-    max-width: 250px;
-  }
-}
-</style>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
@@ -1043,37 +832,66 @@ document.addEventListener('click', (e) => {
 </script>
 
     <!-- Кнопка зонить -->
-    <a href="tel:+74958373850" class="call-button" aria-label="Позвонить">
+    <a href="tel:+79263140455" class="call-button mgo-number" aria-label="Позвонить">
       <i class="fa fa-phone"></i>
     </a>
 
-    <script type="text/javascript" src="https://www.l2.io/ip.js?var=userip"></script>
-<script type="text/javascript" >
-    (function (d, w, c) {
-        (w[c] = w[c] || []).push(function() {
-            try {
-                w.yaCounter51382240 = new Ya.Metrika2({
-                    id:51382240,
-                    clickmap:true,
-                    trackLinks:true,
-                    accurateTrackBounce:true,
-                    webvisor:true,
-                    params:{'ip': userip}
-                });
-            } catch(e) { }
-        });
-        var n = d.getElementsByTagName("script")[0],
-            s = d.createElement("script"),
-            f = function () { n.parentNode.insertBefore(s, n); };
-        s.type = "text/javascript";
-        s.async = true;
-        s.src = "https://mc.yandex.ru/metrika/tag.js";
-        if (w.opera == "[object Opera]") {
-            d.addEventListener("DOMContentLoaded", f, false);
-        } else { f(); }
-    })(document, window, "yandex_metrika_callbacks2");
+
+<!-- Яндекс.Метрика (самый актуальный и надёжный способ на 2026) -->
+<script type="text/javascript">
+  (function(m,e,t,r,i,k,a){
+    m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+    m[i].l=1*new Date();
+    k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+  })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+  ym(51382240, "init", {
+    clickmap:true,
+    trackLinks:true,
+    accurateTrackBounce:true,
+    webvisor:true
+  });
+
+  // Автоматическая передача IP (Яндекс сам берёт из заголовков, если прокси настроен)
+  // Если хочешь принудительно (тест):
+  fetch('https://api.ipify.org?format=json')
+    .then(r => r.json())
+    .then(data => {
+      ym(51382240, 'params', {'client_ip': data.ip});
+      console.log('IP клиента отправлен в Метрику:', data.ip);
+    })
+    .catch(() => console.log('Клиентский IP не удалось получить'));
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/51382240" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<script async src="https://widgets.mango-office.ru/site/34707"></script>
+<!-- /Яндекс.Метрика --> 
+
+
+<!-- Mango Office -->
+<script>
+(function(w,d,u,i,o,s,p){
+    if(d.getElementById(i)){return;}
+    w['MangoObject']=o;
+    w[o]=w[o]||function(){(w[o].q=w[o].q||[]).push(arguments)};
+    w[o].u=u;
+    w[o].t=1*new Date();
+    s=d.createElement('script');
+    s.async=1;
+    s.id=i;
+    s.src=u;
+    p=d.getElementsByTagName('script')[0];
+    p.parentNode.insertBefore(s,p);
+})(window,document,'https://widgets.mango-office.ru/widgets/mango.js','mango-js','mgo');
+
+mgo({
+    calltracking: {
+        id: 34707,
+        elements: [
+            { selector: '.mgo-number' }
+        ],
+        domain: 'mtt-evakuator.ru'
+    }
+});
+</script>
+
 </body>
 </html>

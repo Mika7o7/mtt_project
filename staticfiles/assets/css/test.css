@@ -29,6 +29,7 @@ body {
   pointer-events: none;      /* не кликабельно */
 }
 
+
 /* === Navbar === */
 .navbar {
   background-color: rgba(240, 240, 240, 0.9);
@@ -76,8 +77,6 @@ body {
   grid-template-columns: 300px 1fr; /* Левая колонка + правая */
   grid-template-rows: auto min-content; /* вторая строка минимальной высоты */
   gap: 15px 40px; /* вертикальный gap уменьшен до 15px (было 20px) */
-
-  align-items: start;
   overflow-y: auto;
   overflow-x: hidden;
   box-sizing: border-box;
@@ -534,14 +533,11 @@ body {
   gap: 20px;
   animation: scroll 40s linear infinite; /* авто-прокрутка */
   width: max-content;
-
-
 }
 
 .carousel-wrapper:hover .cards {
   animation-play-state: paused; /* пауза при hover */
 }
-
 
 @keyframes scroll {
   0% {
@@ -763,7 +759,24 @@ body {
   border-radius: 10px;
 }
 
-.transport-card {
+.carousel-wrapper {
+  overflow: hidden;
+  width: 100%;
+  margin-bottom: 40px;
+  cursor: grab;
+  user-select: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.carousel-wrapper:active {
+  cursor: grabbing;
+}
+
+.transport-card  {
+  gap: 30px;
+  animation: scroll 20s linear infinite;
+  width: max-content;
+
   flex: 0 0 250px;
   background: #fff;
   border-radius: 20px;
@@ -772,6 +785,20 @@ body {
   text-align: center;
   padding: 20px;
 }
+
+.carousel-wrapper:hover .transport-card  {
+  animation-play-state: paused;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
 
 .transport-card:hover {
   transform: translateY(-10px);
@@ -886,13 +913,12 @@ body {
 .why-cards {
   display: flex;
   gap: 30px;
-  animation: scroll 20s linear infinite;
+  animation: scroll 40s linear infinite;
   width: max-content;
 }
 
 .carousel-wrapper:hover .why-cards {
   animation-play-state: paused;
-
 }
 
 @keyframes scroll {
@@ -903,7 +929,6 @@ body {
     transform: translateX(-50%);
   }
 }
-
 
 /* Карточки */
 .why-card {
@@ -963,7 +988,7 @@ body {
     gap: 15px !important;
     padding-bottom: 10px !important;
     justify-content: flex-start !important;
-    animation-duration: 5s; /* авто-прокрутка работает и на телефоне */
+    animation-duration: 15s; /* авто-прокрутка работает и на телефоне */
   }
 
   .why-cards::-webkit-scrollbar {
@@ -974,12 +999,12 @@ body {
     scrollbar-width: none;
   }
 
+  
   .why-card {
-    flex: 0 0 40% !important;
-    scroll-snap-align: center !important;
-    min-height: 140px !important;
-    width: 20px;
-    
+  width: 270px;
+  padding: 30px 20px;
+  box-sizing: border-box;
+  flex-shrink: 0;
   }
 
   .why-card:hover {
@@ -2412,11 +2437,11 @@ body {
 
   /* Формы */
   .form-label {
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .form-select {
-    font-size: 10px;
+    font-size: 12px;
     height: 40px;
     padding: 6px 8px;
     color: #000;
@@ -2433,7 +2458,7 @@ body {
   }
 
   .extra-checkbox > span {
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .extra-checkbox input[type="checkbox"] {
@@ -2447,7 +2472,7 @@ body {
   }
 
   .option-checkbox {
-    font-size: 10px;
+    font-size: 12px;
     color: #000;
   }
 
@@ -3759,7 +3784,7 @@ body {
     bottom: 20px;
     right: 20px;
     padding: 14px;
-    font-size: 10px;
+    font-size: 20px;
   }
 
   /* можно сделать чуть меньше анимацию на мобильных */
@@ -3877,8 +3902,7 @@ body {
 
 
 
-
-.modal_succses {
+.modal {
   display: none;
   position: fixed;
   top: 0;
@@ -3891,7 +3915,7 @@ body {
   justify-content: center;
 }
 
-.modal-content_succses {
+.modal-content {
   background: white;
   padding: 30px;
   border-radius: 16px;
@@ -3902,7 +3926,7 @@ body {
   position: relative;
 }
 
-.modal-close_succses {
+.modal-close {
   position: absolute;
   top: 15px;
   right: 20px;
@@ -3911,7 +3935,225 @@ body {
   color: #999;
 }
 
-.modal-close_succses:hover {
+.modal-close:hover {
   color: #333;
 }
 
+
+.sbp-side-panels {
+  position: fixed;
+  right: -250px; /* фиксируем контейнер на месте */
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 9999;
+  font-family: 'Inter', sans-serif;
+}
+
+.side-panel {
+  position: relative;
+  width: 320px;
+  height: 68px;
+  background: #0d3b66;
+  border-radius: 34px 0 0 34px;
+  display: flex;
+  align-items: center;
+  color: white;
+  box-shadow: 0 8px 25px rgba(13,59,102,0.4);
+  cursor: pointer;
+  transition: transform 0.65s cubic-bezier(.22,1,.36,1);
+  transform: translateX(0px); /* по умолчанию скрыта, видна только иконка */
+  overflow: hidden;
+  text-decoration: none !important;
+  pointer-events: none; /* панель не ловит события (чтобы не было мигания) */
+}
+
+.side-panel:hover {
+  transform: translateX(-250px); /* выдвигается только эта панель */
+  pointer-events: auto; /* становится кликабельной при выдвижении */
+}
+
+/* Иконка — единственная видимая часть, ловит hover */
+.panel-icon {
+  width: 66px;
+  height: 66px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  margin-left: 6px;
+  pointer-events: auto; /* только иконка реагирует на курсор */
+  position: relative;
+  z-index: 1;
+}
+
+/* Цвета по брендам */
+.side-panel.sbp,
+.side-panel.calc { background: #0d3b66; }
+.side-panel.telegram { background: #0088cc; }
+.side-panel.whatsapp { background: #25d366; }
+
+.content-qr {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.panel-content {
+  padding-left: 16px;
+  font-weight: 900;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.content-text span {
+  font-size: 11px;
+  display: block;
+  opacity: 0.9;
+}
+
+/* МОБИЛЬНЫЕ — твои размеры сохранены */
+@media (max-width: 768px) {
+  .sbp-side-panels {
+    right: -170px;
+    gap: 10px;
+  }
+
+  .side-panel {
+    width: 210px;
+    height: 44px;
+    border-radius: 27px 0 0 27px;
+    transform: translateX(0px); /* 210 - 44 = 166 */
+  }
+
+  .side-panel:hover {
+    transform: translateX(-100px);
+  }
+
+  .panel-icon {
+    width: 32px;
+    height: 32px;
+    margin-left: 5px;
+  }
+
+  .content-qr {
+    width: 22px;
+    height: 22px;
+  }
+
+  .panel-content {
+    padding-left: 12px;
+    font-size: 8px;
+  }
+
+  .content-text span {
+    font-size: 8px;
+  }
+}
+
+.cookie-banner {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: #c0c1c2;
+  color: rgb(13, 13, 13);
+  padding: 16px 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  z-index: 9999;
+  max-width: 380px;
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(150%);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cookie-banner.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.cookie-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.cookie-text {
+  margin: 0;
+  flex: 1;
+  min-width: 200px;
+}
+
+.cookie-link {
+  color: #000000;
+  text-decoration: underline;
+  font-weight: 600;
+  font-size: 10px;
+}
+
+.cookie-link:hover {
+  color: #595959;
+}
+
+.cookie-btn {
+  background: #fd9719;
+  color: #ffffff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s;
+}
+
+.cookie-btn:hover {
+  background: #6d6d6d;
+  transform: scale(1.05);
+}
+
+/* === МОБИЛЬНАЯ ВЕРСИЯ — по центру снизу === */
+@media (max-width: 768px) {
+  .cookie-banner {
+    left: 50%;
+    right: auto;
+    bottom: 15px;
+    width: calc(100% - 30px);
+    max-width: none;
+    padding: 18px 20px;
+    text-align: center;
+    transform: translateX(-50%) translateY(150%); /* центрирование по X + анимация */
+  }
+
+  .cookie-banner.show {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .cookie-content {
+    flex-direction: column;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .cookie-text {
+    min-width: auto;
+  }
+
+  .cookie-btn {
+    width: 100%;
+    max-width: 250px;
+  }
+}

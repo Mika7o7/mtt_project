@@ -167,6 +167,8 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+    
+
 # ===== ГОРОДА МО (новая модель) =====
 class City(models.Model):
     name = models.CharField("Название города", max_length=100)  # например: Химки
@@ -181,11 +183,15 @@ class City(models.Model):
     # Новые поля — как ты хотел
     info_name = models.CharField("Заголовок страницы (H1)", max_length=150, blank=True,
                                 help_text="Например: Эвакуатор в Химках — недорого и быстро")
-    info_description = models.TextField("SEO-описание для детальной страницы", blank=True)
     
-    image = models.ImageField("Фото города", upload_to="cities/", blank=True, null=True)
-    population = models.CharField("Население", max_length=50, blank=True)
-    distance_from_mkad = models.PositiveIntegerField("Расстояние от МКАД, км", default=0)
+    sub_description = models.TextField("Под заголовок", blank=True)
+    page_title = models.CharField("Заголовок текста", max_length=150, blank=True)
+    page_text = models.TextField("Текст страницы", blank=True)
+
+    meta_title = models.CharField("SEO-Заголовок", max_length=150, blank=True)
+    meta_description = models.TextField("SEO-описание для детальной страницы", blank=True)
+    meta_keywords = models.TextField("SEO-Ключевые слова для детальной страницы", blank=True,
+        help_text="Например: эвакуатор услуги, эвакуация авто москва, грузовой эвакуатор")
 
     class Meta:
         verbose_name = "Город МО"
@@ -206,13 +212,19 @@ class MetroStation(models.Model):
         null=True,
         unique=True
     )
-    line = models.CharField("Линия метро", max_length=100, blank=True)
-    line_color = models.CharField("Цвет линии (hex)", max_length=7, default="#FF0000", blank=True)
 
     # ← НОВЫЕ ПОЛЯ!
     info_name = models.CharField("Заголовок страницы (H1)", max_length=150, blank=True,
                                 help_text="Например: Эвакуатор у метро Саларьево — от 2500 ₽")
-    info_description = models.TextField("SEO-описание для детальной страницы", blank=True)
+
+    sub_description = models.TextField("Под заголовок", blank=True)
+    page_title = models.CharField("Заголовок текста", max_length=150, blank=True)
+    page_text = models.TextField("Текст страницы", blank=True)
+
+    meta_title = models.CharField("SEO-Заголовок", max_length=150, blank=True)
+    meta_description = models.TextField("SEO-описание для детальной страницы", blank=True)
+    meta_keywords = models.TextField("SEO-Ключевые слова для детальной страницы", blank=True,
+        help_text="Например: эвакуатор услуги, эвакуация авто москва, грузовой эвакуатор")
 
     class Meta:
         verbose_name = "Станция метро"
@@ -236,7 +248,15 @@ class Region(models.Model):
     # ← НОВЫЕ ПОЛЯ!
     info_name = models.CharField("Заголовок страницы (H1)", max_length=150, blank=True,
                                 help_text="Например: Эвакуатор у метро Саларьево — от 2500 ₽")
-    info_description = models.TextField("SEO-описание для детальной страницы", blank=True)
+
+    sub_description = models.TextField("Под заголовок", blank=True)
+    page_title = models.CharField("Заголовок текста", max_length=150, blank=True)
+    page_text = models.TextField("Текст страницы", blank=True)
+
+    meta_title = models.CharField("SEO-Заголовок", max_length=150, blank=True)
+    meta_description = models.TextField("SEO-описание для детальной страницы", blank=True)
+    meta_keywords = models.TextField("SEO-Ключевые слова для детальной страницы", blank=True,
+        help_text="Например: эвакуатор услуги, эвакуация авто москва, грузовой эвакуатор")
 
     class Meta:
         verbose_name = "Станция область"
@@ -262,12 +282,15 @@ class District(models.Model):
     # ← НОВЫЕ ПОЛЯ!
     info_name = models.CharField("Заголовок страницы (H1)", max_length=150, blank=True,
                                 help_text="Например: Эвакуатор в ВАО — Восточный округ Москвы")
-    info_description = models.TextField("SEO-описание для детальной страницы", blank=True)
-
     image = models.ImageField("Фото округа", upload_to="districts/", blank=True, null=True)
-    price_note = models.CharField("Особенности цен", max_length=200, blank=True)
-    metro_count = models.PositiveIntegerField("Кол-во станций метро", default=0)
-    population = models.CharField("Население", max_length=50, blank=True)
+    sub_description = models.TextField("Под заголовок", blank=True)
+    page_title = models.CharField("Заголовок текста", max_length=150, blank=True)
+    page_text = models.TextField("Текст страницы", blank=True)
+
+    meta_title = models.CharField("SEO-Заголовок", max_length=150, blank=True)
+    meta_description = models.TextField("SEO-описание для детальной страницы", blank=True)
+    meta_keywords = models.TextField("SEO-Ключевые слова для детальной страницы", blank=True,
+        help_text="Например: эвакуатор услуги, эвакуация авто москва, грузовой эвакуатор")
 
     class Meta:
         verbose_name = "Округ Москвы"
@@ -285,10 +308,14 @@ class Gruzovoy(models.Model):
     
     info_name = models.CharField("Заголовок страницы (H1)", max_length=150, blank=True,
         help_text="Например: Грузовой эвакуатор в Москве и области — от 8000 ₽")
-    info_description = models.TextField("SEO-описание для детальной страницы", blank=True)
-    image = models.ImageField("Фото грузового эвакуатора", upload_to="gruzovoy/", blank=True, null=True)
-    price_from = models.PositiveIntegerField("Цена от, руб", default=8000)
-    weight_max = models.PositiveIntegerField("Макс. вес авто, тонн", default=10)
+    sub_description = models.TextField("Под заголовок", blank=True)
+    page_title = models.CharField("Заголовок текста", max_length=150, blank=True)
+    page_text = models.TextField("Текст страницы", blank=True)
+
+    meta_title = models.CharField("SEO-Заголовок", max_length=150, blank=True)
+    meta_description = models.TextField("SEO-описание для детальной страницы", blank=True)
+    meta_keywords = models.TextField("SEO-Ключевые слова для детальной страницы", blank=True,
+        help_text="Например: эвакуатор услуги, эвакуация авто москва, грузовой эвакуатор")
 
     class Meta:
         verbose_name = "Грузовой эвакуатор"
@@ -306,10 +333,14 @@ class Manipulyator(models.Model):
     
     info_name = models.CharField("Заголовок страницы (H1)", max_length=150, blank=True,
         help_text="Например: Эвакуатор с краном-манипулятором в Москве")
-    info_description = models.TextField("SEO-описание для детальной страницы", blank=True)
-    image = models.ImageField("Фото манипулятора", upload_to="manipulyator/", blank=True, null=True)
-    price_from = models.PositiveIntegerField("Цена от, руб", default=12000)
-    arrow_length = models.CharField("Длина стрелы", max_length=30, blank=True)
+    sub_description = models.TextField("Под заголовок", blank=True)
+    page_title = models.CharField("Заголовок текста", max_length=150, blank=True)
+    page_text = models.TextField("Текст страницы", blank=True)
+
+    meta_title = models.CharField("SEO-Заголовок", max_length=150, blank=True)
+    meta_description = models.TextField("SEO-описание для детальной страницы", blank=True)
+    meta_keywords = models.TextField("SEO-Ключевые слова для детальной страницы", blank=True,
+        help_text="Например: эвакуатор услуги, эвакуация авто москва, грузовой эвакуатор")
 
     class Meta:
         verbose_name = "Эвакуатор-манипулятор"
@@ -327,9 +358,14 @@ class Highway(models.Model):
     
     info_name = models.CharField("Заголовок страницы (H1)", max_length=150, blank=True,
         help_text="Например: Эвакуатор по Дмитровскому шоссе — быстро и недорого")
-    info_description = models.TextField("SEO-описание для детальной страницы", blank=True)
-    image = models.ImageField("Фото шоссе", upload_to="highways/", blank=True, null=True)
-    length_km = models.PositiveIntegerField("Длина шоссе, км", blank=True, null=True)
+    sub_description = models.TextField("Под заголовок", blank=True)
+    page_title = models.CharField("Заголовок текста", max_length=150, blank=True)
+    page_text = models.TextField("Текст страницы", blank=True)
+
+    meta_title = models.CharField("SEO-Заголовок", max_length=150, blank=True)
+    meta_description = models.TextField("SEO-описание для детальной страницы", blank=True)
+    meta_keywords = models.TextField("SEO-Ключевые слова для детальной страницы", blank=True,
+        help_text="Например: эвакуатор услуги, эвакуация авто москва, грузовой эвакуатор")
 
     class Meta:
         verbose_name = "Шоссе"
@@ -338,3 +374,153 @@ class Highway(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class AboutPage(models.Model):
+    info_name = models.CharField(
+        "Заголовок страницы (H1)", 
+        max_length=150, 
+        blank=True,
+        help_text="Например: О нашей компании — профессиональные услуги эвакуации"
+    )
+    sub_description = models.TextField("Под заголовок", blank=True)
+    page_title = models.CharField("Заголовок текста", max_length=150, blank=True)
+    page_text = models.TextField("Текст страницы", blank=True)
+    
+    meta_title = models.CharField("SEO-Заголовок", max_length=150, blank=True)
+    meta_description = models.TextField(
+        "SEO-описание для детальной страницы", 
+        blank=True
+    )
+    meta_keywords = models.TextField(
+        "SEO-Ключевые слова для детальной страницы", 
+        blank=True,
+        help_text="Например: о компании эвакуатор, история компании, наши преимущества"
+    )
+    
+    class Meta:
+        verbose_name = "Страница 'О нас'"
+        verbose_name_plural = "Страница 'О нас'"
+    
+    def __str__(self):
+        return self.info_name if self.info_name else "Страница 'О нас'"
+    
+
+class ArticlePage(models.Model):
+    info_name = models.CharField(
+        "Заголовок страницы (H1)", 
+        max_length=150, 
+        blank=True,
+        help_text="Например: Полезные статьи об услугах эвакуации"
+    )
+    sub_description = models.TextField("Под заголовок", blank=True)
+    page_title = models.CharField("Заголовок текста", max_length=150, blank=True)
+    page_text = models.TextField("Текст страницы", blank=True)
+    
+    meta_title = models.CharField("SEO-Заголовок", max_length=150, blank=True)
+    meta_description = models.TextField(
+        "SEO-описание для детальной страницы", 
+        blank=True
+    )
+    meta_keywords = models.TextField(
+        "SEO-Ключевые слова для детальной страницы", 
+        blank=True,
+        help_text="Например: статьи про эвакуацию, советы автомобилистам, полезная информация"
+    )
+    
+    class Meta:
+        verbose_name = "Страница 'Статьи'"
+        verbose_name_plural = "Страница 'Статьи'"
+    
+    def __str__(self):
+        return self.info_name if self.info_name else "Страница 'Статьи'"
+    
+
+class PricePage(models.Model):
+    info_name = models.CharField(
+        "Заголовок страницы (H1)", 
+        max_length=150, 
+        blank=True,
+        help_text="Например: Цены на услуги эвакуатора в Москве и области"
+    )
+    sub_description = models.TextField("Под заголовок", blank=True)
+    page_title = models.CharField("Заголовок текста", max_length=150, blank=True)
+    page_text = models.TextField("Текст страницы", blank=True)
+    
+    meta_title = models.CharField("SEO-Заголовок", max_length=150, blank=True)
+    meta_description = models.TextField(
+        "SEO-описание для детальной страницы", 
+        blank=True
+    )
+    meta_keywords = models.TextField(
+        "SEO-Ключевые слова для детальной страницы", 
+        blank=True,
+        help_text="Например: цены на эвакуатор, стоимость услуг, прайс-лист эвакуация"
+    )
+    
+    class Meta:
+        verbose_name = "Страница 'Цены'"
+        verbose_name_plural = "Страница 'Цены'"
+    
+    def __str__(self):
+        return self.info_name if self.info_name else "Страница 'Цены'"
+    
+
+class GalleryPage(models.Model):
+    info_name = models.CharField(
+        "Заголовок страницы (H1)", 
+        max_length=150, 
+        blank=True,
+        help_text="Например: Фотогалерея наших работ и эвакуаторов"
+    )
+    sub_description = models.TextField("Под заголовок", blank=True)
+    page_title = models.CharField("Заголовок текста", max_length=150, blank=True)
+    page_text = models.TextField("Текст страницы", blank=True)
+    
+    meta_title = models.CharField("SEO-Заголовок", max_length=150, blank=True)
+    meta_description = models.TextField(
+        "SEO-описание для детальной страницы", 
+        blank=True
+    )
+    meta_keywords = models.TextField(
+        "SEO-Ключевые слова для детальной страницы", 
+        blank=True,
+        help_text="Например: фото эвакуаторов, галерея работ, наши автомобили"
+    )
+    
+    class Meta:
+        verbose_name = "Страница 'Галерея'"
+        verbose_name_plural = "Страница 'Галерея'"
+    
+    def __str__(self):
+        return self.info_name if self.info_name else "Страница 'Галерея'"
+    
+
+class CalculatorPage(models.Model):
+    info_name = models.CharField(
+        "Заголовок страницы (H1)", 
+        max_length=150, 
+        blank=True,
+        help_text="Например: Расчет стоимости эвакуации автомобиля"
+    )
+    sub_description = models.TextField("Под заголовок", blank=True)
+    page_title = models.CharField("Заголовок текста", max_length=150, blank=True)
+    page_text = models.TextField("Текст страницы", blank=True)
+    
+    meta_title = models.CharField("SEO-Заголовок", max_length=150, blank=True)
+    meta_description = models.TextField(
+        "SEO-описание для детальной страницы", 
+        blank=True
+    )
+    meta_keywords = models.TextField(
+        "SEO-Ключевые слова для детальной страницы", 
+        blank=True,
+        help_text="Например: калькулятор эвакуации, рассчитать стоимость, онлайн расчет"
+    )
+    
+    class Meta:
+        verbose_name = "Страница 'Калькулятор'"
+        verbose_name_plural = "Страница 'Калькулятор'"
+    
+    def __str__(self):
+        return self.info_name if self.info_name else "Страница 'Калькулятор'"

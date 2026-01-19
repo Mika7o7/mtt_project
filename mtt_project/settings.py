@@ -29,12 +29,13 @@ DEBUG = False
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    '5.129.193.67',  # твой сервер
+    '193.42.125.36',  # твой сервер
+    
 ]
 
 # Если хочешь домен потом — просто добавишь
 if not DEBUG:
-    ALLOWED_HOSTS += ['whiterabbite.store', 'www.whiterabbite.store']
+    ALLOWED_HOSTS += ['mtt-evakuator.ru', 'www.mtt-evakuator.ru']
 
 # Application definition
 
@@ -45,11 +46,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "corsheaders",
 
     "core",
+
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -57,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'mtt_project.urls'
@@ -136,6 +141,9 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+CORS_ALLOWED_ORIGINS = [
+    "http://193.42.125.36",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /api/
+Disallow: /media/
+Disallow: /static/admin/
+
+Allow: /
+
+Sitemap: https://mtt-evakuator.ru/sitemap.xml

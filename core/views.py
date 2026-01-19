@@ -10,7 +10,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt  # если хочешь, но лучше убрать и использовать token в форме
 
 TELEGRAM_TOKEN = "1625085576:AAGR1VzsLToXxe5NxiPGA-IZy1NmQlbNX7U"  # или хранить в settings.SECRET
-TELEGRAM_CHAT_ID = "1628997906"
+TELEGRAM_CHAT_ID = "-1003511742071"
 @csrf_exempt
 def submit_form(request):
     if request.method != "POST":
@@ -182,6 +182,8 @@ def index(request):
     why_choose_us = WhyChooseUs.objects.all()
     photos = WorkPhoto.objects.all()
     faqs = FAQ.objects.filter(is_active=True)[:6]
+
+    
    
     context = {
         'hero': hero,
