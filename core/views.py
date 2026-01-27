@@ -7,7 +7,7 @@ from .models import (
 )
 
 import requests
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.views.decorators.csrf import csrf_exempt  # если хочешь, но лучше убрать и использовать token в форме
 
 TELEGRAM_TOKEN = "1625085576:AAGR1VzsLToXxe5NxiPGA-IZy1NmQlbNX7U"  # или хранить в settings.SECRET
@@ -347,3 +347,89 @@ def calculator(request):
 def oplata(request):
     return render(request, 'oplata.html')
 
+
+from .models import Page
+
+
+def home(request):
+    page = get_object_or_404(Page, is_active=True)
+    
+    
+    context = {
+        'page': page,
+        # Все связи уже доступны через page.название_связи.all()
+        'hero_sections': page.hero_sections.all(),
+        'how_to_order_steps': page.how_to_order_steps.all().order_by('order'),
+        'transport_types': page.transport_types.all(),
+        'why_choose_us': page.why_choose_us.all(),
+        'calculator': page.calculator,
+        'info_sections': page.info_sections.all(),
+        'price_items': page.price_items.all(),
+        'work_photos': page.work_photos.all(),
+        'faqs': page.faqs.filter(is_active=True),
+        'ratings': page.ratings.all(),
+        'articles': page.articles.all().order_by('-date')[:5],
+        'cities': page.cities.all(),
+        'metro_stations': page.metro_stations.all(),
+        'regions': page.regions.all(),
+        'districts': page.districts.all(),
+        'gruzovoys': page.gruzovoys.all(),
+        'manipulyators': page.manipulyators.all(),
+        'highways': page.highways.all(),
+    }
+    
+    return render(request, 'page_detail.html', context)
+
+
+def page_detail(request, slug=None):
+    if slug:
+        # Для обычных страниц - ищем по slug
+        try:
+            page = Page.objects.get(slug=slug, is_active=True, is_homepage=False)
+        except Page.DoesNotExist:
+            raise Http404("Страница не найдена")
+        except Page.MultipleObjectsReturned:
+            # Если несколько страниц с одинаковым slug, берем первую
+            page = Page.objects.filter(slug=slug, is_active=True, is_homepage=False).first()
+    else:
+        # Для главной страницы - ищем где is_homepage=True
+        try:
+            page = Page.objects.get(is_homepage=True, is_active=True)
+        except Page.DoesNotExist:
+            # Если нет главной, создаем ее или используем первую активную
+            page = Page.objects.filter(is_active=True).first()
+            if not page:
+                raise Http404("Нет активных страниц")
+        except Page.MultipleObjectsReturned:
+            # Если несколько главных страниц, берем первую
+            page = Page.objects.filter(is_homepage=True, is_active=True).first()
+    
+    context = {
+        'page': page,
+        # Все связи уже доступны через page.название_связи.all()
+        'hero_sections': page.hero_sections.all(),
+        'how_to_order_steps': page.how_to_order_steps.all().order_by('order'),
+        'transport_types': page.transport_types.all(),
+        'why_choose_us': page.why_choose_us.all(),
+        'calculator': page.calculator,
+        'payment': page.payment_show,
+        'second_hero_section': page.second_hero_section,
+        'fastorder': page.fastorder,
+        'question_map': page.question_map,
+        'map_show': page.map_show,
+        'info_sections': page.info_sections.all(),
+        'price_items': page.price_items.all(),
+        'work_photos': page.work_photos.all(),
+        'faqs': page.faqs.filter(is_active=True),
+        'ratings': page.ratings.all(),
+        'articles': page.articles.all().order_by('-date')[:5],
+        'cities': page.cities.all(),
+        'metro_stations': page.metro_stations.all(),
+        'regions': page.regions.all(),
+        'districts': page.districts.all(),
+        'gruzovoys': page.gruzovoys.all(),
+        'manipulyators': page.manipulyators.all(),
+        'highways': page.highways.all(),
+    }
+    
+    return render(request, 'page_detail.html', context)

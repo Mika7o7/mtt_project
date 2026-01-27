@@ -33,19 +33,6 @@ class HowToOrderStep(models.Model):
         return f"{self.order}. {self.title}"
 
 
-# ===== TRANSPORT TYPES =====
-# class TransportType(models.Model):
-#     name = models.CharField("Название типа", max_length=100)
-#     image = models.ImageField("Фото транспорта", upload_to="transport/")
-#     button_text = models.CharField("Текст кнопки", max_length=50, default="Заказать")
-
-#     def __str__(self):
-#         return self.name
-
-#     class Meta:
-#         verbose_name = "Тип транспорта"
-#         verbose_name_plural = "Типы транспорта"
-
 class TransportType(models.Model):
     name = models.CharField("Название типа", max_length=100)
     slug = models.SlugField(
@@ -524,3 +511,185 @@ class CalculatorPage(models.Model):
     
     def __str__(self):
         return self.info_name if self.info_name else "Страница 'Калькулятор'"
+
+
+class Page(models.Model):
+    name = models.CharField("Название страницы", max_length=150)
+    slug = models.SlugField(
+        "URL страницы", 
+        max_length=150, 
+        unique=True,
+        blank=True,  # Разрешаем пустое значение
+        null=True,   # Разрешаем null
+        help_text="Оставьте пустым для главной страницы"
+    )
+    is_homepage = models.BooleanField("Главная страница", default=False)
+    
+    # SEO поля
+    info_name = models.CharField("Заголовок страницы (H1)", max_length=150, blank=True)
+    sub_description = models.TextField("Под заголовок", blank=True)
+    page_title = models.CharField("Заголовок текста", max_length=150, blank=True)
+    page_text = models.TextField("Текст страницы", blank=True)
+    
+    meta_title = models.CharField("SEO-Заголовок", max_length=150, blank=True)
+    meta_description = models.TextField("SEO-описание", blank=True)
+    meta_keywords = models.TextField("SEO-Ключевые слова", blank=True)
+    
+    # Связи со всеми моделями через ManyToMany
+    hero_sections = models.ManyToManyField(
+        'HeroSection', 
+        blank=True, 
+        verbose_name="Hero секции",
+        related_name='pages'
+    )
+    
+    how_to_order_steps = models.ManyToManyField(
+        'HowToOrderStep', 
+        blank=True, 
+        verbose_name="Шаги 'Как заказать'",
+        related_name='pages'
+    )
+    
+    transport_types = models.ManyToManyField(
+        'TransportType', 
+        blank=True, 
+        verbose_name="Типы транспорта",
+        related_name='pages'
+    )
+    
+    why_choose_us = models.ManyToManyField(
+        'WhyChooseUs', 
+        blank=True, 
+        verbose_name="Почему выбрать нас",
+        related_name='pages'
+    )
+    fastorder = models.BooleanField("показать Срочный заказ эвакуатора", default=False)
+    calculator = models.BooleanField("показать калькулятор", default=False)
+    question_map = models.BooleanField("показать Остались вопросы", default=False)
+    map_show = models.BooleanField("показать картy", default=False)
+    payment_show = models.BooleanField("показать qr", default=False)
+    second_hero_section = models.BooleanField("показать втарох тип hero section", default=False)
+    
+    info_sections = models.ManyToManyField(
+        'InfoSection', 
+        blank=True, 
+        verbose_name="Инфо секции",
+        related_name='pages'
+    )
+    
+    price_items = models.ManyToManyField(
+        'PriceItem', 
+        blank=True, 
+        verbose_name="Прайс-лист",
+        related_name='pages'
+    )
+    
+    work_photos = models.ManyToManyField(
+        'WorkPhoto', 
+        blank=True, 
+        verbose_name="Фото работ",
+        related_name='pages'
+    )
+    
+    faqs = models.ManyToManyField(
+        'FAQ', 
+        blank=True, 
+        verbose_name="FAQ",
+        related_name='pages'
+    )
+    
+    ratings = models.ManyToManyField(
+        'Rating', 
+        blank=True, 
+        verbose_name="Рейтинги",
+        related_name='pages'
+    )
+    
+    articles = models.ManyToManyField(
+        'Article', 
+        blank=True, 
+        verbose_name="Статьи",
+        related_name='pages'
+    )
+    
+    cities = models.ManyToManyField(
+        'City', 
+        blank=True, 
+        verbose_name="Города МО",
+        related_name='pages'
+    )
+    
+    metro_stations = models.ManyToManyField(
+        'MetroStation', 
+        blank=True, 
+        verbose_name="Станции метро",
+        related_name='pages'
+    )
+    
+    regions = models.ManyToManyField(
+        'Region', 
+        blank=True, 
+        verbose_name="Области",
+        related_name='pages'
+    )
+    
+    districts = models.ManyToManyField(
+        'District', 
+        blank=True, 
+        verbose_name="Округа",
+        related_name='pages'
+    )
+    
+    gruzovoys = models.ManyToManyField(
+        'Gruzovoy', 
+        blank=True, 
+        verbose_name="Грузовые эвакуаторы",
+        related_name='pages'
+    )
+    
+    manipulyators = models.ManyToManyField(
+        'Manipulyator', 
+        blank=True, 
+        verbose_name="Манипуляторы",
+        related_name='pages'
+    )
+    
+    highways = models.ManyToManyField(
+        'Highway', 
+        blank=True, 
+        verbose_name="Шоссе",
+        related_name='pages'
+    )
+    
+    # Настройки
+    is_active = models.BooleanField("Активная страница", default=True)
+    order = models.PositiveIntegerField("Порядок в меню", default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = "Страница"
+        verbose_name_plural = "Страницы"
+        ordering = ['order', 'name']
+    
+    def __str__(self):
+        return self.name
+    
+    def get_absolute_url(self):
+        return f'/{self.slug}/'
+
+    def clean(self):
+        from django.core.exceptions import ValidationError
+        
+        # Проверка, что только одна страница может быть главной
+        if self.is_homepage:
+            if Page.objects.filter(is_homepage=True).exclude(id=self.id).exists():
+                raise ValidationError('Может быть только одна главная страница')
+        
+        # Если это главная страница, слаг должен быть пустым
+        if self.is_homepage and self.slug:
+            raise ValidationError('Главная страница не должна иметь slug')
+        
+        # Если не главная, слаг обязателен
+        if not self.is_homepage and not self.slug:
+            raise ValidationError('Обычные страницы должны иметь slug')

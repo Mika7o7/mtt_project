@@ -1,12 +1,13 @@
 # core/admin.py
 from django.contrib import admin
+from django import forms
 from .models import (
     HeroSection, HowToOrderStep, TransportType,
     WhyChooseUs, InfoSection, PriceItem, WorkPhoto,
     FAQ, Rating, Article, District, MetroStation,
     City, Gruzovoy, Manipulyator, Highway, Region,
     AboutPage, ArticlePage, PricePage, GalleryPage,
-    CalculatorPage
+    CalculatorPage, Page
 )
 
 # ==== КАСТОМНЫЙ АДМИН-САЙТ (ТВОЙ КРАСИВЫЙ ДИЗАЙН) ====
@@ -30,7 +31,7 @@ class CustomAdminSite(admin.AdminSite):
         ]
         pages = [
             "AboutPage", "ArticlePage", "PricePage", "GalleryPage",
-            "CalculatorPage"
+            "CalculatorPage", "Page"
         ]
 
 
@@ -211,3 +212,103 @@ class CalculatorPageAdmin(admin.ModelAdmin):
     search_fields = ("info_name",)
 
 
+class PageAdminForm(forms.ModelForm):
+    class Meta:
+        model = Page
+        fields = '__all__'
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        is_homepage = cleaned_data.get('is_homepage')
+        slug = cleaned_data.get('slug')
+        
+        if is_homepage and slug:
+            raise forms.ValidationError("Главная страница не должна иметь slug")
+        
+        if not is_homepage and not slug:
+            raise forms.ValidationError("Обычные страницы должны иметь slug")
+        
+        return cleaned_data
+
+
+@admin.register(Page, site=custom_admin_site)
+class PageAdmin(admin.ModelAdmin):
+    form = PageAdminForm
+    # Настраиваем отображение полей в зависимости от типа страницы
+    def get_fieldsets(self, request, obj=None):
+        if obj and obj.is_homepage:
+            # Для главной страницы не показываем поле slug
+            return (
+                ('Основная информация', {
+                    'fields': ('name', 'is_homepage', 'is_active', 'order')
+                }),
+                ('SEO информация', {
+                    'fields': ('info_name', 'sub_description', 'page_title', 'page_text',
+                              'meta_title', 'meta_description', 'meta_keywords')
+                }),
+                ('Контент страницы', {
+                    'fields': (
+                        'hero_sections',
+                        'how_to_order_steps',
+                        'transport_types',
+                        'why_choose_us',
+                        'fastorder',
+                        'calculator',
+                        'question_map',
+                        'map_show',
+                        'payment_show',
+                        'second_hero_section',
+                        'info_sections',
+                        'price_items',
+                        'work_photos',
+                        'faqs',
+                        'ratings',
+                        'articles',
+                        'cities',
+                        'metro_stations',
+                        'regions',
+                        'districts',
+                        'gruzovoys',
+                        'manipulyators',
+                        'highways',
+                    ),
+                }),
+            )
+        else:
+            # Для обычных страниц показываем все поля
+            return (
+                ('Основная информация', {
+                    'fields': ('name', 'slug', 'is_homepage', 'is_active', 'order')
+                }),
+                ('SEO информация', {
+                    'fields': ('info_name', 'sub_description', 'page_title', 'page_text',
+                              'meta_title', 'meta_description', 'meta_keywords')
+                }),
+                ('Контент страницы', {
+                    'fields': (
+                        'hero_sections',
+                        'how_to_order_steps',
+                        'transport_types',
+                        'why_choose_us',
+                        'fastorder',
+                        'calculator',
+                        'question_map',
+                        'map_show',
+                        'payment_show',
+                        'second_hero_section',
+                        'info_sections',
+                        'price_items',
+                        'work_photos',
+                        'faqs',
+                        'ratings',
+                        'articles',
+                        'cities',
+                        'metro_stations',
+                        'regions',
+                        'districts',
+                        'gruzovoys',
+                        'manipulyators',
+                        'highways',
+                    ),
+                }),
+            )

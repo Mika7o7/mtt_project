@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Услуги эвакуатора{% endblock %}</title>
-
+    <title>{% block title %}Эвакуатор МТТ — круглосуточно{% endblock %}</title>
 
     <meta name="description" content="{% block meta_description %}
     Эвакуаторная служба МТТ осуществляет круглосуточное эвакуирование транспортных средств. Быстрая подача, доступные цены.
@@ -29,7 +28,7 @@
     <!-- Yandex Maps API -->
     <script src="https://api-maps.yandex.ru/2.1/?apikey=bfca9f71-28f1-4b45-b981-571090675b98&lang=ru_RU"></script>
     <!-- Other scripts -->
-    <script src="https://unpkg.com/imask"></script>
+    <!-- <script src="https://unpkg.com/imask"></script> -->
     <!-- <script src="{% static 'assets/js/calculator.js' %}"></script> -->
      
     {% block extra_head %}{% endblock %}
@@ -150,130 +149,482 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
         
-	<script>
-		;(function($) {
-			"use strict";
+	   <script>
+        ; (function ($) {
+            "use strict";
+            // === Сначала объявляем функцию расчета глобально ===
+            window.SumRez = function () {
+                var vk = $('#clt_vk').val();
+                var distance = parseInt($('#f_qq').val()) || 0;
+                var total = 0;
 
-			ymaps.ready(init);
+                if (distance <= 0) {
+                    $('.clt_sum--js').text('0');
+                    return;
+                }
 
-			function init() {
-			
-					var myMap = new ymaps.Map("map_map", {
-						center: [55.755864, 37.617698],
-						zoom: 9,
-						controls: ["fullscreenControl"],
-						behaviors: ["default", "scrollZoom", "drag"]
-					}),
-			
-	
-					// Создадим панель маршрутизации.
-					routePanelControl = new ymaps.control.RoutePanel({
-						options: {
-							maxWidth: "280px", 
-							autofocus: false
-						}
-					}),
-					zoomControl = new ymaps.control.ZoomControl({
-						options: {
-							size: "small",
-							float: "none",
-							position: {
-								bottom: 45,
-								right: 10
-							}
-						}
-					});
-				
+                if (vk == 1) {
+                    // ЭВАКУАТОР
+                    var visibleSelect = $('.clt_div_1--js .clt_tip--js:not(.hidden)');
+                    if (visibleSelect.length) {
+                        var selectedOption = visibleSelect.find('option:selected');
+                        var basePrice = parseInt(selectedOption.data('price')) || 0;
+                        var freeKm = parseInt(selectedOption.data('km')) || 100;
 
+                        if (distance <= freeKm) {
+                            total = basePrice;
+                        } else {
+                            var extraKm = distance - freeKm;
+                            var pricePerKm = basePrice / freeKm;
+                            total = Math.round(basePrice + (pricePerKm * extraKm));
+                        }
 
-				// Пробки
-				var trafficControl = new ymaps.control.TrafficControl({ state: {
-					providerKey: "traffic#actual",
-					trafficShown: true
-				}});
-				
-				// Добавим контрол на карту.
-				myMap.controls.add(trafficControl);
-				
-				// Получим ссылку на провайдер пробок "Сейчас" и включим показ инфоточек.
-				trafficControl.getProvider("traffic#actual").state.set("infoLayerShown", true);    
-					
-					
-				// Пользователь сможет построить только автомобильный маршрут.
-				routePanelControl.routePanel.options.set({
-					types: {auto: true}
-				});
+                        var kolesoCount = parseInt($('#clt_koleso').val()) || 0;
+                        total += kolesoCount * 1500;
 
+                        $('.clt_div_1--js input[type="checkbox"]:checked').each(function () {
+                            total += parseInt($(this).data('price')) || 0;
+                        });
+                    }
+                } else {
+                    // МАНИПУЛЯТОР
+                    var visibleSelect = $('.clt_div_2--js .clt_tip--js:not(.hidden)');
+                    if (visibleSelect.length) {
+                        var selectedOption = visibleSelect.find('option:selected');
+                        var basePrice = parseInt(selectedOption.data('price')) || 0;
+                        var freeKm = parseInt(selectedOption.data('km')) || 100;
 
-				
+                        if (distance <= freeKm) {
+                            total = basePrice;
+                        } else {
+                            var extraKm = distance - freeKm;
+                            var pricePerKm = basePrice / freeKm;
+                            total = Math.round(basePrice + (pricePerKm * extraKm));
+                        }
 
-				myMap.controls.add(routePanelControl).add(zoomControl);
+                        var kolesoCount = parseInt($('#clt_koleso').val()) || 0;
+                        total += kolesoCount * 1500;
 
-				// Маршрут
-				routePanelControl.routePanel.getRouteAsync().then(function (route) {
-		
-					// Число маршрутов
-					route.model.setParams({results: 1}, true);
+                        $('.clt_div_2--js input[type="checkbox"]:checked').each(function () {
+                            total += parseInt($(this).data('price')) || 0;
+                        });
+                    }
+                }
 
-					// Событие построения маршрута
-					route.model.events.add("requestsuccess", function () {
+                $('.clt_sum--js').text(total.toLocaleString('ru-RU'));
+            };
+            
+            ymaps.ready(init);
 
-						var activeRoute = route.getActiveRoute();
-						if (activeRoute) {
-							var length = route.getActiveRoute().properties.get("distance");					
-							var qq = Math.round( length.value / 1000 ); if ( qq < 1 ) { qq = 1; }	
-							$("#f_qq").val(qq); 
-							 $("#f_qq").prop("readonly", true); 
-							SumRez ();
-								
-							const wayPoints   = route.model.getWayPoints();
-							const addresses   = wayPoints.map((point) => point.properties.get("address"));
-							const coordinates = wayPoints.map((point) => point.properties.get("coordinates"));
+            function init() {
 
-							$("#f_mesto").val(addresses[0]); 
-							$("#f_end").val(addresses[1]); 
-							
-							$("#f_mesto_cd").val(coordinates[0]); 
-							$("#f_end_cd").val(coordinates[1]); 
-
-						}
-					});
-				});
+                var myMap = new ymaps.Map("map_map", {
+                    center: [55.755864, 37.617698],
+                    zoom: 9,
+                    controls: ["fullscreenControl"],
+                    behaviors: ["default", "scrollZoom", "drag"]
+                }),
 
 
-	
-				// Отслеживаем
-				routePanelControl.routePanel.state.events.add("change", function () {
-					var fromValue = routePanelControl.routePanel.state.get("from");
-					var toValue   = routePanelControl.routePanel.state.get("to");
+                    // Создадим панель маршрутизации.
+                    routePanelControl = new ymaps.control.RoutePanel({
+                        options: {
+                            maxWidth: "280px",
+                            autofocus: false
+                        }
+                    }),
+                    zoomControl = new ymaps.control.ZoomControl({
+                        options: {
+                            size: "small",
+                            float: "none",
+                            position: {
+                                bottom: 45,
+                                right: 10
+                            }
+                        }
+                    });
 
-					if (!fromValue) {
-						$("#f_mesto").val(""); 
-						$("#f_mesto_cd").val(""); 
-					}
-					else 
-					{
-						if (!toValue) {
-							$("#f_mesto").val( fromValue ); 
-							$("#f_mesto_cd").val(""); 
-							$("#f_end").val(""); 
-							$("#f_end_cd").val(""); 
-							$("#f_qq").prop("readonly", false);
-						} 
-					}
 
-					if (!toValue) {
-						$("#f_end").val(""); 
-						$("#f_end_cd").val(""); 
-						$("#f_qq").prop("readonly", false);
-					}
-		
-				});
-			
-			}			
-			
-		}(jQuery));
-	</script>
+                // Пробки
+                var trafficControl = new ymaps.control.TrafficControl({
+                    state: {
+                        providerKey: "traffic#actual",
+                        trafficShown: true
+                    }
+                });
+
+                // Добавим контрол на карту.
+                myMap.controls.add(trafficControl);
+
+                // Получим ссылку на провайдер пробок "Сейчас" и включим показ инфоточек.
+                trafficControl.getProvider("traffic#actual").state.set("infoLayerShown", true);
+
+
+                // Пользователь сможет построить только автомобильный маршрут.
+                routePanelControl.routePanel.options.set({
+                    types: { auto: true }
+                });
+
+
+
+                myMap.controls.add(routePanelControl).add(zoomControl);
+
+                // Маршрут
+                routePanelControl.routePanel.getRouteAsync().then(function (route) {
+
+                    // Число маршрутов
+                    route.model.setParams({ results: 1 }, true);
+
+                    // Событие построения маршрута
+                    route.model.events.add("requestsuccess", function () {
+
+                        var activeRoute = route.getActiveRoute();
+                        if (activeRoute) {
+                            var length = route.getActiveRoute().properties.get("distance");
+                            var qq = Math.round(length.value / 1000); if (qq < 1) { qq = 1; }
+                            $("#f_qq").val(qq);
+                            $("#f_qq").prop("readonly", true);
+                            SumRez();
+
+                            const wayPoints = route.model.getWayPoints();
+                            const addresses = wayPoints.map((point) => point.properties.get("address"));
+                            const coordinates = wayPoints.map((point) => point.properties.get("coordinates"));
+
+                            $("#f_mesto").val(addresses[0]);
+                            $("#f_end").val(addresses[1]);
+
+                            $("#f_mesto_cd").val(coordinates[0]);
+                            $("#f_end_cd").val(coordinates[1]);
+
+                        }
+                    });
+                });
+
+
+                // Отслеживаем
+                routePanelControl.routePanel.state.events.add("change", function () {
+                    var fromValue = routePanelControl.routePanel.state.get("from");
+                    var toValue = routePanelControl.routePanel.state.get("to");
+
+                    if (!fromValue) {
+                        $("#f_mesto").val("");
+                        $("#f_mesto_cd").val("");
+                    }
+                    else {
+                        if (!toValue) {
+                            $("#f_mesto").val(fromValue);
+                            $("#f_mesto_cd").val("");
+                            $("#f_end").val("");
+                            $("#f_end_cd").val("");
+                            $("#f_qq").prop("readonly", false);
+                        }
+                    }
+
+                    if (!toValue) {
+                        $("#f_end").val("");
+                        $("#f_end_cd").val("");
+                        $("#f_qq").prop("readonly", false);
+                    }
+
+                });
+
+            }
+
+        }(jQuery));
+
+        // Ожидание полной загрузки DOM
+        $(document).ready(function () {
+            console.log('DOM loaded - initializing calculator');
+
+            // Функция для обновления видимого select с категориями
+            function updateCategorySelect(isEvacuator) {
+                var selectedVid = $('#clt_vid_1').val();
+
+                if (isEvacuator) {
+                    // Для эвакуатора
+                    $('.clt_div_1--js .clt_tip--js').addClass('hidden');
+                    $('#clt_tip_1_' + selectedVid).removeClass('hidden');
+                } else {
+                    // Для манипулятора
+                    $('.clt_div_2--js .clt_tip--js').addClass('hidden');
+                    $('#clt_tip_2_' + selectedVid).removeClass('hidden');
+                }
+
+                // Обновляем расчет если есть расстояние
+                var distance = parseInt($('#f_qq').val()) || 0;
+                if (distance > 0) {
+                    SumRez();
+                } else {
+                    $('.clt_sum--js').text('0');
+                }
+            }
+
+            // Переключение кнопок
+            $('.switcher-btn').on('click', function () {
+                var vk = $(this).data('vk');
+                $('.switcher-btn').removeClass('active');
+                $(this).addClass('active');
+                $('#clt_vk').val(vk);
+
+                console.log('Switched to:', vk);
+
+                // Показываем/скрываем соответствующие блоки
+                if (vk == 1) {
+                    $('.clt_div_1--js').removeClass('hidden');
+                    $('.clt_div_2--js').addClass('hidden');
+                    // Показываем правильную категорию для выбранного вида авто
+                    updateCategorySelect(true);
+                } else {
+                    $('.clt_div_1--js').addClass('hidden');
+                    $('.clt_div_2--js').removeClass('hidden');
+                    // Показываем правильную категорию для манипулятора
+                    updateCategorySelect(false);
+                }
+
+                // Обновляем расчет только если есть расстояние
+                var distance = parseInt($('#f_qq').val()) || 0;
+                if (distance > 0) {
+                    SumRez();
+                } else {
+                    $('.clt_sum--js').text('0');
+                }
+            });
+
+            // При изменении вида авто
+            $('#clt_vid_1').on('change', function () {
+                console.log('Vid changed');
+                var vk = $('#clt_vk').val();
+                if (vk == 1) {
+                    updateCategorySelect(true); // Для эвакуатора
+                } else {
+                    updateCategorySelect(false); // Для манипулятора
+                }
+            });
+
+            // Инициализация при загрузке
+            updateCategorySelect(true);
+
+            // Функция расчета стоимости (ПРАВИЛЬНАЯ ЛОГИКА: фиксированная цена + км сверх лимита)
+            
+
+            // Обработчики изменений для пересчета
+            $(document).on('change', '.clt_tip--js, #clt_koleso, #f_qq', SumRez);
+            $(document).on('change', 'input[type="checkbox"]', SumRez);
+
+            // Обработчики для показа/скрытия дополнительных полей
+            $('#clt_predzakaz').on('change', function () {
+                if ($(this).is(':checked')) {
+                    $('.date-time-row').removeClass('hidden');
+                } else {
+                    $('.date-time-row').addClass('hidden');
+                }
+            });
+
+            $('#clt_dphone').on('change', function () {
+                if ($(this).is(':checked')) {
+                    $('.extra-contact-row').removeClass('hidden');
+                } else {
+                    $('.extra-contact-row').addClass('hidden');
+                }
+            });
+
+            // ИСПРАВЛЕННАЯ инициализация масок для телефонов
+            function initPhoneMasks() {
+                if (typeof $.fn.mask !== 'undefined') {
+                    $('[data-mask]').each(function () {
+                        var mask = $(this).data('mask');
+                        if (mask && typeof mask === 'string' && mask.trim() !== '') {
+                            try {
+                                $(this).mask(mask);
+                            } catch (e) {
+                                console.error('Error applying mask to element:', this, e);
+                            }
+                        }
+                    });
+                } else {
+                    console.warn('jQuery Mask plugin not loaded');
+
+                    // Простая валидация телефона без плагина
+                    $('input[type="tel"]').on('input', function () {
+                        var value = $(this).val().replace(/\D/g, '');
+                        if (value.length > 0) {
+                            if (!value.startsWith('7') && !value.startsWith('8')) {
+                                value = '7' + value;
+                            }
+                            var formatted = '+7 (' + value.substring(1, 4) + ') ' +
+                                value.substring(4, 7) + ' ' +
+                                value.substring(7, 9) + ' ' +
+                                value.substring(9, 11);
+                            $(this).val(formatted.trim());
+                        }
+                    });
+                }
+            }
+
+            // Инициализация масок
+            initPhoneMasks();
+
+            // Инициализация календаря с проверкой
+            function initDatepicker() {
+                if (typeof $.fn.datepicker !== 'undefined') {
+                    try {
+                        $('#datepickerDefault').datepicker({
+                            dateFormat: 'dd.mm.yyyy',
+                            minDate: 0,
+                            changeMonth: true,
+                            changeYear: true,
+                            yearRange: '2024:2030'
+                        });
+                    } catch (e) {
+                        console.error('Datepicker init error:', e);
+                        // Fallback: обычное поле с паттерном
+                        $('#datepickerDefault').attr('type', 'date');
+                    }
+                } else {
+                    console.warn('Datepicker plugin not loaded');
+                    $('#datepickerDefault').attr('type', 'date');
+                }
+            }
+
+            initDatepicker();
+
+            // Инициализация времени с проверкой
+            function initTimepicker() {
+                if (typeof $.fn.timepicker !== 'undefined') {
+                    try {
+                        $('#f_time').timepicker({
+                            timeFormat: 'HH:mm',
+                            interval: 30,
+                            minTime: '00:00',
+                            maxTime: '23:30',
+                            startTime: '08:00',
+                            dynamic: false,
+                            dropdown: true,
+                            scrollbar: true
+                        });
+                    } catch (e) {
+                        console.error('Timepicker init error:', e);
+                        // Fallback: обычное поле с паттерном
+                        $('#f_time').attr('type', 'time');
+                    }
+                } else {
+                    console.warn('Timepicker plugin not loaded');
+                    $('#f_time').attr('type', 'time');
+                }
+            }
+
+            initTimepicker();
+
+            // Локальное кэширование данных формы
+            var CalculatorCache = {
+                key: 'evac_calculator_state',
+                ttl: 24 * 60 * 60 * 1000, // 24 часа
+
+                save: function () {
+                    try {
+                        var state = {
+                            timestamp: Date.now(),
+                            data: {
+                                vid: $('#clt_vid_1').val(),
+                                vk: $('#clt_vk').val(),
+                                koleso: $('#clt_koleso').val(),
+                                distance: $('#f_qq').val(),
+                                name: $('input[name="f_name"]').val(),
+                                phone: $('input[name="f_phone"]').val(),
+                                comment: $('textarea[name="f_ztxt"]').val(),
+                                // Добавьте другие поля по необходимости
+                            }
+                        };
+                        localStorage.setItem(this.key, JSON.stringify(state));
+                    } catch (e) {
+                        console.warn('Cannot save to localStorage:', e);
+                    }
+                },
+
+                load: function () {
+                    try {
+                        var saved = localStorage.getItem(this.key);
+                        if (saved) {
+                            var state = JSON.parse(saved);
+
+                            // Проверяем TTL
+                            if (Date.now() - state.timestamp < this.ttl) {
+                                // Восстанавливаем значения
+                                if (state.data.vid) $('#clt_vid_1').val(state.data.vid);
+                                if (state.data.vk) {
+                                    $('.switcher-btn').removeClass('active');
+                                    $('.switcher-btn[data-vk="' + state.data.vk + '"]').addClass('active');
+                                    $('#clt_vk').val(state.data.vk);
+                                }
+                                if (state.data.koleso) $('#clt_koleso').val(state.data.koleso);
+                                if (state.data.distance && parseInt(state.data.distance) > 0) {
+                                    $('#f_qq').val(state.data.distance);
+                                }
+                                if (state.data.name) $('input[name="f_name"]').val(state.data.name);
+                                if (state.data.phone) $('input[name="f_phone"]').val(state.data.phone);
+                                if (state.data.comment) $('textarea[name="f_ztxt"]').val(state.data.comment);
+
+                                return true;
+                            } else {
+                                // Удаляем устаревшие данные
+                                localStorage.removeItem(this.key);
+                            }
+                        }
+                    } catch (e) {
+                        console.warn('Cannot load from localStorage:', e);
+                    }
+                    return false;
+                },
+
+                clear: function () {
+                    try {
+                        localStorage.removeItem(this.key);
+                    } catch (e) {
+                        console.warn('Cannot clear localStorage:', e);
+                    }
+                }
+            };
+
+            // Сохраняем данные при изменениях
+            $(document).on('change input', '#clt_vid_1, #clt_koleso, #f_qq, input[name="f_name"], input[name="f_phone"], textarea[name="f_ztxt"]', function () {
+                setTimeout(function () {
+                    CalculatorCache.save();
+                }, 100);
+            });
+
+            $(document).on('change', '.clt_tip--js, input[type="checkbox"]', function () {
+                setTimeout(function () {
+                    CalculatorCache.save();
+                }, 100);
+            });
+
+            // Восстанавливаем данные при загрузке
+            $(window).on('load', function () {
+                setTimeout(function () {
+                    if (CalculatorCache.load()) {
+                        console.log('Calculator state restored from cache');
+                        // Обновляем категории после восстановления
+                        var vk = $('#clt_vk').val();
+                        updateCategorySelect(vk == 1);
+
+                        // Пересчитываем если есть расстояние
+                        var distance = parseInt($('#f_qq').val()) || 0;
+                        if (distance > 0) {
+                            SumRez();
+                        }
+                    }
+                }, 500);
+            });
+
+            // Очищаем кэш при отправке формы
+            $('#calculatorForm').on('submit', function () {
+                CalculatorCache.clear();
+            });
+
+            // Дебаг информация
+            console.log('Calculator initialized successfully');
+        });
+    </script>
 
       <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -790,6 +1141,8 @@ document.addEventListener('click', (e) => {
     
     </script>
 
+    
+
     {% endblock %}
 
 <!-- ИДЕАЛЬНЫЙ COOKIE-БАННЕР 2025: слева внизу на ПК, по центру снизу на телефоне -->
@@ -832,66 +1185,37 @@ document.addEventListener('click', (e) => {
 </script>
 
     <!-- Кнопка зонить -->
-    <a href="tel:+79263140455" class="call-button mgo-number" aria-label="Позвонить">
+    <a href="tel:+79263140455" class="call-button" aria-label="Позвонить">
       <i class="fa fa-phone"></i>
     </a>
 
-
-<!-- Яндекс.Метрика (самый актуальный и надёжный способ на 2026) -->
-<script type="text/javascript">
-  (function(m,e,t,r,i,k,a){
-    m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-    m[i].l=1*new Date();
-    k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-  })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-
-  ym(51382240, "init", {
-    clickmap:true,
-    trackLinks:true,
-    accurateTrackBounce:true,
-    webvisor:true
-  });
-
-  // Автоматическая передача IP (Яндекс сам берёт из заголовков, если прокси настроен)
-  // Если хочешь принудительно (тест):
-  fetch('https://api.ipify.org?format=json')
-    .then(r => r.json())
-    .then(data => {
-      ym(51382240, 'params', {'client_ip': data.ip});
-      console.log('IP клиента отправлен в Метрику:', data.ip);
-    })
-    .catch(() => console.log('Клиентский IP не удалось получить'));
+    <script type="text/javascript" src="https://www.l2.io/ip.js?var=userip"></script>
+<script type="text/javascript" >
+    (function (d, w, c) {
+        (w[c] = w[c] || []).push(function() {
+            try {
+                w.yaCounter51382240 = new Ya.Metrika2({
+                    id:51382240,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true,
+                    webvisor:true,
+                    params:{'ip': userip}
+                });
+            } catch(e) { }
+        });
+        var n = d.getElementsByTagName("script")[0],
+            s = d.createElement("script"),
+            f = function () { n.parentNode.insertBefore(s, n); };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = "https://mc.yandex.ru/metrika/tag.js";
+        if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f, false);
+        } else { f(); }
+    })(document, window, "yandex_metrika_callbacks2");
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/51382240" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Яндекс.Метрика --> 
-
-
-<!-- Mango Office -->
-<script>
-(function(w,d,u,i,o,s,p){
-    if(d.getElementById(i)){return;}
-    w['MangoObject']=o;
-    w[o]=w[o]||function(){(w[o].q=w[o].q||[]).push(arguments)};
-    w[o].u=u;
-    w[o].t=1*new Date();
-    s=d.createElement('script');
-    s.async=1;
-    s.id=i;
-    s.src=u;
-    p=d.getElementsByTagName('script')[0];
-    p.parentNode.insertBefore(s,p);
-})(window,document,'https://widgets.mango-office.ru/widgets/mango.js','mango-js','mgo');
-
-mgo({
-    calltracking: {
-        id: 34707,
-        elements: [
-            { selector: '.mgo-number' }
-        ],
-        domain: 'mtt-evakuator.ru'
-    }
-});
-</script>
-
+<!-- <script async src="https://widgets.mango-office.ru/site/34707"></script> -->
 </body>
 </html>

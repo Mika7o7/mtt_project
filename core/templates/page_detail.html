@@ -1,0 +1,857 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}{{ page.meta_title }}{% endblock %}
+{% block meta_description %} {{ page.meta_description }} {% endblock %}
+{% block meta_keywords %} {{ page.meta_keywords }} {% endblock %}
+
+
+
+{% block content %}
+
+
+<!-- Показать список округов -->
+{% if districts %}
+<section class="districts">
+    <h1>{{info_name}}</h1>
+
+    <!-- ОДИН ОБЩИЙ ГРИД НА ВСЕ ОКРУГА -->
+    <div class="district-grid">
+        {% for d in districts %}
+        <a href="{% url 'districts' d.slug %}" class="district-link">
+            <div class="district-card">
+                <img src="{{ d.image.url }}" alt="{{ d.name }}">
+                <span>({{ d.short_name }}) {{ d.name }}</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+
+<!-- Payment -->
+{% if payment %}
+<section class="payment-page">
+    <div class="payment-container">
+
+        <h1 class="payment-title">Оплатите услугу<br>эвакуатора</h1>
+
+        <p class="payment-text">
+            Наведите камеру телефона на QR-код,<br>
+            чтобы мгновенно оплатить услугу картой
+        </p>
+
+        <!-- САМ QR-КОД -->
+        <div class="qr-wrapper">
+            <img src="{% static 'images/qr_code1.jpg' %}" alt="QR-код для оплаты" class="qr-code">
+        </div>
+
+        <div class="payment-info">
+            <p>После оплаты водитель сразу начнёт движение к вам</p>
+        </div>
+
+        <a href="tel:+79263140455" class="payment-phone" style="font-size: 30px;">
+            Или переводить по номеру телефона: +7 (926) 314-0455
+        </a>
+
+    </div>
+</section>
+{% endif %}
+
+
+
+
+{% if second_hero_section %}
+<section class="metro-hero">
+    <div class="metro-hero-overlay">
+        <div class="container metro-hero-container">
+
+            <!-- Левая часть: текст + форма -->
+            <div class="metro-hero-content">
+                <h1>
+                    {% if location.info_name %}
+                    {{ location.info_name|safe }}
+                    {% else %}
+                    {% if location_type == 'metro' %}
+                    Эвакуатор у метро {{ location.name }}
+                    {% elif location_type == 'district' %}
+                    Эвакуатор {{ location.short_name|default:location.name }} — {{ location.name }}
+                    {% elif location_type == 'city' %}
+                    Эвакуатор в {{ location.name }}{% if location.distance_from_mkad %} — {{ location.distance_from_mkad
+                    }} км от МКАД{% endif %}
+                    {% elif location_type == 'gruzovoy' %}
+                    {{ location.name }} — от {{ location.price_from }} ₽
+                    {% elif location_type == 'manipulyator' %}
+                    {{ location.name }} — от {{ location.price_from }} ₽
+                    {% elif location_type == 'highway' %}
+                    Эвакуатор по {{ location.name }}
+                    {% else %}
+                    Эвакуатор в Москве и МО
+                    {% endif %}
+                    {% endif %}
+                </h1>
+
+                <!-- Подзаголовок (линия метро / население / расстояние / цена / длина шоссе) -->
+                <p class="metro-hero-subtitle">
+                    {% if location %}
+                    {{ location.sub_description }}
+                    {% else %}
+                    Недорогой эвакуатор • Выезд за 20–40 минут
+                    {% endif %}
+                </p>
+
+                <!-- Форма заявки (одинаковая везде) -->
+                <form class="universal-form metro-hero-form" novalidate>
+                    {% csrf_token %}
+                    <!-- Телефон — обязательно -->
+                    <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required
+                        data-mask="+7 (999) 999 99 99">
+
+                    <!-- Согласие с политикой — можно кликать -->
+                    <label class="policy-checkbox">
+                        <span>Согласен с <a href="/policy" style="text-decoration: none; " target="_blank">политикой
+                                конфиденциальности</a> и <a href="/policy" style="text-decoration: none; "
+                                target="_blank">обработкой данных</a></span>
+                    </label>
+
+                    <button type="submit" class="btn-send">Заказать эвакуатор</button>
+
+                    <!-- Сообщение под формой -->
+                    <div class="form-message"></div>
+                </form>
+            </div>
+
+
+
+            <!-- Правая часть: 3D-модель эвакуатора -->
+            <div class="hero-model">
+                <model-viewer src="{% static 'assets/models/tow-truck.glb' %}" alt="Эвакуатор 3D модель" auto-rotate
+                    camera-controls ar ar-modes="webxr scene-viewer quick-look" shadow-intensity="1" exposure="1.0"
+                    class="model">
+                </model-viewer>
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- ===== Hero Section ===== -->
+{% if hero_sections %}
+<section class="hero">
+    {% for hero in hero_sections %}
+    <div class="container hero-container">
+        <div class="hero-text">
+            <h1>{{ info_name }}</h1>
+            <h2>{{ sub_description }}</h2>
+            <a href="#" class="btn-order hero-btn">{{ hero.button_text }}</a>
+        </div>
+        <div class="hero-model">
+            <model-viewer src="{% static 'assets/models/tow-truck.glb' %}" alt="Tow Truck 3D" auto-rotate class="model">
+            </model-viewer>
+        </div>
+    </div>
+    {% endfor %}
+</section>
+{% endif %}
+
+
+
+<!-- ===== How To Order ===== -->
+ {% if how_to_order_steps %}
+<section class="how-to-order">
+    <div class="container how-to-order-container">
+        <h2 class="section-title">Как заказать услугу</h2>
+
+        <!-- Карусель -->
+        <div class="carousel-wrapper">
+            <div class="cards">
+                {% for step in how_to_order_steps %}
+                <div class="card">
+                    <img src="{{ step.image.url }}" alt="{{ step.title }}">
+                    <div class="overlay">
+                        <div class="icon">{{ step.icon }}</div>
+                        <h3>{{ step.title }}</h3>
+                        <p>{{ step.description }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <!-- Дублируем для бесконечной прокрутки -->
+                {% for step in how_to_order_steps %}
+                <div class="card">
+                    <img src="{{ step.image.url }}" alt="{{ step.title }}">
+                    <div class="overlay">
+                        <div class="icon">{{ step.icon }}</div>
+                        <h3>{{ step.title }}</h3>
+                        <p>{{ step.description }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <a href="#" class="btn-contact btn-order">Связаться с нами</a>
+    </div>
+</section>
+{% endif %}
+
+
+
+<!-- === Срочный заказ эвакуатора === -->
+{% if fastorder %}
+<section class="order-section">
+    <div class="order-overlay" style="background-image: url({% static 'images/XXXL.webp' %});">
+        <div class="order-container">
+
+            <h2><span>Срочный</span> заказ эвакуатора</h2>
+            <p class="order-subtitle">Подача в течение <strong>18 минут</strong>, эвакуация любой сложности</p>
+
+            <form class="order-form" action="{% url 'submit_form' %}" method="post" id="orderForm">
+                {% csrf_token %}
+
+                <input type="text" name="f_name" placeholder="Ваше имя" required>
+
+                <input type="tel" name="f_phone" placeholder="+7 (___) ___-__-__" required
+                    data-mask="+7 (999) 999 99 99">
+
+                <input type="text" name="f_ztxt" placeholder="Авто">
+
+                <button type="submit" class="btn-send">Отправить</button>
+            </form>
+
+            <p class="order-agreement">
+                Нажимая на кнопку, Вы даёте согласие на
+                <a href="/policy/">обработку персональных данных</a>
+            </p>
+
+            <div class="order-contact">
+                <p>Или позвоните нам:</p>
+
+                <div>
+
+                    <div class="order-icons">
+                        <a href="https://t.me/mttevakuator1" target="_blank">
+                            <img src="{% static '/assets/i/telegram.svg' %}" alt="telegram">
+                        </a>
+                        <a href="https://wa.me/79263140455" target="_blank">
+                            <img src="{% static '/assets/i/whatsapp.svg' %}" alt="whatsapp">
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("orderForm");
+
+        if (!form) return;
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": formData.get("csrfmiddlewaretoken"),
+                    },
+                    body: formData,
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert("✅ Заявка отправлена!");
+                    form.reset();
+                } else {
+                    alert("❌ Ошибка: " + (data.message || "Не удалось отправить"));
+                }
+            } catch (err) {
+                alert("❌ Ошибка соединения");
+            }
+        });
+    });
+</script>
+
+{% endif %}
+
+<!-- ===== Transport Types ===== -->
+{% if transport_types %}
+<section class="transport-section">
+    <h2 class="section-title">Эвакуатор любого транспорта</h2>
+    <div class="transport-scroll">
+        {% for t in transport_types %}
+        <div class="transport-card">
+            <a href="{% url 'transport_detail' t.slug %}" class="transport-card-link">
+                {% if t.icon %}
+                <img src="{{ t.icon.url }}" alt="{{ t.name }}">
+                {% else %}
+                <img src="{{ t.image.url }}" alt="{{ t.name }}">
+                {% endif %}
+            </a>
+            <h3>{{ t.name }}</h3>
+            <button class="btn-order">{{ t.button_text }}</button>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+
+
+
+
+<!-- ===== Why Choose Us ===== -->
+{% if why_choose_us %}
+<section class="why-choose-us">
+    <div class="container why-choose-container">
+        <h2 class="section-title">Почему выбрать нас</h2>
+
+        <!-- Карусель -->
+        <div class="carousel-wrapper">
+            <div class="why-cards">
+                {% for item in why_choose_us %}
+                <div class="why-card">
+                    <div class="icon">{{ item.icon }}</div>
+                    <h3>{{ item.title }}</h3>
+                    <p>{{ item.description }}</p>
+                </div>
+                {% endfor %}
+
+                <!-- Дублируем для бесконечной прокрутки -->
+                {% for item in why_choose_us %}
+                <div class="why-card">
+                    <div class="icon">{{ item.icon }}</div>
+                    <h3>{{ item.title }}</h3>
+                    <p>{{ item.description }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+<!-- Секция Калькулятор -->
+{% if calculator %}
+<section class="calculator">
+    <div class="calculator-container">
+        <h2 class="calculator-title">Онлайн калькулятор для расчёта стоимости эвакуатора</h2>
+        <div class="calculator-form">
+            <!-- Переключатель -->
+            <div class="switcher-row">
+                <div class="switcher-group">
+                    <button type="button" class="switcher-btn active" data-vk="1">ЭВАКУАТОР</button>
+                    <button type="button" class="switcher-btn" data-vk="2">МАНИПУЛЯТОР</button>
+                </div>
+            </div>
+            <form class="clt_form" id="calculatorForm" method="POST" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="clt_vk" id="clt_vk" value="1">
+                <input type="hidden" name="f_tip" id="clt_tip" value="1">
+                <input type="hidden" name="page_id" value="414">
+                <input type="hidden" name="dop_id" value="0">
+                <input type="hidden" name="f_pskidka" id="clt_pskidka" value="0">
+                <input type="hidden" name="f_mesto" id="f_mesto">
+                <input type="hidden" name="f_mesto_cd" id="f_mesto_cd">
+                <input type="hidden" name="f_end" id="f_end">
+                <input type="hidden" name="f_end_cd" id="f_end_cd">
+                <input type="hidden" name="f_uid" id="f_uid">
+                <input type="hidden" name="f_old" value="0">
+                <input type="hidden" name="f_old_gen" value="">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Выберите вид авто</label>
+                        <select class="form-select clt_vid--js" id="clt_vid_1" name="clt_vid_1" required>
+                            <option value="1" data-skidka="5" selected>Легковой стандарт</option>
+                            <option value="2" data-skidka="5">Мототехника</option>
+                            <option value="3" data-skidka="5">Кроссовер</option>
+                            <option value="4" data-skidka="5">Минивэн</option>
+                            <option value="5" data-skidka="5">Внедорожник</option>
+                            <option value="6" data-skidka="0">Легковой премиум</option>
+                            <option value="7" data-skidka="0">Спорт класс</option>
+                            <option value="8" data-skidka="5">Микроавтобус</option>
+                            <option value="9" data-skidka="0">Коммерческий транспорт</option>
+                            <option value="10" data-skidka="0">Легкая спецтехника до 5 тонн</option>
+                        </select>
+                        <span class="error-msg" id="vid-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Выберите категорию</label>
+                        <div class="clt_div_1--js">
+                            <!-- Категории для эвакуатора -->
+                            <select class="form-select clt_tip--js" id="clt_tip_1_1" name="clt_tip_1" required>
+                                <option value="1" data-price="4500" data-km="100" selected>Стандарт до 2 тонн</option>
+                                <option value="2" data-price="5000" data-km="100">Стандарт до 3 тонн</option>
+                            </select>
+
+                            <select class="form-select clt_tip--js hidden" id="clt_tip_1_2" name="clt_tip_1">
+                                <option value="1" data-price="4000" data-km="100">Мотоцикл</option>
+                                <option value="2" data-price="4000" data-km="100">Скутер</option>
+                                <option value="3" data-price="4000" data-km="100">Квадроцикл</option>
+                            </select>
+
+                            <select class="form-select clt_tip--js hidden" id="clt_tip_1_3" name="clt_tip_1">
+                                <option value="1" data-price="4500" data-km="100">Кроссовер до 2 тонн</option>
+                                <option value="2" data-price="5500" data-km="100">Кроссовер до 3 тонн</option>
+                            </select>
+
+                            <select class="form-select clt_tip--js hidden" id="clt_tip_1_4" name="clt_tip_1">
+                                <option value="1" data-price="5000" data-km="100">Компактвэн до 2 тонн</option>
+                                <option value="2" data-price="6000" data-km="100">Минивэн до 3 тонн</option>
+                            </select>
+
+                            <select class="form-select clt_tip--js hidden" id="clt_tip_1_5" name="clt_tip_1">
+                                <option value="1" data-price="4500" data-km="100">Внедорожник до 2 тонн</option>
+                                <option value="2" data-price="5500" data-km="100">Внедорожник до 3 тонн</option>
+                            </select>
+
+                            <select class="form-select clt_tip--js hidden" id="clt_tip_1_6" name="clt_tip_1">
+                                <option value="1" data-price="5000" data-km="100">Премиум седан</option>
+                                <option value="2" data-price="5500" data-km="100">Премиум кроссовер</option>
+                                <option value="3" data-price="6000" data-km="100">Премиум внедорожник</option>
+                                <option value="4" data-price="6500" data-km="100">Премиум минивэн</option>
+                            </select>
+
+                            <select class="form-select clt_tip--js hidden" id="clt_tip_1_7" name="clt_tip_1">
+                                <option value="1" data-price="5000" data-km="100">Спортивный седан</option>
+                                <option value="2" data-price="7000" data-km="100">Суперкар</option>
+                                <option value="3" data-price="10000" data-km="150">Гиперкар</option>
+                            </select>
+
+                            <select class="form-select clt_tip--js hidden" id="clt_tip_1_8" name="clt_tip_1">
+                                <option value="1" data-price="8000" data-km="100">Компактный микроавтобус 8-12 мест,
+                                    длина 5-6 метров</option>
+                                <option value="2" data-price="9000" data-km="100">Средний микроавтобус 12-15 мест, длина
+                                    6-7 метров</option>
+                                <option value="3" data-price="10000" data-km="100">Большой микроавтобус 15-20 мест,
+                                    длина от 7 метров</option>
+                            </select>
+
+                            <select class="form-select clt_tip--js hidden" id="clt_tip_1_9" name="clt_tip_1">
+                                <option value="1" data-price="6000" data-km="100">Короткая база от 3 до 5 метров
+                                </option>
+                                <option value="2" data-price="7000" data-km="100">Средняя база от 5 до 6 метров</option>
+                                <option value="3" data-price="10000" data-km="100">Длинная база от 6 до 7 метров
+                                </option>
+                            </select>
+
+                            <select class="form-select clt_tip--js hidden" id="clt_tip_1_10" name="clt_tip_1">
+                                <option value="1" data-price="5000" data-km="100">Спецтехника 1-2 тонн</option>
+                                <option value="2" data-price="7500" data-km="100">Спецтехника 2-3 тонн</option>
+                                <option value="3" data-price="10000" data-km="120">Спецтехника 3-4 тонн</option>
+                                <option value="4" data-price="12500" data-km="120">Спецтехника 4-5 тонн</option>
+                            </select>
+                        </div>
+                        <div class="clt_div_2--js hidden">
+                            <!-- Категории для манипулятора - ВСЕ КАТЕГОРИИ как у эвакуатора -->
+                            <select class="form-select clt_tip--js" id="clt_tip_2_1" name="clt_tip_2" required>
+                                <option value="1" data-price="10000" data-km="100" selected>Стандарт до 2 тонн</option>
+                                <option value="2" data-price="11000" data-km="100">Стандарт до 3 тонн</option>
+                            </select>
+
+                            <select class="form-select clt_tip--js hidden" id="clt_tip_2_2" name="clt_tip_2">
+                                <option value="1" data-price="10000" data-km="100">Мотоцикл</option>
+                                <option value="2" data-price="10000" data-km="100">Скутер</option>
+                                <option value="3" data-price="10000" data-km="100">Квадроцикл</option>
+                            </select>
+
+                            <select class="form-select clt_tip--js hidden" id="clt_tip_2_3" name="clt_tip_2">
+                                <option value="1" data-price="12000" data-km="120">Кроссовер до 2 тонн</option>
+                                <option value="2" data-price="13000" data-km="120">Кроссовер до 3 тонн</option>
+                            </select>
+
+                            <select class="form-select clt_tip--js hidden" id="clt_tip_2_4" name="clt_tip_2">
+                                <option value="1" data-price="12000" data-km="120">Компактвэн до 2 тонн</option>
+                                <option value="2" data-price="14000" data-km="120">Минивэн до 3 тонн</option>
+                            </select>
+
+                            <select class="form-select clt_tip--js hidden" id="clt_tip_2_5" name="clt_tip_2">
+                                <option value="1" data-price="12000" data-km="120">Внедорожник до 2 тонн</option>
+                                <option value="2" data-price="14000" data-km="120">Внедорожник до 3 тонн</option>
+                            </select>
+
+                            <select class="form-select clt_tip--js hidden" id="clt_tip_2_6" name="clt_tip_2">
+                                <option value="1" data-price="15000" data-km="150">Премиум седан</option>
+                                <option value="2" data-price="16000" data-km="150">Премиум кроссовер</option>
+                                <option value="3" data-price="17000" data-km="150">Премиум внедорожник</option>
+                                <option value="4" data-price="18000" data-km="150">Премиум минивэн</option>
+                            </select>
+
+                            <select class="form-select clt_tip--js hidden" id="clt_tip_2_7" name="clt_tip_2">
+                                <option value="1" data-price="15000" data-km="150">Спортивный седан</option>
+                                <option value="2" data-price="20000" data-km="150">Суперкар</option>
+                                <option value="3" data-price="25000" data-km="150">Гиперкар</option>
+                            </select>
+
+                            <select class="form-select clt_tip--js hidden" id="clt_tip_2_8" name="clt_tip_2">
+                                <option value="1" data-price="15000" data-km="150">Компактный микроавтобус 8-12 мест,
+                                    длина 5-6 метров</option>
+                                <option value="2" data-price="18000" data-km="150">Средний микроавтобус 12-15 мест,
+                                    длина
+                                    6-7 метров</option>
+                                <option value="3" data-price="22000" data-km="150">Большой микроавтобус 15-20 мест,
+                                    длина от 7 метров</option>
+                            </select>
+
+                            <select class="form-select clt_tip--js hidden" id="clt_tip_2_9" name="clt_tip_2">
+                                <option value="1" data-price="15000" data-km="150">Короткая база от 3 до 5 метров
+                                </option>
+                                <option value="2" data-price="18000" data-km="150">Средняя база от 5 до 6 метров
+                                </option>
+                                <option value="3" data-price="22000" data-km="150">Длинная база от 6 до 7 метров
+                                </option>
+                            </select>
+
+                            <select class="form-select clt_tip--js hidden" id="clt_tip_2_10" name="clt_tip_2">
+                                <option value="1" data-price="15000" data-km="150">Спецтехника 1-2 тонн</option>
+                                <option value="2" data-price="18000" data-km="150">Спецтехника 2-3 тонн</option>
+                                <option value="3" data-price="22000" data-km="150">Спецтехника 3-4 тонн</option>
+                                <option value="4" data-price="25000" data-km="150">Спецтехника 4-5 тонн</option>
+                            </select>
+                        </div>
+                        <span class="error-msg" id="tip-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label clt_div_1--js">Заблокированных колёс</label>
+                        <label class="form-label clt_div_2--js hidden">Отсутствующих колёс</label>
+                        <select class="form-select" id="clt_koleso" name="f_koleso" data-price="1500" required>
+                            <option value="0" selected>0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                        <span class="error-msg" id="koleso-error"></span>
+                    </div>
+                </div>
+                <div class="map-container">
+                    <div id="map_map"></div>
+                </div>
+                <div class="form-group distance-group">
+                    <label class="form-label">Расстояние, км</label>
+                    <input type="text" class="form-input" id="f_qq" name="f_qq" placeholder="0" maxlength="5" readonly>
+                    <span class="error-msg" id="qq-error"></span>
+                </div>
+                <div class="extras-section">
+                    <h3 class="extras-title">Дополнительные параметры</h3>
+                    <div class="extras-grid clt_div_1--js">
+                        <label class="extra-checkbox">
+                            <input type="checkbox" id="clt_dop_1_1" name="f_dop_1_1" value="1" data-price="500">
+                            <span>Нет буксировочного крюка</span>
+                        </label>
+                        <label class="extra-checkbox">
+                            <input type="checkbox" id="clt_dop_1_2" name="f_dop_1_2" value="1" data-price="4000">
+                            <span>Необходимо прикурить авто</span>
+                        </label>
+                        <label class="extra-checkbox">
+                            <input type="checkbox" id="clt_dop_1_3" name="f_dop_1_3" value="1" data-price="500">
+                            <span>Заблокирован руль</span>
+                        </label>
+                        <label class="extra-checkbox">
+                            <input type="checkbox" id="clt_dop_1_4" name="f_dop_1_4" value="1" data-price="10000">
+                            <span>ТС в подземном паркинге</span>
+                        </label>
+                        <label class="extra-checkbox">
+                            <input type="checkbox" id="clt_dop_1_5" name="f_dop_1_5" value="1" data-price="2000">
+                            <span>Клиренс менее 15 см</span>
+                        </label>
+                        <label class="extra-checkbox">
+                            <input type="checkbox" id="clt_dop_1_6" name="f_dop_1_6" value="1" data-price="1000">
+                            <span>Автомобиль в ряду</span>
+                        </label>
+                    </div>
+                    <div class="extras-grid clt_div_2--js hidden">
+                        <label class="extra-checkbox">
+                            <input type="checkbox" id="clt_dop_2_1" name="f_dop_2_1" value="1" data-price="2000">
+                            <span>Машина стоит вплотную к бордюру</span>
+                        </label>
+                        <label class="extra-checkbox">
+                            <input type="checkbox" id="clt_dop_2_2" name="f_dop_2_2" value="1" data-price="5000">
+                            <span>Необходимо снять с автовоза</span>
+                        </label>
+                        <label class="extra-checkbox">
+                            <input type="checkbox" id="clt_dop_2_3" name="f_dop_2_3" value="1" data-price="1000">
+                            <span>Автомобиль в ряду</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="contact-row">
+                    <div class="form-group small">
+                        <label class="form-label">Ваше имя</label>
+                        <input type="text" class="form-input" name="f_name" placeholder="Имя" required>
+                        <span class="error-msg" id="name-error"></span>
+                    </div>
+                    <div class="form-group small">
+                        <label class="form-label">Номер телефона</label>
+                        <input type="tel" class="form-input" name="f_phone" placeholder="+7 (___) ___ __ __" required
+                            data-mask="+7 (999) 999 99 99" autocomplete="off">
+                        <span class="error-msg" id="phone-error"></span>
+                    </div>
+                    <div class="options-group">
+                        <label class="option-checkbox">
+                            <input type="checkbox" id="clt_predzakaz" name="f_predzakaz" value="1">
+                            <span>Заказ на точную дату/время</span>
+                        </label>
+                        <label class="option-checkbox">
+                            <input type="checkbox" id="clt_dphone" name="clt_dphone" value="1">
+                            <span>Указать дополнительный номер</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="contact-row date-time-row hidden">
+                    <div class="form-group small">
+                        <label class="form-label">Дата</label>
+                        <input type="text" class="form-input" id="datepickerDefault" name="f_date"
+                            placeholder="дд.мм.гггг" required pattern="\d{2}\.\d{2}\.\d{4}">
+                        <span class="error-msg" id="date-error"></span>
+                    </div>
+                    <div class="form-group small">
+                        <label class="form-label">Время</label>
+                        <input type="text" class="form-input" id="f_time" name="f_time" placeholder="чч:мм" required
+                            pattern="\d{2}:\d{2}">
+                        <span class="error-msg" id="time-error"></span>
+                    </div>
+                </div>
+                <div class="contact-row extra-contact-row hidden">
+                    <div class="form-group small">
+                        <label class="form-label">Дополнительное имя</label>
+                        <input type="text" class="form-input" name="f_name_2" placeholder="Имя">
+                        <span class="error-msg" id="name2-error"></span>
+                    </div>
+                    <div class="form-group small">
+                        <label class="form-label">Дополнительный номер</label>
+                        <input type="tel" class="form-input" name="f_phone_2" placeholder="+7 (___) ___ __ __"
+                            data-mask="+7 (999) 999 99 99" autocomplete="off">
+                        <span class="error-msg" id="phone2-error"></span>
+                    </div>
+                </div>
+                <div class="summary-row">
+                    <div class="summary-group">
+                        <div class="summary-label">Стоимость эвакуации:</div>
+                        <div class="summary-value"><strong class="clt_sum--js">0</strong> руб.</div>
+                        <div class="summary-note">* Стоимость может быть скорректирована при обнаружении дополнительных
+                            факторов, которые влияют на услугу</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Комментарий</label>
+                        <textarea class="form-textarea" name="f_ztxt" placeholder="Комментарий"></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn">ОФОРМИТЬ ЗАЯВКУ</button>
+            </form>
+            <!-- Модальное окно успеха -->
+            <div id="successModal" class="modal" style="display:none;">
+                <div class="modal-content">
+                    <span class="modal-close">×</span>
+                    <h3>Заявка отправлена!</h3>
+                    <p id="successMessage">Мы свяжемся с вами в ближайшее время</p>
+                    <button class="modal-btn">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<style>
+    /* Стиль для select манипулятора - перенос текста */
+    .manipulator-select {
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        height: auto !important;
+        min-height: 55px !important;
+        line-height: 1.4 !important;
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+    }
+
+    /* Для option внутри select */
+    .manipulator-select option {
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        padding: 8px 12px !important;
+    }
+
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .manipulator-select {
+            font-size: 14px !important;
+            min-height: 50px !important;
+        }
+    }
+</style>
+
+<!-- ===== Info Section ===== -->
+{% if info_sections %}
+<section class="info-section">
+    {% for info in info_sections %}
+    <div class="info-container">
+        <div class="info-image">
+            <img src="{{ info.image.url }}" alt="{{ info.title }}">
+        </div>
+        <div class="info-text">
+            <h2>{{ info.title }}</h2>
+            <p>{{ info.text }}</p>
+            <a href="{{ info.button_link }}" class="btn-contact btn-order">{{ info.button_text }}</a>
+        </div>
+    </div>
+    {% endfor %}
+</section>
+{% endif %}
+
+
+
+<!-- ===== Price List ===== -->
+{% if price_items %}
+<section class="prices">
+    <div class="container prices-container">
+        <h2 class="prices-title">Наши тарифы</h2>
+        <div class="price-table-wrapper">
+            <table class="price-table">
+                <tbody>
+                    {% for price in price_items %}
+                    <tr>
+                        <td>{{ price.title }}</td>
+                        <td>{{ price.price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+
+
+<!-- ===== Work Photos ===== -->
+{% if work_photos %}
+<section class="works">
+    <div class="container works-container">
+        <h2 class="works-title">Фото наших работ</h2>
+        <div class="works-gallery">
+            {% for photo in work_photos %}
+            <div class="work-item">
+                <img src="{{ photo.image.url }}" alt="{{ photo.caption }}">
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+
+<!-- ===== FAQ ===== -->
+{% if faqs %}
+<section class="faq">
+    <div class="faq-container">
+        <div class="title-and-button">
+            <h2 class="faq-title">Часто задаваемые вопросы</h2>
+            <a href="#" class="btn-contact btn-question">Задать вопрос</a>
+        </div>
+        <div class="faq-list">
+            {% for faq in faqs %}
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>{{ faq.question }}</span>
+                    <i class="fa fa-angle-down arrow"></i>
+                </div>
+                <div class="faq-answer">
+                    {{ faq.answer }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>                                                                                                                                                                              
+{% endif %}
+
+
+{% if question_map %}
+<div class="container-pluse">
+    <div class="evacuation-block">
+        <div class="evacuation-content">
+            <h2>Остались вопросы или хотите заказать эвакуатор?</h2>
+            <p>Напишите нам</p>
+            <button class="btn-contact btn-order">Обратный звонок</button>
+        </div>
+        <div class="evacuation-image">
+            <img src="{% static '/images/truc_flipped.png' %}" alt="Эвакуатор">
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+
+{% if articles %}
+<section class="articles" id="articles">
+    <div class="articles-container">
+        <h2 class="section-title">{{ info_name }}</h2>
+
+
+        {% for article in articles %}
+        <div class="article-card">
+            <div class="article-date">{{ article.date|date:"d.m.Y" }}</div>
+            <h3>{{ article.title }}</h3>
+            <p>
+                {{ article.text|truncatechars:150 }}
+            </p>
+            <a href="{% url 'article_detail' article.id %}" class="article-btn">Читать далее</a>
+        </div>
+        {% endfor %}
+
+    </div>
+</section>
+
+{% endif %}
+
+
+{% if map_show %}
+<section class="contact-section">
+    <div class="contact-map">
+        <!-- Вставь сюда код Яндекс карты -->
+
+        <iframe
+            src="https://yandex.ru/map-widget/v1/?um=constructor%3A4486b9c12da82af0eeba885ef942f24eb8f6d4a7cccf7ac298f6ed585e65e09c&amp;source=constructor"
+            width="100%" height="100%" frameborder="0"></iframe>
+    </div>
+
+    <div class="contact-form">
+        <h3>Оставьте заявку</h3>
+        <form class="contact-form" novalidate>
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Ваше имя">
+            <input type="tel" name="phone" placeholder="+7 (___) ___ __ __" required data-mask="+7 (999) 999 99 99">
+
+            <label class="policy-checkbox">
+                <span style="text-decoration: none;">Согласен с <a href="/policy"
+                        style="text-decoration: none; color: #999 !important;" target="_blank">политикой
+                        конфиденциальности</a> и <a href="/policy"
+                        style="text-decoration: none; color: #999 !important;" target="_blank">обработкой
+                        данных</a></span>
+            </label>
+
+
+            <button type="submit">Отправить</button>
+            <div class="form-message"></div>
+        </form>
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}
