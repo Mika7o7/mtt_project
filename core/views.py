@@ -12,161 +12,177 @@ from django.views.decorators.csrf import csrf_exempt  # если хочешь, �
 
 TELEGRAM_TOKEN = "1625085576:AAGR1VzsLToXxe5NxiPGA-IZy1NmQlbNX7U"  # или хранить в settings.SECRET
 TELEGRAM_CHAT_ID = "-1003511742071"
+
 @csrf_exempt
-def submit_form(request):
+def universal_form(request):
     if request.method != "POST":
-        return JsonResponse({"success": False, "message": "Некорректный запрос"}, status=400)
+        return JsonResponse(
+            {"success": False, "message": "Некорректный запрос"},
+            status=400
+        )
 
-    # Основные поля
-    name = request.POST.get("f_name", "").strip()
-    phone = request.POST.get("f_phone", "").strip()
-    name2 = request.POST.get("f_name_2", "").strip()
-    phone2 = request.POST.get("f_phone_2", "").strip()
-    comment = request.POST.get("f_ztxt", "").strip()
-    distance = request.POST.get("f_qq", "").strip()
-    vk_type = request.POST.get("clt_vk", "").strip()
-    auto_type_id = request.POST.get("clt_vid_1", "").strip()
-    koleso = request.POST.get("f_koleso", "").strip()
-    mesto = request.POST.get("f_mesto", "").strip()
-    mesto_cd = request.POST.get("f_mesto_cd", "").strip()
-    end = request.POST.get("f_end", "").strip()
-    end_cd = request.POST.get("f_end_cd", "").strip()
-    date = request.POST.get("f_date", "").strip()
-    time = request.POST.get("f_time", "").strip()
+    form_type = request.POST.get("form_type", "").strip()
 
-    # Проверяем телефон
-    if not phone:
-        return JsonResponse({"success": False, "message": "Укажите номер телефона."})
+    # =========================
+    # FASTORDER
+    # =========================
+    if form_type == "fastorder":
+        name = request.POST.get("f_name", "").strip() or "Не указано"
+        phone = request.POST.get("f_phone", "").strip()
+        avto = request.POST.get("f_ztxt", "").strip()
 
-    # --- Словарь видов авто ---
-    AUTO_TYPES = {
-        "1": "Седан",
-        "2": "Мотоцикл",
-        "3": "Кроссовер",
-        "4": "Минивэн",
-        "5": "Внедорожник",
-        "6": "Премиум класс",
-        "7": "Спорт класс",
-        "8": "Микроавтобус",
-        "9": "Коммерческий транспорт",
-        "10": "Легкая спецтехника до 5 тонн",
-    }
+        if not phone:
+            return JsonResponse({"success": False, "message": "Укажите телефон"})
 
-    auto_type_name = AUTO_TYPES.get(auto_type_id, "—")
+        message = (
+            "📞 <b>Заказать звонок</b>\n\n"
+            f"👤 Имя: {name}\n"
+            f"📞 Телефон: {phone}\n"
+            f"✅ Авто: {avto}"
+        )
 
-    # --- Словарь доп. опций ---
-    dop_map = {
-        "f_dop_1_1": "Нет буксировочного крюка",
-        "f_dop_1_2": "Необходимо прикурить авто",
-        "f_dop_1_3": "Заблокирован руль",
-        "f_dop_1_4": "ТС в подземном паркинге",
-        "f_dop_1_5": "Клиренс менее 15 см",
-        "f_dop_1_6": "Автомобиль в ряду",
-        "f_dop_2_1": "Машина стоит вплотную к бордюру",
-        "f_dop_2_2": "Необходимо снять с автовоза",
-        "f_dop_2_3": "Автомобиль в ряду",
-    }
+    # =========================
+    # CALLBACK
+    # =========================
+    elif form_type == "callback":
+        name = request.POST.get("name", "").strip() or "Не указано"
+        phone = request.POST.get("phone", "").strip()
+        agree = request.POST.get("agree_policy", "false")
 
-    # --- Собираем отмеченные опции ---
-    extras = [label for key, label in dop_map.items() if request.POST.get(key) == "1"]
-    extras_text = ", ".join(extras) if extras else "—"
+        if not phone:
+            return JsonResponse({"success": False, "message": "Укажите телефон"})
 
-    # --- Формируем сообщение ---
-    message = (
-        f"🚨 <b>Новая заявка с сайта</b>\n\n"
-        f"👤 Имя: {name or '—'}\n"
-        f"📞 Телефон: {phone or '—'}\n"
-        f"👥 Доп. контакт: {name2 or '—'} / {phone2 or '—'}\n"
-        f"🚗 Тип техники: {'Эвакуатор' if vk_type == '1' else 'Манипулятор'}\n"
-        f"🚘 Вид авто: {auto_type_name}\n"
-        f"🔩 Кол-во колёс: {koleso or '—'}\n"
-        f"📍 Откуда: {mesto or mesto_cd or '—'}\n"
-        f"🏁 Куда: {end or end_cd or '—'}\n"
-        f"📏 Расстояние: {distance or '—'} км\n"
-        f"🧰 Доп. опции: {extras_text}\n"
-        f"🕒 Дата/время: {date or '—'} {time or ''}\n"
-        f"💬 Комментарий: {comment or '—'}"
-    )
+        message = (
+            "📞 <b>Заказать звонок</b>\n\n"
+            f"👤 Имя: {name}\n"
+            f"📞 Телефон: {phone}\n"
+            f"✅ Согласие с политикой: {agree}"
+        )
 
-    # --- Отправляем в Telegram ---
+    # =========================
+    # QUESTION
+    # =========================
+    elif form_type == "question":
+        name = request.POST.get("q_name", "").strip()
+        phone = request.POST.get("q_phone", "").strip()
+        question = request.POST.get("q_question", "").strip()
+
+        if not phone:
+            return JsonResponse({"success": False, "message": "Укажите телефон"})
+
+        message = (
+            "❓ <b>Вопрос с сайта</b>\n\n"
+            f"👤 Имя: {name or '—'}\n"
+            f"📞 Телефон: {phone}\n"
+        )
+
+        if question:
+            message += f"📝 Вопрос: {question}\n"
+
+    # =========================
+    # CALCULATOR (submit_form)
+    # =========================
+    elif form_type == "calculator":
+        # --- Основные поля ---
+        name = request.POST.get("f_name", "").strip()
+        phone = request.POST.get("f_phone", "").strip()
+        name2 = request.POST.get("f_name_2", "").strip()
+        phone2 = request.POST.get("f_phone_2", "").strip()
+        comment = request.POST.get("f_ztxt", "").strip()
+        distance = request.POST.get("f_qq", "").strip()
+        vk_type = request.POST.get("clt_vk", "").strip()
+        auto_type_id = request.POST.get("clt_vid_1", "").strip()
+        koleso = request.POST.get("f_koleso", "").strip()
+        mesto = request.POST.get("f_mesto", "").strip()
+        mesto_cd = request.POST.get("f_mesto_cd", "").strip()
+        end = request.POST.get("f_end", "").strip()
+        end_cd = request.POST.get("f_end_cd", "").strip()
+        date = request.POST.get("f_date", "").strip()
+        time = request.POST.get("f_time", "").strip()
+
+        if not phone:
+            return JsonResponse({"success": False, "message": "Укажите номер телефона."})
+
+        # --- Типы авто ---
+        AUTO_TYPES = {
+            "1": "Седан",
+            "2": "Мотоцикл",
+            "3": "Кроссовер",
+            "4": "Минивэн",
+            "5": "Внедорожник",
+            "6": "Премиум класс",
+            "7": "Спорт класс",
+            "8": "Микроавтобус",
+            "9": "Коммерческий транспорт",
+            "10": "Легкая спецтехника до 5 тонн",
+        }
+
+        auto_type_name = AUTO_TYPES.get(auto_type_id, "—")
+
+        # --- Доп. опции ---
+        dop_map = {
+            "f_dop_1_1": "Нет буксировочного крюка",
+            "f_dop_1_2": "Необходимо прикурить авто",
+            "f_dop_1_3": "Заблокирован руль",
+            "f_dop_1_4": "ТС в подземном паркинге",
+            "f_dop_1_5": "Клиренс менее 15 см",
+            "f_dop_1_6": "Автомобиль в ряду",
+            "f_dop_2_1": "Машина стоит вплотную к бордюру",
+            "f_dop_2_2": "Необходимо снять с автовоза",
+            "f_dop_2_3": "Автомобиль в ряду",
+        }
+
+        extras = [
+            label for key, label in dop_map.items()
+            if request.POST.get(key) == "1"
+        ]
+        extras_text = ", ".join(extras) if extras else "—"
+
+        message = (
+            "🚨 <b>Новая заявка эвакуатор</b>\n\n"
+            f"👤 Имя: {name or '—'}\n"
+            f"📞 Телефон: {phone}\n"
+            f"👥 Доп. контакт: {name2 or '—'} / {phone2 or '—'}\n"
+            f"🚗 Тип техники: {'Эвакуатор' if vk_type == '1' else 'Манипулятор'}\n"
+            f"🚘 Вид авто: {auto_type_name}\n"
+            f"🔩 Кол-во колёс: {koleso or '—'}\n"
+            f"📍 Откуда: {mesto or mesto_cd or '—'}\n"
+            f"🏁 Куда: {end or end_cd or '—'}\n"
+            f"📏 Расстояние: {distance or '—'} км\n"
+            f"🧰 Доп. опции: {extras_text}\n"
+            f"🕒 Дата/время: {date or '—'} {time or ''}\n"
+            f"💬 Комментарий: {comment or '—'}"
+        )
+
+    else:
+        return JsonResponse(
+            {"success": False, "message": "Неизвестный тип формы"}
+        )
+
+    # =========================
+    # SEND TO TELEGRAM
+    # =========================
     try:
         r = requests.post(
             f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
-            data={"chat_id": TELEGRAM_CHAT_ID, "text": message, "parse_mode": "HTML"},
+            data={
+                "chat_id": TELEGRAM_CHAT_ID,
+                "text": message,
+                "parse_mode": "HTML",
+            },
             timeout=5,
         )
         r.raise_for_status()
-        return JsonResponse({"success": True, "message": "Спасибо! Ваша заявка успешно отправлена."})
+
     except Exception as e:
         print("Ошибка Telegram:", e)
-        return JsonResponse({"success": False, "message": "Не удалось отправить сообщение."})
+        return JsonResponse(
+            {"success": False, "message": "Не удалось отправить сообщение."}
+        )
 
-
-@csrf_exempt
-def send_callback(request):
-    if request.method != "POST":
-        return JsonResponse({"success": False, "message": "Только POST"}, status=400)
-
-    name = request.POST.get("name", "").strip() or "Не указано"
-    phone = request.POST.get("phone", "").strip()
-    agree = request.POST.get("agree_policy", "false")
-
-    if not phone:
-        return JsonResponse({"success": False, "message": "Укажите телефон"})
-
-    message = (
-        "НОВАЯ ЗАЯВКА\n\n"
-        f"Имя: {name}\n"
-        f"Телефон: {phone}\n"
-        f"Согласен с политикой: {agree}"
+    return JsonResponse(
+        {"success": True, "message": "Спасибо! Заявка успешно отправлена."}
     )
-
-    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-    payload = {"chat_id": TELEGRAM_CHAT_ID, "text": message, "parse_mode": "HTML"}
-
-    try:
-        r = requests.post(url, data=payload, timeout=5)
-        r.raise_for_status()
-    except Exception as e:
-        # логирование (print или logger) если нужно
-        print("Telegram send error:", e)
-        return JsonResponse({"success": False, "message": "Не удалось отправить сообщение. Попробуйте позже."})
-
-    return JsonResponse({"success": True, "message": "Спасибо! Заявка отправлена."})
-
-
-@csrf_exempt
-def send_callback_question(request):
-    if request.method != "POST":
-        return JsonResponse({"success": False, "message": "Только POST"}, status=400)
-
-    name = request.POST.get("q_name", "").strip()
-    phone = request.POST.get("q_phone", "").strip()
-    question = request.POST.get("q_question", "").strip()
-
-    if not phone:
-        return JsonResponse({"success": False, "message": "Укажите телефон"})
-
-    message = (
-        "📩 <b>Заявка с сайта</b>\n"
-        f"👤 Имя: {name or '—'}\n"
-        f"📞 Телефон: {phone}\n"
-    )
-
-    if question:
-        message += f"❓ Вопрос: {question}\n"
-
-    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-    payload = {"chat_id": TELEGRAM_CHAT_ID, "text": message, "parse_mode": "HTML"}
-
-    try:
-        r = requests.post(url, data=payload, timeout=5)
-        r.raise_for_status()
-    except Exception as e:
-        print("Telegram send error:", e)
-        return JsonResponse({"success": False, "message": "Не удалось отправить сообщение. Попробуйте позже."})
-
-    return JsonResponse({"success": True, "message": "Спасибо! Ваш вопрос отправлен."})
 
 def policy(request):
     return render(request, 'policy.html')

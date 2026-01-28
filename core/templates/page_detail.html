@@ -103,7 +103,7 @@
                 </p>
 
                 <!-- Форма заявки (одинаковая везде) -->
-                <form class="universal-form metro-hero-form" novalidate>
+                <form class="universal-form metro-hero-form ajax-form" novalidate>
                     {% csrf_token %}
                     <!-- Телефон — обязательно -->
                     <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required
@@ -127,7 +127,7 @@
 
             <!-- Правая часть: 3D-модель эвакуатора -->
             <div class="hero-model">
-                <model-viewer src="{% static 'assets/models/tow-truck.glb' %}" alt="Эвакуатор 3D модель" auto-rotate
+                <model-viewer src="{% static 'assets/models/tow-truck-super.glb' %}" alt="Эвакуатор 3D модель" auto-rotate
                     camera-controls ar ar-modes="webxr scene-viewer quick-look" shadow-intensity="1" exposure="1.0"
                     class="model">
                 </model-viewer>
@@ -209,9 +209,9 @@
             <h2><span>Срочный</span> заказ эвакуатора</h2>
             <p class="order-subtitle">Подача в течение <strong>18 минут</strong>, эвакуация любой сложности</p>
 
-            <form class="order-form" action="{% url 'submit_form' %}" method="post" id="orderForm">
+            <form class="ajax-form order-form" data-url="{% url 'universal_form' %}" data-success="Спасибо! Заявка принята">
                 {% csrf_token %}
-
+                <input type="hidden" name="form_type" value="fastorder">
                 <input type="text" name="f_name" placeholder="Ваше имя" required>
 
                 <input type="tel" name="f_phone" placeholder="+7 (___) ___-__-__" required
@@ -220,6 +220,7 @@
                 <input type="text" name="f_ztxt" placeholder="Авто">
 
                 <button type="submit" class="btn-send">Отправить</button>
+                <div class="form-message"></div>
             </form>
 
             <p class="order-agreement">
@@ -248,40 +249,6 @@
     </div>
 </section>
 
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const form = document.getElementById("orderForm");
-
-        if (!form) return;
-
-        form.addEventListener("submit", async (e) => {
-            e.preventDefault();
-
-            const formData = new FormData(form);
-
-            try {
-                const response = await fetch(form.action, {
-                    method: "POST",
-                    headers: {
-                        "X-CSRFToken": formData.get("csrfmiddlewaretoken"),
-                    },
-                    body: formData,
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    alert("✅ Заявка отправлена!");
-                    form.reset();
-                } else {
-                    alert("❌ Ошибка: " + (data.message || "Не удалось отправить"));
-                }
-            } catch (err) {
-                alert("❌ Ошибка соединения");
-            }
-        });
-    });
-</script>
 
 {% endif %}
 
@@ -356,8 +323,9 @@
                     <button type="button" class="switcher-btn" data-vk="2">МАНИПУЛЯТОР</button>
                 </div>
             </div>
-            <form class="clt_form" id="calculatorForm" method="POST" novalidate>
+            <form class="ajax-form" data-url="{% url 'universal_form' %}" data-success="Спасибо! Заявка принята">
                 {% csrf_token %}
+                <input type="hidden" name="form_type" value="calculator">
                 <input type="hidden" name="clt_vk" id="clt_vk" value="1">
                 <input type="hidden" name="f_tip" id="clt_tip" value="1">
                 <input type="hidden" name="page_id" value="414">
@@ -614,12 +582,12 @@
                     <div class="form-group small">
                         <label class="form-label">Дата</label>
                         <input type="text" class="form-input" id="datepickerDefault" name="f_date"
-                            placeholder="дд.мм.гггг" required pattern="\d{2}\.\d{2}\.\d{4}">
+                            placeholder="дд.мм.гггг"  pattern="\d{2}\.\d{2}\.\d{4}">
                         <span class="error-msg" id="date-error"></span>
                     </div>
                     <div class="form-group small">
                         <label class="form-label">Время</label>
-                        <input type="text" class="form-input" id="f_time" name="f_time" placeholder="чч:мм" required
+                        <input type="text" class="form-input" id="f_time" name="f_time" placeholder="чч:мм" 
                             pattern="\d{2}:\d{2}">
                         <span class="error-msg" id="time-error"></span>
                     </div>
@@ -650,6 +618,7 @@
                     </div>
                 </div>
                 <button type="submit" class="submit-btn">ОФОРМИТЬ ЗАЯВКУ</button>
+                <div class="form-message"></div>
             </form>
             <!-- Модальное окно успеха -->
             <div id="successModal" class="modal" style="display:none;">
@@ -833,8 +802,9 @@
 
     <div class="contact-form">
         <h3>Оставьте заявку</h3>
-        <form class="contact-form" novalidate>
+        <form class="ajax-form" data-url="{% url 'universal_form' %}" data-success="Заявка отправлена">
             {% csrf_token %}
+            <input type="hidden" name="form_type" value="callback">
             <input type="text" name="name" placeholder="Ваше имя">
             <input type="tel" name="phone" placeholder="+7 (___) ___ __ __" required data-mask="+7 (999) 999 99 99">
 

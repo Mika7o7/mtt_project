@@ -11,9 +11,7 @@ urlpatterns = [
     path('articles/<int:pk>/', views.article_detail, name='article_detail'),
     path('metro/', views.metro_list, name='metro_list'),
     
-    path('submit_form/', views.submit_form, name='submit_form'),
-    path('send_callback/', views.send_callback, name='send_callback'),
-    path('send_callback_question/', views.send_callback_question, name='send_callback_question'),
+    path('universal_form/', views.universal_form, name='universal_form'),
     path('politika-cookies/', TemplateView.as_view(template_name='politika-cookies.html'), name='politika-cookies'),
     path('policy/', views.policy, name='policy'),
     
