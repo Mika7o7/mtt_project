@@ -4157,3 +4157,48 @@ body {
     max-width: 250px;
   }
 }
+
+.order-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.order-form input {
+  flex: 1 1 auto;
+  min-width: 180px;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.order-form .policy-checkbox {
+  flex-basis: 100%;
+  font-size: 0.85rem;
+  color: #999;
+}
+
+.order-section {
+  color: #fff;
+  text-align: left;
+}
+
+.order-form .btn-send,
+.order-form button[type="submit"] {
+  flex: 0 0 auto;
+  padding: 15px 30px;
+  background: #ff4b2b;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.order-form .btn-send:hover,
+.order-form button[type="submit"]:hover {
+  background: #e63e1a;
+}

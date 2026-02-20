@@ -1,14 +1,13 @@
-from django.shortcuts import render, get_object_or_404
-from .models import (
-    HeroSection, HowToOrderStep, TransportType,
-    WhyChooseUs, InfoSection, PriceItem, WorkPhoto, FAQ, Rating, Article,
-    District, MetroStation, City, Gruzovoy, Manipulyator, Highway, Region,
-    AboutPage, ArticlePage, PricePage, GalleryPage, CalculatorPage,
-)
-
 import requests
+from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, Http404
 from django.views.decorators.csrf import csrf_exempt  # если хочешь, но лучше убрать и использовать token в форме
+
+from .models import (
+    HeroSection, HowToOrderStep, TransportType,
+    WhyChooseUs, InfoSection, PriceItem, WorkPhoto, FAQ, Article, Page
+    
+)
 
 TELEGRAM_TOKEN = "1625085576:AAGR1VzsLToXxe5NxiPGA-IZy1NmQlbNX7U"  # или хранить в settings.SECRET
 TELEGRAM_CHAT_ID = "-1003511742071"
@@ -230,146 +229,18 @@ def transport_detail(request, slug):
 def services(request):
     return render(request, 'services.html')
 
-def district_list(request):
-    districts = District.objects.all()
-    return render(request, 'district_list.html', {'districts': districts})
-
-
-def metro_list(request):
-    stations = MetroStation.objects.select_related('district').all()
-    return render(request, 'metro_list.html', {'stations': stations})
-
-# Грузовой
-def gruzovoy_detail(request, slug):
-    item = get_object_or_404(Gruzovoy, slug=slug)
-    return render(request, 'metro_list.html', {'item': item})
-
-# Манипулятор
-def manipulyator_detail(request, slug):
-    item = get_object_or_404(Manipulyator, slug=slug)
-    return render(request, 'metro_list.html', {'item': item})
-
-# Шоссе
-def highway_detail(request, slug):
-    item = get_object_or_404(Highway, slug=slug)
-    return render(request, 'metro_list.html', {'item': item})
-
-def location_detail(request, slug):
-    location = None
-    location_type = None
-
-    if District.objects.filter(slug=slug).exists():
-        location = get_object_or_404(District, slug=slug)
-        location_type = 'district'
-    elif Region.objects.filter(slug=slug).exists():
-        location = get_object_or_404(Region, slug=slug)
-        location_type = 'oblasti'
-    elif MetroStation.objects.filter(slug=slug).exists():
-        location = get_object_or_404(MetroStation, slug=slug)
-        location_type = 'metro'
-    elif City.objects.filter(slug=slug).exists():
-        location = get_object_or_404(City, slug=slug)
-        location_type = 'city'
-    elif Gruzovoy.objects.filter(slug=slug).exists():
-        location = get_object_or_404(Gruzovoy, slug=slug)
-        location_type = 'gruzovoy'
-    elif Manipulyator.objects.filter(slug=slug).exists():
-        location = get_object_or_404(Manipulyator, slug=slug)
-        location_type = 'manipulyator'
-    elif Highway.objects.filter(slug=slug).exists():
-        location = get_object_or_404(Highway, slug=slug)
-        location_type = 'highway'
-    else:
-        raise Http404("Страница не найдена")
-
-    context = {
-        'location': location,
-        'location_type': location_type,
-        'order_steps': HowToOrderStep.objects.all(),
-        'transports': TransportType.objects.all(),
-        'info': InfoSection.objects.first(),
-        'prices': PriceItem.objects.all(),
-        'why_choose_us': WhyChooseUs.objects.all(),
-        'photos': WorkPhoto.objects.all(),
-        'faqs': FAQ.objects.filter(is_active=True)[:6],
-       
-    }
-    return render(request, 'location_detail.html', context)
-
-def payment(request):
-    return render(request, 'payment.html')
-
-def about(request):
-    info = InfoSection.objects.first()
-    photos = WorkPhoto.objects.all()
-    aboutpage = AboutPage.objects.first()
-
-    context = {
-        'info': info,
-        'page_info': aboutpage,
-        'photos': photos,
-        'order_steps': HowToOrderStep.objects.all(),
-        'why_choose_us': WhyChooseUs.objects.all(),
-    }
-
-    return render(request, 'about.html', context)
- 
-
-def article_list(request):
-    articles = Article.objects.all()
-    articlepage = ArticlePage.objects.first()
-
-    context = {
-        "articles": articles,
-        "page_info": articlepage, 
-    }
-    return render(request, 'articles.html', context)
-
 def article_detail(request, pk):
     article = get_object_or_404(Article, pk=pk)
     return render(request, 'article_detail.html', {'article': article})
-
-def prices(request):
-    prices = PriceItem.objects.all()
-    pricepage = PricePage.objects.first()
-
-    context = {
-        "prices": prices,
-        "page_info": pricepage,
-    }
-
-    return render(request, 'prices.html', context)
-
-def gallery(request):
-    photos = WorkPhoto.objects.all()
-    gallerypage = GalleryPage.objects.first()
-
-    context = {
-        "photos": photos,
-        "page_info": gallerypage, 
-    }
-
-    return render(request, 'gallery.html', context)
-
-def calculator(request):
-    calculatorpage = CalculatorPage.objects.first()
-
-    context = {
-        "page_info": calculatorpage,
-    }
-    return render(request, 'calculator.html', context)
-
 
 def oplata(request):
     return render(request, 'oplata.html')
 
 
-from .models import Page
 
 
 def home(request):
-    page = get_object_or_404(Page, is_active=True)
-    
+    page = get_object_or_404(Page, is_active=True, is_homepage=True)
     
     context = {
         'page': page,
@@ -379,19 +250,17 @@ def home(request):
         'transport_types': page.transport_types.all(),
         'why_choose_us': page.why_choose_us.all(),
         'calculator': page.calculator,
+        'payment': page.payment_show,
+        'second_hero_section': page.second_hero_section,
+        'fastorder': page.fastorder,
+        'question_map': page.question_map,
+        'map_show': page.map_show,
         'info_sections': page.info_sections.all(),
         'price_items': page.price_items.all(),
         'work_photos': page.work_photos.all(),
         'faqs': page.faqs.filter(is_active=True),
-        'ratings': page.ratings.all(),
         'articles': page.articles.all().order_by('-date')[:5],
-        'cities': page.cities.all(),
-        'metro_stations': page.metro_stations.all(),
-        'regions': page.regions.all(),
-        'districts': page.districts.all(),
-        'gruzovoys': page.gruzovoys.all(),
-        'manipulyators': page.manipulyators.all(),
-        'highways': page.highways.all(),
+        # Удаленные поля убраны
     }
     
     return render(request, 'page_detail.html', context)
@@ -437,15 +306,8 @@ def page_detail(request, slug=None):
         'price_items': page.price_items.all(),
         'work_photos': page.work_photos.all(),
         'faqs': page.faqs.filter(is_active=True),
-        'ratings': page.ratings.all(),
         'articles': page.articles.all().order_by('-date')[:5],
-        'cities': page.cities.all(),
-        'metro_stations': page.metro_stations.all(),
-        'regions': page.regions.all(),
-        'districts': page.districts.all(),
-        'gruzovoys': page.gruzovoys.all(),
-        'manipulyators': page.manipulyators.all(),
-        'highways': page.highways.all(),
+        # Удаленные поля убраны
     }
     
     return render(request, 'page_detail.html', context)

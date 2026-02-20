@@ -12,24 +12,42 @@
 
 
 <!-- Показать список округов -->
-{% if districts %}
+{% if district_pages and page.slug == "okrug" %}
 <section class="districts">
-    <h1>{{info_name}}</h1>
+    <h1>{{ info_name }}</h1>
 
     <!-- ОДИН ОБЩИЙ ГРИД НА ВСЕ ОКРУГА -->
     <div class="district-grid">
-        {% for d in districts %}
-        <a href="{% url 'districts' d.slug %}" class="district-link">
+        {% for page in district_pages %}
+        <a href="{% url 'page_detail' page.slug %}" class="district-link">
             <div class="district-card">
-                <img src="{{ d.image.url }}" alt="{{ d.name }}">
-                <span>({{ d.short_name }}) {{ d.name }}</span>
+                <!-- Фиксированные картинки для округов -->
+                {% if "Центральный" in page.name %}
+                <img src="{% static 'images/1.jpg' %}" alt="ЦАО">
+                {% elif "Северный" in page.name %}
+                <img src="{% static 'images/2.jpg' %}" alt="САО">
+                {% elif "Северо-Восточный" in page.name %}
+                <img src="{% static 'images/3.jpg' %}" alt="СВАО">
+                {% elif "Восточный" in page.name %}
+                <img src="{% static 'images/4.jpg' %}" alt="ВАО">
+                {% elif "Юго-Восточный" in page.name %}
+                <img src="{% static 'images/5.jpg' %}" alt="ЮВАО">
+                {% elif "Южный" in page.name %}
+                <img src="{% static 'images/6.jpg' %}" alt="ЮАО">
+                {% elif "Юго-Западный" in page.name %}
+                <img src="{% static 'images/7.jpg' %}" alt="ЮЗАО">
+                {% elif "Западный" in page.name %}
+                <img src="{% static 'images/8.jpg' %}" alt="ЗАО">
+                {% elif "Северо-Западный" in page.name %}
+                <img src="{% static 'images/9.jpg' %}" alt="СЗАО">
+                {% endif %}
+                <span>{{ page.name|cut:"Эвакуатор " }}</span>
             </div>
         </a>
         {% endfor %}
     </div>
 </section>
 {% endif %}
-
 
 <!-- Payment -->
 {% if payment %}
@@ -59,7 +77,6 @@
     </div>
 </section>
 {% endif %}
-
 
 
 
@@ -101,6 +118,7 @@
                     Недорогой эвакуатор • Выезд за 20–40 минут
                     {% endif %}
                 </p>
+                
 
                 <!-- Форма заявки (одинаковая везде) -->
                 <form class="universal-form metro-hero-form ajax-form" novalidate>
@@ -121,18 +139,13 @@
                     <!-- Сообщение под формой -->
                     <div class="form-message"></div>
                 </form>
+                
             </div>
 
-
-
-            <!-- Правая часть: 3D-модель эвакуатора -->
             <div class="hero-model">
-                <model-viewer src="{% static 'assets/models/tow-truck-super.glb' %}" alt="Эвакуатор 3D модель" auto-rotate
-                    camera-controls ar ar-modes="webxr scene-viewer quick-look" shadow-intensity="1" exposure="1.0"
-                    class="model">
-                </model-viewer>
-            </div>
-
+           <img src="{% static 'images/hero_bg.jpg' %}" alt="">
+        </div>
+            
         </div>
     </div>
 </section>
@@ -149,7 +162,9 @@
             <a href="#" class="btn-order hero-btn">{{ hero.button_text }}</a>
         </div>
         <div class="hero-model">
-            <model-viewer src="{% static 'assets/models/tow-truck.glb' %}" alt="Tow Truck 3D" auto-rotate class="model">
+            <model-viewer src="{% static 'assets/models/tow-truck-super.glb' %}" alt="Эвакуатор 3D модель" auto-rotate
+                camera-controls ar ar-modes="webxr scene-viewer quick-look" shadow-intensity="1" exposure="1.0" class="model"
+                loading="eager" reveal="auto" tone-mapping="commerce" shadow-softness="0.5" disable-zoom>
             </model-viewer>
         </div>
     </div>

@@ -10,8 +10,10 @@
     <div class="top-bar-right">
       <a href="https://www.facebook.com/evakuatorpushkino" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
       <a href="https://vk.ru/mttevakuatorpushkino" aria-label="VK"><i class="fab fa-vk"></i></a>
-      <a href="https://www.instagram.com/evakuator_pushkino?igsh=cDgxMWxhOTRkZmY4" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-      <a href="https://youtube.com/@mttevakuator?si=nLSKr5ft87LEz0Sf" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+      <a href="https://www.instagram.com/evakuator_pushkino?igsh=cDgxMWxhOTRkZmY4" aria-label="Instagram"><i
+          class="fab fa-instagram"></i></a>
+      <a href="https://youtube.com/@mttevakuator?si=nLSKr5ft87LEz0Sf" aria-label="YouTube"><i
+          class="fab fa-youtube"></i></a>
       <a href="https://wa.me/79263140455" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
     </div>
   </div>
@@ -31,149 +33,166 @@
       <ul>
         <li><a href="/okrug">По округам</a></li>
         <li class="mega-dropdown">
-  <span class="dropdown-toggle" id="services-toggle">Услуги ▾</span>
+          <span class="dropdown-toggle" id="services-toggle">Услуги ▾</span>
 
-  <div class="main-dropdown-menu" id="mega-menu">
-    <div class="container bg-white">
-      <div class="main-dropdown-menu__row">
-        <!-- Левая колонка — fake-selects -->
-        <div class="wrapper">
-          <div class="fake-button">Работаем 24/7</div>
-          <div class="selects">
-            <!-- ГОРОДА МО -->
-            <div class="fake-select">
-              <div class="fake-select__title">Эвакуатор по городам МО</div>
-              <div class="fake-select__list">
-                {% for city in cities %}
-                <a href="{% url 'city_detail' city.slug %}">
-                  {{ city.name }}
-                  {% if city.distance_from_mkad > 0 %}
-                  <small class="text-gray-500">({{ city.distance_from_mkad }} км от МКАД)</small>
-                  {% endif %}
-                </a>
-                {% endfor %}
-              </div>
-            </div>
+          <div class="main-dropdown-menu" id="mega-menu">
+            <div class="container bg-white">
+              <div class="main-dropdown-menu__row">
+                <!-- Левая колонка — fake-selects -->
+                <div class="wrapper">
+                  <div class="fake-button">Работаем 24/7</div>
 
-            <!-- ОКРУГА -->
-            <div class="fake-select">
-              <div class="fake-select__title">Эвакуатор по округам</div>
-              <div class="fake-select__list">
-                {% for d in districts %}
-                <a href="{% url 'districts' d.slug %}">
-                  {{ d.short_name }} — {{ d.name }}
-                </a>
-                {% endfor %}
-              </div>
-            </div>
+                  <!-- ГОРОДА МО (исправлено) -->
+                  <div class="fake-select">
+                    <div class="fake-select__title">Эвакуатор по городам МО</div>
+                    <div class="fake-select__list">
+                      {% for page in city_pages %}
+                      <a href="{% url 'page_detail' page.slug %}">
+                        {{ page.name|cut:"Эвакуатор " }}
+                        <small class="text-gray-500">(МО)</small>
+                      </a>
+                      {% empty %}
+                      <a href="#">Нет городов</a>
+                      {% endfor %}
+                    </div>
+                  </div>
 
-            <!-- МЕТРО -->
-            <div class="fake-select">
-              <div class="fake-select__title">Эвакуатор у метро</div>
-              <div class="fake-select__list">
-                {% for station in metro_stations %}
-                <a href="{% url 'metro_detail' station.slug %}">
-                  {{ station.name }}
-                  {% if station.line %}
-                  <small class="text-gray-500">({{ station.line }})</small>
-                  {% endif %}
-                </a>
-                {% endfor %}
-              </div>
-            </div>
+                  <!-- ОКРУГА (исправлено) -->
+                  <div class="fake-select">
+                    <div class="fake-select__title">Эвакуатор по округам</div>
+                    <div class="fake-select__list">
+                      {% for page in district_pages %}
+                      <a href="{% url 'page_detail' page.slug %}">
+                        {{ page.name|cut:"Эвакуатор " }}
+                      </a>
+                      {% empty %}
+                      <a href="#">Нет округов</a>
+                      {% endfor %}
+                    </div>
+                  </div>
 
-            <!-- Области -->
-            <div class="fake-select">
-              <div class="fake-select__title">Эвакуатор по областям</div>
-              <div class="fake-select__list">
-                {% for ob in oblast %}
-                <a href="{% url 'oblasti' ob.slug %}">
-                  {{ ob.name }}
-                </a>
-                {% endfor %}
-              </div>
-            </div>
+                  <!-- МЕТРО (исправлено) -->
+                  <div class="fake-select">
+                    <div class="fake-select__title">Эвакуатор у метро</div>
+                    <div class="fake-select__list">
+                      {% for page in metro_pages %}
+                      <a href="{% url 'page_detail' page.slug %}">
+                        {{ page.name|cut:"Эвакуатор " }}
+                      </a>
+                      {% empty %}
+                      <a href="#">Нет станций метро</a>
+                      {% endfor %}
+                    </div>
+                  </div>
 
-            <!-- Грузовые -->
-            <div class="fake-select">
-              <div class="fake-select__title">Грузовые эвакуаторы</div>
-              <div class="fake-select__list">
-                {% for item in gruzovoy_list %}
-                <a href="{% url 'gruzovoy_detail' item.slug %}">{{ item.name }}</a>
-                {% endfor %}
-              </div>
-            </div>
+                  <!-- Области (исправлено) -->
+                  <div class="fake-select">
+                    <div class="fake-select__title">Эвакуатор по областям</div>
+                    <div class="fake-select__list">
+                      {% for page in region_pages %}
+                      <a href="{% url 'page_detail' page.slug %}">
+                        {{ page.name|cut:"Эвакуатор " }}
+                      </a>
+                      {% empty %}
+                      <a href="#">Нет областей</a>
+                      {% endfor %}
+                    </div>
+                  </div>
 
-            <!-- Манипуляторы -->
-            <div class="fake-select">
-              <div class="fake-select__title">Эвакуаторы с манипулятором</div>
-              <div class="fake-select__list">
-                {% for item in manipulyator_list %}
-                <a href="{% url 'manipulyator_detail' item.slug %}">{{ item.name }}</a>
-                {% endfor %}
-              </div>
-            </div>
+                  <!-- Грузовые (исправлено) -->
+                  <div class="fake-select">
+                    <div class="fake-select__title">Грузовые эвакуаторы</div>
+                    <div class="fake-select__list">
+                      {% for page in gruz_pages %}
+                      <a href="{% url 'page_detail' page.slug %}">
+                        {{ page.name|cut:"Грузовой эвакуатор " }}
+                      </a>
+                      {% empty %}
+                      <a href="#">Нет грузовых</a>
+                      {% endfor %}
+                    </div>
+                  </div>
 
-            <!-- Шоссе -->
-            <div class="fake-select">
-              <div class="fake-select__title">Эвакуатор по шоссе</div>
-              <div class="fake-select__list">
-                {% for h in highways %}
-                <a href="{% url 'highway_detail' h.slug %}">{{ h.name }}</a>
-                {% endfor %}
+                  <!-- Манипуляторы (исправлено) -->
+                  <div class="fake-select">
+                    <div class="fake-select__title">Эвакуаторы с манипулятором</div>
+                    <div class="fake-select__list">
+                      {% for page in manip_pages %}
+                      <a href="{% url 'page_detail' page.slug %}">
+                        {{ page.name|cut:"Эвакуатор-манипулятор " }}
+                      </a>
+                      {% empty %}
+                      <a href="#">Нет манипуляторов</a>
+                      {% endfor %}
+                    </div>
+                  </div>
+
+                  <!-- Шоссе (исправлено) -->
+                  <div class="fake-select">
+                    <div class="fake-select__title">Эвакуатор по шоссе</div>
+                    <div class="fake-select__list">
+                      {% for page in highway_pages %}
+                      <a href="{% url 'page_detail' page.slug %}">
+                        {{ page.name|cut:"Эвакуатор на " }}
+                      </a>
+                      {% empty %}
+                      <a href="#">Нет шоссе</a>
+                      {% endfor %}
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- Правая колонка -->
+                <div class="mega-menu-right">
+                  <!-- Эвакуация -->
+                  <div class="main-dropdown-menu-link-group shift-left">
+                    <h3 class="main-dropdown-menu-link__title">Эвакуация</h3>
+                    <div class="main-dropdown-menu-links-wrap">
+                      <ul class="links-col-3">
+                        {% for t in transports %}
+                        <li>
+                          <a href="{% url 'transport_detail' t.slug %}">
+                            {{ t.name }}
+                          </a>
+                        </li>
+                        {% empty %}
+                        <li><a href="#">Нет типов транспорта</a></li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <!-- Нижняя строка -->
+                  <div class="main-dropdown-menu-link-group bottom-row">
+                    <div class="left">
+                      <h3 class="main-dropdown-menu-link__title">Цены</h3>
+                      <ul>
+                        <li><a href="/czenyi">Прайс-лист</a></li>
+                        <li><a href="/calculator">Калькулятор</a></li>
+                      </ul>
+                    </div>
+                    <div class="center">
+                      <h3 class="main-dropdown-menu-link__title">Техническая помощь</h3>
+                      <ul>
+                        <li><a href="#">Замена колеса</a></li>
+                        <li><a href="#">Подвоз топлива</a></li>
+                      </ul>
+                    </div>
+                    <div class="right">
+                      <h3 class="main-dropdown-menu-link__title">Дополнительные услуги</h3>
+                      <ul>
+                        <li><a href="#">Эвакуатор срочно</a></li>
+                        <li><a href="#">Эвакуатор круглосуточно</a></li>
+                        <li><a href="#">Междугородняя эвакуация</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-
-        <!-- Правая колонка -->
-        <div class="mega-menu-right">
-          <!-- Эвакуация -->
-          <div class="main-dropdown-menu-link-group shift-left">
-            <h3 class="main-dropdown-menu-link__title">Эвакуация</h3>
-            <div class="main-dropdown-menu-links-wrap">
-              <ul class="links-col-3">
-                {% for t in transports %}
-                <li>
-                  <a href="{% url 'transport_detail' t.slug %}">
-                    {{ t.name }}
-                  </a>
-                </li>
-                {% endfor %}
-              </ul>
-            </div>
-          </div>
-
-          <!-- Нижняя строка -->
-          <div class="main-dropdown-menu-link-group bottom-row">
-            <div class="left">
-              <h3 class="main-dropdown-menu-link__title">Цены</h3>
-              <ul>
-                <li><a href="/czenyi">Прайс-лист</a></li>
-                <li><a href="/calculator">Калькулятор</a></li>
-              </ul>
-            </div>
-            <div class="center">
-              <h3 class="main-dropdown-menu-link__title">Техническая помощь</h3>
-              <ul>
-                <li><a href="#">Замена колеса</a></li>
-                <li><a href="#">Подвоз топлива</a></li>
-              </ul>
-            </div>
-            <div class="right">
-              <h3 class="main-dropdown-menu-link__title">Дополнительные услуги</h3>
-              <ul>
-                <li><a href="#">Эвакуатор срочно</a></li>
-                <li><a href="#">Эвакуатор круглосуточно</a></li>
-                <li><a href="#">Междугородняя эвакуация</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</li>
+        </li>
         <li><a href="/o-nas">О нас</a></li>
         <li><a href="/articles">Статья</a></li>
         <li><a href="/czenyi">Цены</a></li>
@@ -187,4 +206,3 @@
     </nav>
   </div>
 </header>
-
