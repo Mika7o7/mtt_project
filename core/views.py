@@ -3,11 +3,8 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, Http404
 from django.views.decorators.csrf import csrf_exempt  # если хочешь, но лучше убрать и использовать token в форме
 
-from .models import (
-    HeroSection, HowToOrderStep, TransportType,
-    WhyChooseUs, InfoSection, PriceItem, WorkPhoto, FAQ, Article, Page
+from .models import TransportType, PriceItem, FAQ, Article, Page
     
-)
 
 TELEGRAM_TOKEN = "1625085576:AAGR1VzsLToXxe5NxiPGA-IZy1NmQlbNX7U"  # или хранить в settings.SECRET
 TELEGRAM_CHAT_ID = "-1003511742071"
@@ -186,32 +183,6 @@ def universal_form(request):
 def policy(request):
     return render(request, 'policy.html')
 
-def index(request):
-    """
-    Renders the index page with data for all sections.
-    """
-    hero = HeroSection.objects.first()
-    order_steps = HowToOrderStep.objects.all()
-    transports = TransportType.objects.all()
-    info = InfoSection.objects.first()
-    prices = PriceItem.objects.all()
-    why_choose_us = WhyChooseUs.objects.all()
-    photos = WorkPhoto.objects.all()
-    faqs = FAQ.objects.filter(is_active=True)[:6]
-
-    
-   
-    context = {
-        'hero': hero,
-        'order_steps': order_steps,
-        'transports': transports,
-        'info': info,
-        'prices': prices,
-        'why_choose_us': why_choose_us,
-        'photos': photos,
-        'faqs': faqs,
-    }
-    return render(request, 'index.html', context)
 
 # ДЕТАЛЬНАЯ СТРАНИЦА — РАБОТАЕТ СРАЗУ
 def transport_detail(request, slug):
@@ -226,15 +197,11 @@ def transport_detail(request, slug):
     return render(request, 'transport_detail.html', context)
 
 
-def services(request):
-    return render(request, 'services.html')
 
 def article_detail(request, pk):
     article = get_object_or_404(Article, pk=pk)
     return render(request, 'article_detail.html', {'article': article})
 
-def oplata(request):
-    return render(request, 'oplata.html')
 
 
 

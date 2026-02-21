@@ -5,7 +5,6 @@ from django.views.generic import TemplateView
 urlpatterns = [
     
     # Все СТАТИЧНЫЕ пути
-    path('services/', views.services, name='services'),
     path('articles/<int:pk>/', views.article_detail, name='article_detail'),
     
     path('universal_form/', views.universal_form, name='universal_form'),
