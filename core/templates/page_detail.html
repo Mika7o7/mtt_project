@@ -88,32 +88,13 @@
             <!-- Левая часть: текст + форма -->
             <div class="metro-hero-content">
                 <h1>
-                    {% if location.info_name %}
-                    {{ location.info_name|safe }}
-                    {% else %}
-                    {% if location_type == 'metro' %}
-                    Эвакуатор у метро {{ location.name }}
-                    {% elif location_type == 'district' %}
-                    Эвакуатор {{ location.short_name|default:location.name }} — {{ location.name }}
-                    {% elif location_type == 'city' %}
-                    Эвакуатор в {{ location.name }}{% if location.distance_from_mkad %} — {{ location.distance_from_mkad
-                    }} км от МКАД{% endif %}
-                    {% elif location_type == 'gruzovoy' %}
-                    {{ location.name }} — от {{ location.price_from }} ₽
-                    {% elif location_type == 'manipulyator' %}
-                    {{ location.name }} — от {{ location.price_from }} ₽
-                    {% elif location_type == 'highway' %}
-                    Эвакуатор по {{ location.name }}
-                    {% else %}
-                    Эвакуатор в Москве и МО
-                    {% endif %}
-                    {% endif %}
+                    {{ page.name}}
                 </h1>
 
                 <!-- Подзаголовок (линия метро / население / расстояние / цена / длина шоссе) -->
                 <p class="metro-hero-subtitle">
-                    {% if location %}
-                    {{ location.sub_description }}
+                    {% if page %}
+                    {{ page.sub_description }}
                     {% else %}
                     Недорогой эвакуатор • Выезд за 20–40 минут
                     {% endif %}
@@ -154,18 +135,16 @@
 <!-- ===== Hero Section ===== -->
 {% if hero_sections %}
 <section class="hero">
-    {% for hero in hero_sections %}
     <div class="container hero-container">
         <div class="hero-text">
-            <h1>{{ info_name }}</h1>
-            <h2>{{ sub_description }}</h2>
-            <a href="#" class="btn-order hero-btn">{{ hero.button_text }}</a>
+            <h1>{{ page.name }}</h1>
+            <h2>{{ page.sub_description }}</h2>
+            <a href="#" class="btn-order hero-btn">Заказать Звонок</a>
         </div>
         <div class="hero-model">
             <img src="{% static 'images/hero_bg.jpg' %}" alt="">
         </div>
     </div>
-    {% endfor %}
 </section>
 {% endif %}
 

@@ -174,12 +174,20 @@ class ArticleAdmin(admin.ModelAdmin):
     search_fields = ("title", "text")
     date_hierarchy = "date"
     ordering = ("-date",)
-
+    
+    # Используем только fieldsets
     fieldsets = (
         (None, {
-            "fields": ("title", "text", "date")
+            "fields": ("title", "text")
+        }),
+        ("Дата создания", {
+            "fields": ("date",),
+            "classes": ("collapse",),  # сворачиваемый блок
         }),
     )
+    
+    # Показываем date как read-only
+    readonly_fields = ('date',)
 
 
 # ФОРМА ДЛЯ PAGE - ПОЛНОСТЬЮ ИСПРАВЛЕНО

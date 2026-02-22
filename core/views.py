@@ -233,32 +233,29 @@ def home(request):
     return render(request, 'page_detail.html', context)
 
 
-def page_detail(request, slug=None):
-    if slug:
-        # Для обычных страниц - ищем по slug
-        try:
-            page = Page.objects.get(slug=slug, is_active=True, is_homepage=False)
-        except Page.DoesNotExist:
-            raise Http404("Страница не найдена")
-        except Page.MultipleObjectsReturned:
-            # Если несколько страниц с одинаковым slug, берем первую
-            page = Page.objects.filter(slug=slug, is_active=True, is_homepage=False).first()
+def page_detail(request, path=None):
+    """
+    Универсальный view для всех страниц
+    path может быть: None (главная), 'slug', 'oblasti/evakuator/evakuator-aleshino'
+    """
+    
+    if path is None:
+        # Главная страница
+        page = get_object_or_404(Page, is_homepage=True, is_active=True)
     else:
-        # Для главной страницы - ищем где is_homepage=True
+        # Ищем страницу по полному пути (который хранится в slug)
         try:
-            page = Page.objects.get(is_homepage=True, is_active=True)
+            page = Page.objects.get(slug=path, is_active=True)
         except Page.DoesNotExist:
-            # Если нет главной, создаем ее или используем первую активную
-            page = Page.objects.filter(is_active=True).first()
-            if not page:
-                raise Http404("Нет активных страниц")
+            # Если не нашли по полному пути, пробуем найти по последней части
+            # (для обратной совместимости)
+            last_part = path.split('/')[-1]
+            page = get_object_or_404(Page, slug=last_part, is_active=True)
         except Page.MultipleObjectsReturned:
-            # Если несколько главных страниц, берем первую
-            page = Page.objects.filter(is_homepage=True, is_active=True).first()
+            page = Page.objects.filter(slug=path, is_active=True).first()
     
     context = {
         'page': page,
-        # Все связи уже доступны через page.название_связи.all()
         'hero_sections': page.hero_sections.all(),
         'how_to_order_steps': page.how_to_order_steps.all().order_by('order'),
         'transport_types': page.transport_types.all(),
@@ -274,7 +271,6 @@ def page_detail(request, slug=None):
         'work_photos': page.work_photos.all(),
         'faqs': page.faqs.filter(is_active=True),
         'articles': page.articles.all().order_by('-date')[:5],
-        # Удаленные поля убраны
     }
     
     return render(request, 'page_detail.html', context)

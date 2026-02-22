@@ -5,8 +5,8 @@ from django.views.generic import TemplateView
 urlpatterns = [
     
     # Все СТАТИЧНЫЕ пути
-    path('articles/<int:pk>/', views.article_detail, name='article_detail'),
     
+    path('articles/<int:pk>/', views.article_detail, name='article_detail'),
     path('universal_form/', views.universal_form, name='universal_form'),
     path('politika-cookies/', TemplateView.as_view(template_name='politika-cookies.html'), name='politika-cookies'),
     path('policy/', views.policy, name='policy'),
@@ -16,7 +16,8 @@ urlpatterns = [
     
     
     # ОБЩИЙ путь для страниц Page - САМЫЙ ПОСЛЕДНИЙ!
-    path('<slug:slug>/', views.page_detail, name='page_detail'),  # ← ДОБАВЬТЕ / в конце!
-    path('', views.page_detail, name='page_detail'),  # ← ДОБАВЬТЕ / в конце!
+    re_path(r'^(?P<path>.*)/$', views.page_detail, name='page_detail'),
+    path('', views.page_detail, name='homepage'),
+
     
 ]
