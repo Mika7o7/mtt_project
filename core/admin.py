@@ -209,19 +209,25 @@ class PageAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        # Для главной страницы
-        if self.instance and self.instance.pk and self.instance.is_homepage:
-            self.fields['slug'].required = False
-            self.fields['slug'].help_text = "Главная страница не должна иметь slug"
-            self.fields['slug'].widget.attrs['readonly'] = True
-        else:
-            # Для обычных страниц
-            self.fields['slug'].required = True
-            self.fields['slug'].help_text = "URL страницы. Можно использовать слеши (/), латиницу, цифры и дефисы. Например: oblasti/evakuator/evakuator-aleshino"
-            self.fields['slug'].widget.attrs['placeholder'] = 'oblasti/evakuator/evakuator-aleshino'
+        # Проверяем, существует ли поле slug в форме
+        if 'slug' in self.fields:
+            # Для главной страницы
+            if self.instance and self.instance.pk and self.instance.is_homepage:
+                self.fields['slug'].required = False
+                self.fields['slug'].help_text = "Главная страница не должна иметь slug"
+                self.fields['slug'].widget.attrs['readonly'] = True
+            else:
+                # Для обычных страниц
+                self.fields['slug'].required = True
+                self.fields['slug'].help_text = "URL страницы. Можно использовать слеши (/), латиницу, цифры и дефисы. Например: oblasti/evakuator/evakuator-aleshino"
+                self.fields['slug'].widget.attrs['placeholder'] = 'oblasti/evakuator/evakuator-aleshino'
     
     def clean_slug(self):
         """Валидация slug"""
+        # Проверяем, есть ли поле slug в cleaned_data
+        if 'slug' not in self.cleaned_data:
+            return None
+            
         slug = self.cleaned_data.get('slug')
         is_homepage = self.cleaned_data.get('is_homepage')
         
@@ -259,14 +265,21 @@ class PageAdminForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         is_homepage = cleaned_data.get('is_homepage')
-        slug = cleaned_data.get('slug')
+        
+        # Проверяем наличие slug в cleaned_data только если это не главная страница
+        if not is_homepage and 'slug' in cleaned_data:
+            slug = cleaned_data.get('slug')
+            if not slug:
+                self.add_error('slug', "Обычные страницы должны иметь slug")
         
         # Проверка для главной страницы
-        if is_homepage:
+        if is_homepage and 'slug' in cleaned_data:
+            slug = cleaned_data.get('slug')
             if slug:
                 self.add_error('slug', "Главная страница не должна иметь slug")
         
         return cleaned_data
+
 
 @admin.register(Page, site=custom_admin_site)
 class PageAdmin(admin.ModelAdmin):
@@ -284,9 +297,6 @@ class PageAdmin(admin.ModelAdmin):
     
     search_fields = ('name', 'slug', 'info_name', 'page_title', 'meta_title')
     
-    # Убираем prepopulated_fields, так как это не работает с CharField
-    # prepopulated_fields = {'slug': ('name',)}
-    
     date_hierarchy = 'created_at'
     
     def slug_preview(self, obj):
@@ -298,15 +308,8 @@ class PageAdmin(admin.ModelAdmin):
         return '-'
     slug_preview.short_description = 'URL'
     
-    def get_readonly_fields(self, request, obj=None):
-        """Поля только для чтения"""
-        readonly = []
-        if obj and obj.is_homepage:
-            readonly.append('slug')
-        return readonly
-    
     def get_fieldsets(self, request, obj=None):
-        # Для главной страницы - slug не показываем в редактируемых полях
+        # Для главной страницы - исключаем slug из полей
         if obj and obj.is_homepage:
             base_fields = ('page_type', 'name', 'is_homepage', 'is_active', 'order')
         else:
@@ -340,3 +343,11 @@ class PageAdmin(admin.ModelAdmin):
         ]
         
         return fieldsets
+    
+    def get_readonly_fields(self, request, obj=None):
+        """Поля только для чтения"""
+        readonly = []
+        if obj and obj.is_homepage:
+            # Для главной страницы slug должен быть только для чтения
+            readonly.append('slug')
+        return readonly
