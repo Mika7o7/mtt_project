@@ -190,7 +190,6 @@ class ArticleAdmin(admin.ModelAdmin):
     readonly_fields = ('date',)
 
 
-# ФОРМА ДЛЯ PAGE - ИСПРАВЛЕНО
 class PageAdminForm(forms.ModelForm):
     class Meta:
         model = Page
@@ -218,8 +217,8 @@ class PageAdminForm(forms.ModelForm):
         else:
             # Для обычных страниц
             self.fields['slug'].required = True
-            self.fields['slug'].help_text = "URL страницы (только латиница, дефисы и цифры)"
-            self.fields['slug'].widget.attrs['placeholder'] = 'naprimer-url-stranicy'
+            self.fields['slug'].help_text = "URL страницы. Можно использовать слеши (/), латиницу, цифры и дефисы. Например: oblasti/evakuator/evakuator-aleshino"
+            self.fields['slug'].widget.attrs['placeholder'] = 'oblasti/evakuator/evakuator-aleshino'
     
     def clean_slug(self):
         """Валидация slug"""
@@ -234,13 +233,22 @@ class PageAdminForm(forms.ModelForm):
         if not slug:
             raise forms.ValidationError("Обычные страницы должны иметь slug")
         
-        # Проверяем формат slug (только буквы, цифры, дефисы)
+        # Проверяем формат slug (буквы, цифры, дефисы, слеши)
         import re
-        if not re.match(r'^[a-z0-9-]+$', slug):
+        # Разрешаем: латиница, цифры, дефисы, слеши
+        if not re.match(r'^[a-z0-9-/]+$', slug.lower()):
             raise forms.ValidationError(
                 "Slug может содержать только латинские буквы в нижнем регистре, "
-                "цифры и дефисы"
+                "цифры, дефисы и слеши (/)"
             )
+        
+        # Проверяем, что нет двойных слешей
+        if '//' in slug:
+            raise forms.ValidationError("Slug не может содержать двойные слеши")
+        
+        # Проверяем, что слеши не в начале и не в конце
+        if slug.startswith('/') or slug.endswith('/'):
+            raise forms.ValidationError("Slug не может начинаться или заканчиваться слешем")
         
         # Проверяем уникальность
         if Page.objects.filter(slug=slug).exclude(id=self.instance.id).exists():
@@ -260,8 +268,6 @@ class PageAdminForm(forms.ModelForm):
         
         return cleaned_data
 
-
-# ===== Page =====
 @admin.register(Page, site=custom_admin_site)
 class PageAdmin(admin.ModelAdmin):
     form = PageAdminForm
@@ -271,17 +277,26 @@ class PageAdmin(admin.ModelAdmin):
         'faqs', 'articles',
     )
     
-    list_display = ('name', 'page_type', 'is_homepage', 'is_active', 'order')
+    list_display = ('name', 'page_type', 'is_homepage', 'is_active', 'order', 'slug_preview')
     list_editable = ('order', 'is_active')
     list_filter = ('page_type', 'is_homepage', 'is_active')
     list_per_page = 20
     
     search_fields = ('name', 'slug', 'info_name', 'page_title', 'meta_title')
     
-    # Убираем prepopulated_fields, так как теперь валидация в форме
+    # Убираем prepopulated_fields, так как это не работает с CharField
     # prepopulated_fields = {'slug': ('name',)}
     
     date_hierarchy = 'created_at'
+    
+    def slug_preview(self, obj):
+        """Предпросмотр URL"""
+        if obj.is_homepage:
+            return '/'
+        if obj.slug:
+            return f'/{obj.slug}/'
+        return '-'
+    slug_preview.short_description = 'URL'
     
     def get_readonly_fields(self, request, obj=None):
         """Поля только для чтения"""

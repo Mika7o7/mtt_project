@@ -163,13 +163,13 @@ class Page(models.Model):
         db_index=True
     )
     name = models.CharField("Название страницы", max_length=150)
-    slug = models.SlugField(
-        "URL страницы", 
-        max_length=150, 
+    slug = models.CharField(
+        "URL страницы",
+        max_length=150,
         unique=True,
         blank=True,
         null=True,
-        help_text="Оставьте пустым для главной страницы"
+        help_text="Оставьте пустым для главной страницы. Можно использовать слеши (/) для вложенных URL"
     )
     is_homepage = models.BooleanField("Главная страница", default=False)
     
