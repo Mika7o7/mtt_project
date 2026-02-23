@@ -149,3 +149,18 @@ CORS_ALLOWED_ORIGINS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Для продакшена - добавьте ваш домен
+CSRF_TRUSTED_ORIGINS = [
+    'https://mtt-evakuator.ru',
+    'http://mtt-evakuator.ru',
+    'https://www.mtt-evakuator.ru',
+    'http://www.mtt-evakuator.ru',
+]
+
+# Если используете локальный сервер для тестов
+if DEBUG:
+    CSRF_TRUSTED_ORIGINS += [
+        'http://127.0.0.1:8000',
+        'http://localhost:8000',
+    ]

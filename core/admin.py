@@ -190,7 +190,7 @@ class ArticleAdmin(admin.ModelAdmin):
     readonly_fields = ('date',)
 
 
-# ФОРМА ДЛЯ PAGE - ПОЛНОСТЬЮ ИСПРАВЛЕНО
+# ФОРМА ДЛЯ PAGE - ИСПРАВЛЕНО
 class PageAdminForm(forms.ModelForm):
     class Meta:
         model = Page
@@ -209,22 +209,54 @@ class PageAdminForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Поле slug всегда доступно в форме
+        
+        # Для главной страницы
         if self.instance and self.instance.pk and self.instance.is_homepage:
-            # Для главной страницы делаем slug необязательным и скрываем его
             self.fields['slug'].required = False
             self.fields['slug'].help_text = "Главная страница не должна иметь slug"
+            self.fields['slug'].widget.attrs['readonly'] = True
+        else:
+            # Для обычных страниц
+            self.fields['slug'].required = True
+            self.fields['slug'].help_text = "URL страницы (только латиница, дефисы и цифры)"
+            self.fields['slug'].widget.attrs['placeholder'] = 'naprimer-url-stranicy'
+    
+    def clean_slug(self):
+        """Валидация slug"""
+        slug = self.cleaned_data.get('slug')
+        is_homepage = self.cleaned_data.get('is_homepage')
+        
+        # Если это главная страница, slug должен быть пустым
+        if is_homepage:
+            return ''
+        
+        # Для неглавных страниц slug обязателен
+        if not slug:
+            raise forms.ValidationError("Обычные страницы должны иметь slug")
+        
+        # Проверяем формат slug (только буквы, цифры, дефисы)
+        import re
+        if not re.match(r'^[a-z0-9-]+$', slug):
+            raise forms.ValidationError(
+                "Slug может содержать только латинские буквы в нижнем регистре, "
+                "цифры и дефисы"
+            )
+        
+        # Проверяем уникальность
+        if Page.objects.filter(slug=slug).exclude(id=self.instance.id).exists():
+            raise forms.ValidationError("Страница с таким slug уже существует")
+        
+        return slug
     
     def clean(self):
         cleaned_data = super().clean()
         is_homepage = cleaned_data.get('is_homepage')
         slug = cleaned_data.get('slug')
         
-        if is_homepage and slug:
-            self.add_error('slug', "Главная страница не должна иметь slug")
-        
-        if not is_homepage and not slug:
-            self.add_error('slug', "Обычные страницы должны иметь slug")
+        # Проверка для главной страницы
+        if is_homepage:
+            if slug:
+                self.add_error('slug', "Главная страница не должна иметь slug")
         
         return cleaned_data
 
@@ -246,17 +278,23 @@ class PageAdmin(admin.ModelAdmin):
     
     search_fields = ('name', 'slug', 'info_name', 'page_title', 'meta_title')
     
-    prepopulated_fields = {'slug': ('name',)}
+    # Убираем prepopulated_fields, так как теперь валидация в форме
+    # prepopulated_fields = {'slug': ('name',)}
     
     date_hierarchy = 'created_at'
     
-    def get_fieldsets(self, request, obj=None):
-        # Для всех страниц slug должен быть в форме, но для главной его скрываем
+    def get_readonly_fields(self, request, obj=None):
+        """Поля только для чтения"""
+        readonly = []
         if obj and obj.is_homepage:
-            # Для главной страницы - slug не показываем
-            base_fields = ('page_type', 'name', 'slug', 'is_homepage', 'is_active', 'order')
+            readonly.append('slug')
+        return readonly
+    
+    def get_fieldsets(self, request, obj=None):
+        # Для главной страницы - slug не показываем в редактируемых полях
+        if obj and obj.is_homepage:
+            base_fields = ('page_type', 'name', 'is_homepage', 'is_active', 'order')
         else:
-            # Для обычных страниц - показываем slug
             base_fields = ('page_type', 'name', 'slug', 'is_homepage', 'is_active', 'order')
         
         fieldsets = [
