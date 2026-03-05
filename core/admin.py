@@ -1,11 +1,13 @@
-# core/admin.py
 from django.contrib import admin
+from django.db.models import Q
+from django.db.models.functions import Lower
 from django import forms
 from .models import (
     HeroSection, HowToOrderStep, TransportType,
     WhyChooseUs, InfoSection, PriceItem, WorkPhoto,
     FAQ, Article, Page
 )
+
 
 # ==== КАСТОМНЫЙ АДМИН-САЙТ ====
 class CustomAdminSite(admin.AdminSite):
@@ -21,25 +23,22 @@ class CustomAdminSite(admin.AdminSite):
             "WhyChooseUs", "InfoSection", "PriceItem", "WorkPhoto",
             "FAQ", "Article",
         ]
-        
-        pages = [
-            "Page"
-        ]
+        pages = ["Page"]
 
         main_models = []
         pages_models = []
+
         for app in app_list:
             for model in app.get('models', []):
                 if model['object_name'] in main_model_order:
                     main_models.append(model)
                 elif model['object_name'] in pages:
                     pages_models.append(model)
-               
-        new_app_list = [
+
+        return [
             {"name": "Модули", "app_label": "core", "models": main_models},
             {"name": "Страницы", "app_label": "core", "models": pages_models},
         ]
-        return new_app_list
 
 
 custom_admin_site = CustomAdminSite(name='custom_admin')
@@ -70,6 +69,7 @@ class TransportTypeAdmin(admin.ModelAdmin):
 class HeroSectionAdmin(admin.ModelAdmin):
     list_display = ("title", "subtitle")
     search_fields = ("title", "subtitle")
+
     fieldsets = (
         (None, {
             "fields": ("title", "subtitle", "button_text", "model_3d")
@@ -102,6 +102,7 @@ class HowToOrderStepAdmin(admin.ModelAdmin):
 class WhyChooseUsAdmin(admin.ModelAdmin):
     list_display = ("title",)
     search_fields = ("title", "description")
+
     fieldsets = (
         (None, {
             "fields": ("icon", "title", "description")
@@ -114,6 +115,7 @@ class WhyChooseUsAdmin(admin.ModelAdmin):
 class InfoSectionAdmin(admin.ModelAdmin):
     list_display = ("title", "button_text")
     search_fields = ("title", "text", "button_text")
+
     fieldsets = (
         (None, {
             "fields": ("image", "title", "text", "button_text")
@@ -174,180 +176,123 @@ class ArticleAdmin(admin.ModelAdmin):
     search_fields = ("title", "text")
     date_hierarchy = "date"
     ordering = ("-date",)
-    
-    # Используем только fieldsets
+    readonly_fields = ("date",)
+
     fieldsets = (
         (None, {
             "fields": ("title", "text")
         }),
         ("Дата создания", {
             "fields": ("date",),
-            "classes": ("collapse",),  # сворачиваемый блок
+            "classes": ("collapse",),
         }),
     )
-    
-    # Показываем date как read-only
-    readonly_fields = ('date',)
 
 
+# ===== Page Form =====
 class PageAdminForm(forms.ModelForm):
     class Meta:
         model = Page
-        fields = '__all__'
-        widgets = {
-            'hero_sections': forms.CheckboxSelectMultiple,
-            'how_to_order_steps': forms.CheckboxSelectMultiple,
-            'transport_types': forms.CheckboxSelectMultiple,
-            'why_choose_us': forms.CheckboxSelectMultiple,
-            'info_sections': forms.CheckboxSelectMultiple,
-            'price_items': forms.CheckboxSelectMultiple,
-            'work_photos': forms.CheckboxSelectMultiple,
-            'faqs': forms.CheckboxSelectMultiple,
-            'articles': forms.CheckboxSelectMultiple,
-        }
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        
-        # Проверяем, существует ли поле slug в форме
-        if 'slug' in self.fields:
-            # Для главной страницы
-            if self.instance and self.instance.pk and self.instance.is_homepage:
-                self.fields['slug'].required = False
-                self.fields['slug'].help_text = "Главная страница не должна иметь slug"
-                self.fields['slug'].widget.attrs['readonly'] = True
-            else:
-                # Для обычных страниц
-                self.fields['slug'].required = True
-                self.fields['slug'].help_text = "URL страницы. Можно использовать слеши (/), латиницу, цифры и дефисы. Например: oblasti/evakuator/evakuator-aleshino"
-                self.fields['slug'].widget.attrs['placeholder'] = 'oblasti/evakuator/evakuator-aleshino'
-    
+        fields = "__all__"
+
     def clean_slug(self):
-        """Валидация slug"""
-        # Проверяем, есть ли поле slug в cleaned_data
-        if 'slug' not in self.cleaned_data:
-            return None
-            
-        slug = self.cleaned_data.get('slug')
-        is_homepage = self.cleaned_data.get('is_homepage')
-        
-        # Если это главная страница, slug должен быть пустым
+        slug = self.cleaned_data.get("slug")
+        is_homepage = self.cleaned_data.get("is_homepage")
+
         if is_homepage:
-            return ''
-        
-        # Для неглавных страниц slug обязателен
+            return ""
+
         if not slug:
             raise forms.ValidationError("Обычные страницы должны иметь slug")
-        
-        # Проверяем формат slug (буквы, цифры, дефисы, слеши)
+
         import re
-        # Разрешаем: латиница, цифры, дефисы, слеши
-        if not re.match(r'^[a-z0-9-/]+$', slug.lower()):
+        if not re.match(r"^[a-z0-9-/]+$", slug.lower()):
             raise forms.ValidationError(
                 "Slug может содержать только латинские буквы в нижнем регистре, "
                 "цифры, дефисы и слеши (/)"
             )
-        
-        # Проверяем, что нет двойных слешей
-        if '//' in slug:
+
+        if "//" in slug:
             raise forms.ValidationError("Slug не может содержать двойные слеши")
-        
-        # Проверяем, что слеши не в начале и не в конце
-        if slug.startswith('/') or slug.endswith('/'):
-            raise forms.ValidationError("Slug не может начинаться или заканчиваться слешем")
-        
-        # Проверяем уникальность
-        if Page.objects.filter(slug=slug).exclude(id=self.instance.id).exists():
-            raise forms.ValidationError("Страница с таким slug уже существует")
-        
+
+        if slug.startswith("/") or slug.endswith("/"):
+            raise forms.ValidationError(
+                "Slug не может начинаться или заканчиваться слешем"
+            )
+
+        if Page.objects.filter(slug__iexact=slug).exclude(
+            id=self.instance.id
+        ).exists():
+            raise forms.ValidationError(
+                "Страница с таким slug уже существует"
+            )
+
         return slug
-    
-    def clean(self):
-        cleaned_data = super().clean()
-        is_homepage = cleaned_data.get('is_homepage')
-        
-        # Проверяем наличие slug в cleaned_data только если это не главная страница
-        if not is_homepage and 'slug' in cleaned_data:
-            slug = cleaned_data.get('slug')
-            if not slug:
-                self.add_error('slug', "Обычные страницы должны иметь slug")
-        
-        # Проверка для главной страницы
-        if is_homepage and 'slug' in cleaned_data:
-            slug = cleaned_data.get('slug')
-            if slug:
-                self.add_error('slug', "Главная страница не должна иметь slug")
-        
-        return cleaned_data
 
 
+
+
+
+# ===== Page Admin =====
 @admin.register(Page, site=custom_admin_site)
 class PageAdmin(admin.ModelAdmin):
     form = PageAdminForm
-    filter_horizontal = (
-        'hero_sections', 'how_to_order_steps', 'transport_types',
-        'why_choose_us', 'info_sections', 'price_items', 'work_photos',
-        'faqs', 'articles',
+
+    list_display = (
+        "name",
+        "page_type",
+        "is_homepage",
+        "is_active",
+        "order",
+        "slug_preview",
     )
-    
-    list_display = ('name', 'page_type', 'is_homepage', 'is_active', 'order', 'slug_preview')
-    list_editable = ('order', 'is_active')
-    list_filter = ('page_type', 'is_homepage', 'is_active')
+    list_editable = ("order", "is_active")
+    list_filter = ("page_type", "is_homepage", "is_active")
     list_per_page = 20
-    
-    search_fields = ('name', 'slug', 'info_name', 'page_title', 'meta_title')
-    
-    date_hierarchy = 'created_at'
-    
+
+    search_fields = ('name',)  # Обычный поиск по точному значению
+
+    date_hierarchy = "created_at"
+
+    filter_horizontal = (
+        "hero_sections",
+        "how_to_order_steps",
+        "transport_types",
+        "why_choose_us",
+        "info_sections",
+        "price_items",
+        "work_photos",
+        "faqs",
+        "articles",
+    )
+
+    def get_search_results(self, request, queryset, search_term):
+        """
+        Преобразуем поисковый запрос в формат с большой буквы
+        Например: "рузавик" -> "Грузавик"
+        """
+        if search_term:
+            # Делаем первую букву заглавной
+            # Например: "рузавик" -> "Рузавик"
+            search_term_capitalized = search_term.capitalize()
+            
+            from django.db.models import Q
+            queryset = queryset.filter(
+                Q(name__icontains=search_term) |  # Поиск как есть (без учета регистра)
+                Q(name__contains=search_term_capitalized)  # Поиск с заглавной буквой
+            )
+        
+        return queryset, False
+
     def slug_preview(self, obj):
-        """Предпросмотр URL"""
         if obj.is_homepage:
-            return '/'
+            return "/"
         if obj.slug:
-            return f'/{obj.slug}/'
-        return '-'
-    slug_preview.short_description = 'URL'
-    
-    def get_fieldsets(self, request, obj=None):
-        # Для главной страницы - исключаем slug из полей
-        if obj and obj.is_homepage:
-            base_fields = ('page_type', 'name', 'is_homepage', 'is_active', 'order')
-        else:
-            base_fields = ('page_type', 'name', 'slug', 'is_homepage', 'is_active', 'order')
-        
-        fieldsets = [
-            ('Основная информация', {
-                'fields': base_fields
-            }),
-            ('SEO информация', {
-                'fields': ('info_name', 'sub_description', 'page_title', 'page_text',
-                          'meta_title', 'meta_description', 'meta_keywords')
-            }),
-            ('Настройки отображения', {
-                'fields': ('fastorder', 'calculator', 'question_map', 
-                          'map_show', 'payment_show', 'second_hero_section')
-            }),
-            ('Контент страницы', {
-                'fields': (
-                    'hero_sections',
-                    'how_to_order_steps',
-                    'transport_types',
-                    'why_choose_us',
-                    'info_sections',
-                    'price_items',
-                    'work_photos',
-                    'faqs',
-                    'articles',
-                ),
-            }),
-        ]
-        
-        return fieldsets
-    
+            return f"/{obj.slug}/"
+        return "-"
+    slug_preview.short_description = "URL"
+
     def get_readonly_fields(self, request, obj=None):
-        """Поля только для чтения"""
-        readonly = []
         if obj and obj.is_homepage:
-            # Для главной страницы slug должен быть только для чтения
-            readonly.append('slug')
-        return readonly
+            return ("slug",)
+        return ()

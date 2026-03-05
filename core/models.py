@@ -147,14 +147,15 @@ class Article(models.Model):
 
 class Page(models.Model):
     PAGE_TYPE_CHOICES = (
-        ('default', 'Обычная страница'),
-        ('metro', 'Метро'),
-        ('district', 'Районы'),
-        ('region', 'Области'),
-        ('highway', 'Шоссе'),
-        ('service', 'Услуга'),
+        ('default',        'Обычная страница'),
+        ('metro',          'Метро'),
+        ('district',       'Районы'),
+        ('region',         'Области'),
+        ('highway',        'Шоссе'),
+        ('service',        'Услуга'),
+        ('evacuator_city_mo', 'Эвакуатор по городам МО'),   # ← новый тип
     )
-
+    
     page_type = models.CharField(
         "Тип страницы",
         max_length=20,
