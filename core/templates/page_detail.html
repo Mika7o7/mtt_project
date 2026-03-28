@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load dict_extras %}
 
 {% block title %}{{ page.meta_title }}{% endblock %}
 {% block meta_description %} {{ page.meta_description }} {% endblock %}
@@ -329,156 +329,54 @@
                 <input type="hidden" name="f_uid" id="f_uid">
                 <input type="hidden" name="f_old" value="0">
                 <input type="hidden" name="f_old_gen" value="">
+
+                <!-- Скрытые данные для JavaScript -->
+                <div style="display: none;">
+                    <div id="evacuator_types_data">
+                        {% for vt in calculator_vehicle_types %}
+                        <option value="{{ vt.id }}" data-order="{{ vt.order }}">{{ vt.name }}</option>
+                        {% endfor %}
+                    </div>
+                    <div id="manipulator_types_data">
+                        {% for vt in calculator_manipulator_types %}
+                        <option value="{{ vt.id }}" data-order="{{ vt.order }}">{{ vt.name }}</option>
+                        {% endfor %}
+                    </div>
+                </div>
+
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Выберите вид авто</label>
                         <select class="form-select clt_vid--js" id="clt_vid_1" name="clt_vid_1" required>
-                            <option value="1" data-skidka="5" selected>Легковой стандарт</option>
-                            <option value="2" data-skidka="5">Мототехника</option>
-                            <option value="3" data-skidka="5">Кроссовер</option>
-                            <option value="4" data-skidka="5">Минивэн</option>
-                            <option value="5" data-skidka="5">Внедорожник</option>
-                            <option value="6" data-skidka="0">Легковой премиум</option>
-                            <option value="7" data-skidka="0">Спорт класс</option>
-                            <option value="8" data-skidka="5">Микроавтобус</option>
-                            <option value="9" data-skidka="0">Коммерческий транспорт</option>
-                            <option value="10" data-skidka="0">Легкая спецтехника до 5 тонн</option>
+                            <option value="" selected disabled>Загрузка...</option>
                         </select>
                         <span class="error-msg" id="vid-error"></span>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Выберите категорию</label>
                         <div class="clt_div_1--js">
-                            <!-- Категории для эвакуатора -->
-                            <select class="form-select clt_tip--js" id="clt_tip_1_1" name="clt_tip_1" required>
-                                <option value="1" data-price="4500" data-km="100" selected>Стандарт до 2 тонн</option>
-                                <option value="2" data-price="5000" data-km="100">Стандарт до 3 тонн</option>
-                            </select>
-
-                            <select class="form-select clt_tip--js hidden" id="clt_tip_1_2" name="clt_tip_1">
-                                <option value="1" data-price="4000" data-km="100">Мотоцикл</option>
-                                <option value="2" data-price="4000" data-km="100">Скутер</option>
-                                <option value="3" data-price="4000" data-km="100">Квадроцикл</option>
-                            </select>
-
-                            <select class="form-select clt_tip--js hidden" id="clt_tip_1_3" name="clt_tip_1">
-                                <option value="1" data-price="4500" data-km="100">Кроссовер до 2 тонн</option>
-                                <option value="2" data-price="5500" data-km="100">Кроссовер до 3 тонн</option>
-                            </select>
-
-                            <select class="form-select clt_tip--js hidden" id="clt_tip_1_4" name="clt_tip_1">
-                                <option value="1" data-price="5000" data-km="100">Компактвэн до 2 тонн</option>
-                                <option value="2" data-price="6000" data-km="100">Минивэн до 3 тонн</option>
-                            </select>
-
-                            <select class="form-select clt_tip--js hidden" id="clt_tip_1_5" name="clt_tip_1">
-                                <option value="1" data-price="4500" data-km="100">Внедорожник до 2 тонн</option>
-                                <option value="2" data-price="5500" data-km="100">Внедорожник до 3 тонн</option>
-                            </select>
-
-                            <select class="form-select clt_tip--js hidden" id="clt_tip_1_6" name="clt_tip_1">
-                                <option value="1" data-price="5000" data-km="100">Премиум седан</option>
-                                <option value="2" data-price="5500" data-km="100">Премиум кроссовер</option>
-                                <option value="3" data-price="6000" data-km="100">Премиум внедорожник</option>
-                                <option value="4" data-price="6500" data-km="100">Премиум минивэн</option>
-                            </select>
-
-                            <select class="form-select clt_tip--js hidden" id="clt_tip_1_7" name="clt_tip_1">
-                                <option value="1" data-price="5000" data-km="100">Спортивный седан</option>
-                                <option value="2" data-price="7000" data-km="100">Суперкар</option>
-                                <option value="3" data-price="10000" data-km="150">Гиперкар</option>
-                            </select>
-
-                            <select class="form-select clt_tip--js hidden" id="clt_tip_1_8" name="clt_tip_1">
-                                <option value="1" data-price="8000" data-km="100">Компактный микроавтобус 8-12 мест,
-                                    длина 5-6 метров</option>
-                                <option value="2" data-price="9000" data-km="100">Средний микроавтобус 12-15 мест, длина
-                                    6-7 метров</option>
-                                <option value="3" data-price="10000" data-km="100">Большой микроавтобус 15-20 мест,
-                                    длина от 7 метров</option>
-                            </select>
-
-                            <select class="form-select clt_tip--js hidden" id="clt_tip_1_9" name="clt_tip_1">
-                                <option value="1" data-price="6000" data-km="100">Короткая база от 3 до 5 метров
+                            {% for vt in calculator_vehicle_types %}
+                            <select class="form-select clt_tip--js hidden" id="clt_tip_1_{{ vt.id }}" name="clt_tip_1">
+                                {% for category in evacuator_categories_by_type|get_item:vt.id %}
+                                <option value="{{ category.id }}" data-price="{{ category.price_per_100km }}"
+                                    data-km="100" data-order="{{ category.order }}">
+                                    {{ category.name }}
                                 </option>
-                                <option value="2" data-price="7000" data-km="100">Средняя база от 5 до 6 метров</option>
-                                <option value="3" data-price="10000" data-km="100">Длинная база от 6 до 7 метров
-                                </option>
+                                {% endfor %}
                             </select>
-
-                            <select class="form-select clt_tip--js hidden" id="clt_tip_1_10" name="clt_tip_1">
-                                <option value="1" data-price="5000" data-km="100">Спецтехника 1-2 тонн</option>
-                                <option value="2" data-price="7500" data-km="100">Спецтехника 2-3 тонн</option>
-                                <option value="3" data-price="10000" data-km="120">Спецтехника 3-4 тонн</option>
-                                <option value="4" data-price="12500" data-km="120">Спецтехника 4-5 тонн</option>
-                            </select>
+                            {% endfor %}
                         </div>
                         <div class="clt_div_2--js hidden">
-                            <!-- Категории для манипулятора - ВСЕ КАТЕГОРИИ как у эвакуатора -->
-                            <select class="form-select clt_tip--js" id="clt_tip_2_1" name="clt_tip_2" required>
-                                <option value="1" data-price="10000" data-km="100" selected>Стандарт до 2 тонн</option>
-                                <option value="2" data-price="11000" data-km="100">Стандарт до 3 тонн</option>
-                            </select>
-
-                            <select class="form-select clt_tip--js hidden" id="clt_tip_2_2" name="clt_tip_2">
-                                <option value="1" data-price="10000" data-km="100">Мотоцикл</option>
-                                <option value="2" data-price="10000" data-km="100">Скутер</option>
-                                <option value="3" data-price="10000" data-km="100">Квадроцикл</option>
-                            </select>
-
-                            <select class="form-select clt_tip--js hidden" id="clt_tip_2_3" name="clt_tip_2">
-                                <option value="1" data-price="12000" data-km="120">Кроссовер до 2 тонн</option>
-                                <option value="2" data-price="13000" data-km="120">Кроссовер до 3 тонн</option>
-                            </select>
-
-                            <select class="form-select clt_tip--js hidden" id="clt_tip_2_4" name="clt_tip_2">
-                                <option value="1" data-price="12000" data-km="120">Компактвэн до 2 тонн</option>
-                                <option value="2" data-price="14000" data-km="120">Минивэн до 3 тонн</option>
-                            </select>
-
-                            <select class="form-select clt_tip--js hidden" id="clt_tip_2_5" name="clt_tip_2">
-                                <option value="1" data-price="12000" data-km="120">Внедорожник до 2 тонн</option>
-                                <option value="2" data-price="14000" data-km="120">Внедорожник до 3 тонн</option>
-                            </select>
-
-                            <select class="form-select clt_tip--js hidden" id="clt_tip_2_6" name="clt_tip_2">
-                                <option value="1" data-price="15000" data-km="150">Премиум седан</option>
-                                <option value="2" data-price="16000" data-km="150">Премиум кроссовер</option>
-                                <option value="3" data-price="17000" data-km="150">Премиум внедорожник</option>
-                                <option value="4" data-price="18000" data-km="150">Премиум минивэн</option>
-                            </select>
-
-                            <select class="form-select clt_tip--js hidden" id="clt_tip_2_7" name="clt_tip_2">
-                                <option value="1" data-price="15000" data-km="150">Спортивный седан</option>
-                                <option value="2" data-price="20000" data-km="150">Суперкар</option>
-                                <option value="3" data-price="25000" data-km="150">Гиперкар</option>
-                            </select>
-
-                            <select class="form-select clt_tip--js hidden" id="clt_tip_2_8" name="clt_tip_2">
-                                <option value="1" data-price="15000" data-km="150">Компактный микроавтобус 8-12 мест,
-                                    длина 5-6 метров</option>
-                                <option value="2" data-price="18000" data-km="150">Средний микроавтобус 12-15 мест,
-                                    длина
-                                    6-7 метров</option>
-                                <option value="3" data-price="22000" data-km="150">Большой микроавтобус 15-20 мест,
-                                    длина от 7 метров</option>
-                            </select>
-
-                            <select class="form-select clt_tip--js hidden" id="clt_tip_2_9" name="clt_tip_2">
-                                <option value="1" data-price="15000" data-km="150">Короткая база от 3 до 5 метров
+                            {% for vt in calculator_manipulator_types %}
+                            <select class="form-select clt_tip--js hidden" id="clt_tip_2_{{ vt.id }}" name="clt_tip_2">
+                                {% for category in manipulator_categories_by_type|get_item:vt.id %}
+                                <option value="{{ category.id }}" data-price="{{ category.price_per_100km }}"
+                                    data-km="100" data-order="{{ category.order }}">
+                                    {{ category.name }}
                                 </option>
-                                <option value="2" data-price="18000" data-km="150">Средняя база от 5 до 6 метров
-                                </option>
-                                <option value="3" data-price="22000" data-km="150">Длинная база от 6 до 7 метров
-                                </option>
+                                {% endfor %}
                             </select>
-
-                            <select class="form-select clt_tip--js hidden" id="clt_tip_2_10" name="clt_tip_2">
-                                <option value="1" data-price="15000" data-km="150">Спецтехника 1-2 тонн</option>
-                                <option value="2" data-price="18000" data-km="150">Спецтехника 2-3 тонн</option>
-                                <option value="3" data-price="22000" data-km="150">Спецтехника 3-4 тонн</option>
-                                <option value="4" data-price="25000" data-km="150">Спецтехника 4-5 тонн</option>
-                            </select>
+                            {% endfor %}
                         </div>
                         <span class="error-msg" id="tip-error"></span>
                     </div>
@@ -506,46 +404,25 @@
                 <div class="extras-section">
                     <h3 class="extras-title">Дополнительные параметры</h3>
                     <div class="extras-grid clt_div_1--js">
-                        <label class="extra-checkbox">
-                            <input type="checkbox" id="clt_dop_1_1" name="f_dop_1_1" value="1" data-price="500">
-                            <span>Нет буксировочного крюка</span>
+                        {% for service in evacuator_extra_services %}
+                        <label class="extra-checkbox" data-order="{{ service.order }}">
+                            <input type="checkbox" name="f_dop_{{ service.id }}" value="1"
+                                data-price="{{ service.price }}">
+                            <span>{{ service.name }}</span>
                         </label>
-                        <label class="extra-checkbox">
-                            <input type="checkbox" id="clt_dop_1_2" name="f_dop_1_2" value="1" data-price="4000">
-                            <span>Необходимо прикурить авто</span>
-                        </label>
-                        <label class="extra-checkbox">
-                            <input type="checkbox" id="clt_dop_1_3" name="f_dop_1_3" value="1" data-price="500">
-                            <span>Заблокирован руль</span>
-                        </label>
-                        <label class="extra-checkbox">
-                            <input type="checkbox" id="clt_dop_1_4" name="f_dop_1_4" value="1" data-price="10000">
-                            <span>ТС в подземном паркинге</span>
-                        </label>
-                        <label class="extra-checkbox">
-                            <input type="checkbox" id="clt_dop_1_5" name="f_dop_1_5" value="1" data-price="2000">
-                            <span>Клиренс менее 15 см</span>
-                        </label>
-                        <label class="extra-checkbox">
-                            <input type="checkbox" id="clt_dop_1_6" name="f_dop_1_6" value="1" data-price="1000">
-                            <span>Автомобиль в ряду</span>
-                        </label>
+                        {% endfor %}
                     </div>
                     <div class="extras-grid clt_div_2--js hidden">
-                        <label class="extra-checkbox">
-                            <input type="checkbox" id="clt_dop_2_1" name="f_dop_2_1" value="1" data-price="2000">
-                            <span>Машина стоит вплотную к бордюру</span>
+                        {% for service in manipulator_extra_services %}
+                        <label class="extra-checkbox" data-order="{{ service.order }}">
+                            <input type="checkbox" name="f_dop_{{ service.id }}" value="1"
+                                data-price="{{ service.price }}">
+                            <span>{{ service.name }}</span>
                         </label>
-                        <label class="extra-checkbox">
-                            <input type="checkbox" id="clt_dop_2_2" name="f_dop_2_2" value="1" data-price="5000">
-                            <span>Необходимо снять с автовоза</span>
-                        </label>
-                        <label class="extra-checkbox">
-                            <input type="checkbox" id="clt_dop_2_3" name="f_dop_2_3" value="1" data-price="1000">
-                            <span>Автомобиль в ряду</span>
-                        </label>
+                        {% endfor %}
                     </div>
                 </div>
+                <!-- остальные поля (контакты, дата, время, комментарий) остаются без изменений -->
                 <div class="contact-row">
                     <div class="form-group small">
                         <label class="form-label">Ваше имя</label>
@@ -573,12 +450,12 @@
                     <div class="form-group small">
                         <label class="form-label">Дата</label>
                         <input type="text" class="form-input" id="datepickerDefault" name="f_date"
-                            placeholder="дд.мм.гггг"  pattern="\d{2}\.\d{2}\.\d{4}">
+                            placeholder="дд.мм.гггг" pattern="\d{2}\.\d{2}\.\d{4}">
                         <span class="error-msg" id="date-error"></span>
                     </div>
                     <div class="form-group small">
                         <label class="form-label">Время</label>
-                        <input type="text" class="form-input" id="f_time" name="f_time" placeholder="чч:мм" 
+                        <input type="text" class="form-input" id="f_time" name="f_time" placeholder="чч:мм"
                             pattern="\d{2}:\d{2}">
                         <span class="error-msg" id="time-error"></span>
                     </div>

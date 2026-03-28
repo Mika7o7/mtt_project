@@ -1,15 +1,14 @@
 from django.contrib import admin
 from django.db.models import Q
-from django.db.models.functions import Lower
+from django.db.models.functions import Lower, Upper
 from django import forms
 from .models import (
     HeroSection, HowToOrderStep, TransportType,
     WhyChooseUs, InfoSection, PriceItem, WorkPhoto,
-    FAQ, Article, Page
+    FAQ, Article, Page, CalculatorVehicleType, CalculatorCategory, CalculatorExtraService
 )
 
 
-# ==== КАСТОМНЫЙ АДМИН-САЙТ ====
 class CustomAdminSite(admin.AdminSite):
     site_header = "Модули"
     site_title = "Админка MTT Project"
@@ -18,15 +17,24 @@ class CustomAdminSite(admin.AdminSite):
     def get_app_list(self, request):
         app_list = super().get_app_list(request)
 
+        # Модели для раздела "Модули"
         main_model_order = [
             "HeroSection", "HowToOrderStep", "TransportType",
             "WhyChooseUs", "InfoSection", "PriceItem", "WorkPhoto",
             "FAQ", "Article",
         ]
+        
+        # Модели для раздела "Страницы"
         pages = ["Page"]
+        
+        # Модели для раздела "Калькулятор"
+        calculator_models = [
+            "CalculatorVehicleType", "CalculatorCategory", "CalculatorExtraService"
+        ]
 
         main_models = []
         pages_models = []
+        calculator_models_list = []
 
         for app in app_list:
             for model in app.get('models', []):
@@ -34,9 +42,12 @@ class CustomAdminSite(admin.AdminSite):
                     main_models.append(model)
                 elif model['object_name'] in pages:
                     pages_models.append(model)
+                elif model['object_name'] in calculator_models:
+                    calculator_models_list.append(model)
 
         return [
             {"name": "Модули", "app_label": "core", "models": main_models},
+            {"name": "Калькулятор", "app_label": "core", "models": calculator_models_list},
             {"name": "Страницы", "app_label": "core", "models": pages_models},
         ]
 
@@ -250,7 +261,8 @@ class PageAdmin(admin.ModelAdmin):
     list_filter = ("page_type", "is_homepage", "is_active")
     list_per_page = 20
 
-    search_fields = ('name',)  # Обычный поиск по точному значению
+    # ВАЖНО: search_fields должен быть, чтобы поле поиска отображалось
+    search_fields = ('name',)  # ← добавил, чтобы поле поиска было видно
 
     date_hierarchy = "created_at"
 
@@ -268,19 +280,24 @@ class PageAdmin(admin.ModelAdmin):
 
     def get_search_results(self, request, queryset, search_term):
         """
-        Преобразуем поисковый запрос в формат с большой буквы
-        Например: "рузавик" -> "Грузавик"
+        Поиск с нормализацией регистра для SQLite
         """
         if search_term:
-            # Делаем первую букву заглавной
-            # Например: "рузавик" -> "Рузавик"
-            search_term_capitalized = search_term.capitalize()
+            # Приводим поисковый запрос к верхнему регистру
+            term_upper = search_term.upper()
             
-            from django.db.models import Q
-            queryset = queryset.filter(
-                Q(name__icontains=search_term) |  # Поиск как есть (без учета регистра)
-                Q(name__contains=search_term_capitalized)  # Поиск с заглавной буквой
-            )
+            # Используем аннотацию для нормализации
+            queryset = queryset.annotate(
+                name_upper=Upper('name')
+            ).filter(
+                Q(name_upper__contains=term_upper) |
+                Q(slug__icontains=search_term) |
+                Q(info_name__icontains=search_term) |
+                Q(page_title__icontains=search_term) |
+                Q(meta_title__icontains=search_term) |
+                Q(sub_description__icontains=search_term) |
+                Q(page_text__icontains=search_term)
+            ).distinct()
         
         return queryset, False
 
@@ -296,3 +313,28 @@ class PageAdmin(admin.ModelAdmin):
         if obj and obj.is_homepage:
             return ("slug",)
         return ()
+    
+
+@admin.register(CalculatorVehicleType, site=custom_admin_site)
+class CalculatorVehicleTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'vehicle_type', 'order')
+    list_editable = ('order',)
+    list_filter = ('vehicle_type',)
+    search_fields = ('name',)
+
+
+@admin.register(CalculatorCategory, site=custom_admin_site)
+class CalculatorCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'vehicle_type', 'price_per_100km', 'order')
+    list_editable = ('price_per_100km', 'order')
+    list_filter = ('vehicle_type',)
+    search_fields = ('name',)
+    autocomplete_fields = ('vehicle_type',)
+
+
+@admin.register(CalculatorExtraService, site=custom_admin_site)
+class CalculatorExtraServiceAdmin(admin.ModelAdmin):
+    list_display = ('name', 'price', 'vehicle_type', 'order')
+    list_editable = ('price', 'order')
+    list_filter = ('vehicle_type',)
+    search_fields = ('name',)

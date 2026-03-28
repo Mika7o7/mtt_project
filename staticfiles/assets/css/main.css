@@ -1545,19 +1545,61 @@ body {
   gap: 15px;
 }
 
-.extra-checkbox {
+.extras-grid {
   display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.extra-checkbox {
+  display: inline-flex;
+  /* вместо flex */
   align-items: center;
   gap: 10px;
   cursor: pointer;
   font-size: 14px;
   color: #000;
+  width: auto;
+  /* авто-ширина по содержимому */
+  flex-shrink: 0;
+  /* не сжимается */
+  flex-grow: 0;
+  /* не растягивается */
 }
 
 .extra-checkbox input[type="checkbox"] {
   width: 18px;
   height: 18px;
   accent-color: #dc3545;
+  flex-shrink: 0;
+  /* чекбокс не сжимается */
+}
+
+.extra-checkbox span {
+  white-space: nowrap;
+  /* текст в одну строку */
+  line-height: 1.4;
+}
+
+/* Для мобильных — если текст не помещается, делаем перенос */
+@media (max-width: 768px) {
+  .extras-grid {
+    gap: 10px;
+  }
+
+  .extra-checkbox {
+    display: flex;
+    /* на мобильных можно растягивать */
+    flex: 1 0 auto;
+    min-width: 150px;
+  }
+
+  .extra-checkbox span {
+    white-space: normal;
+    /* разрешаем перенос */
+    font-size: 13px;
+  }
 }
 
 /* Контактные данные */

@@ -19,35 +19,45 @@ window.SumRez = function () {
     if (vk === '1') {
         // Эвакуатор
         visibleSelect = document.querySelector('.clt_div_1--js .clt_tip--js:not(.hidden)');
-        extrasContainer = document.querySelector('.clt_div_1--js .extras-grid:not(.hidden)');
+        extrasContainer = document.querySelector('.extras-grid.clt_div_1--js'); // ← ИСПРАВЛЕНО
+        console.log('Эвакуатор extrasContainer:', extrasContainer);
     } else {
         // Манипулятор
         visibleSelect = document.querySelector('.clt_div_2--js .clt_tip--js:not(.hidden)');
-        extrasContainer = document.querySelector('.clt_div_2--js .extras-grid:not(.hidden)');
+        extrasContainer = document.querySelector('.extras-grid.clt_div_2--js'); // ← ИСПРАВЛЕНО
+        console.log('Манипулятор extrasContainer:', extrasContainer);
     }
 
     if (visibleSelect) {
         const selectedOption = visibleSelect.selectedOptions[0];
         const basePrice = parseInt(selectedOption.dataset.price) || 0;
-        const kmRate = parseInt(selectedOption.dataset.km) || 50;
+        const kmRate = parseInt(selectedOption.dataset.km) || 100;
         const kmPrice = distance * kmRate;
-
         total += basePrice + kmPrice;
+        console.log('Base:', basePrice, 'Km price:', kmPrice);
     }
 
-    // Дополнительные чекбоксы
     if (extrasContainer) {
-        extrasContainer.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
-            total += parseInt(cb.dataset.price) || 0;
+        const checkedBoxes = extrasContainer.querySelectorAll('input[type="checkbox"]:checked');
+        console.log('Найдено чекбоксов:', checkedBoxes.length);
+        checkedBoxes.forEach(cb => {
+            const price = parseInt(cb.dataset.price) || 0;
+            total += price;
+            console.log('+', cb.parentElement.textContent.trim(), price);
         });
     } else {
-        // Fallback на старый селектор, если .extras-grid нет
-        const divClass = (vk === '1') ? '.clt_div_1--js' : '.clt_div_2--js';
-        document.querySelectorAll(`${divClass} input[type="checkbox"]:checked`).forEach(cb => {
-            total += parseInt(cb.dataset.price) || 0;
-        });
+        console.log('extrasContainer не найден! Проверь HTML');
+        // Пробуем найти альтернативно
+        const altContainer = document.querySelector('.extras-grid:not(.hidden)');
+        if (altContainer) {
+            console.log('Найден альтернативный контейнер:', altContainer);
+            altContainer.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                total += parseInt(cb.dataset.price) || 0;
+            });
+        }
     }
 
+    console.log('Total:', total);
     document.querySelector('.clt_sum--js').textContent = total.toLocaleString('ru-RU');
 };
 
@@ -165,28 +175,56 @@ document.addEventListener('DOMContentLoaded', () => {
     const kolesoLabel = document.querySelector('label[for="clt_koleso"]'); // Предполагаем, что лейбл существует
 
     function updateCategorySelect(isEvacuator) {
+        const vidSelect = document.getElementById('clt_vid_1');
+        const distanceInput = document.getElementById('f_qq');
+        
+        if (!vidSelect) {
+            console.error('vidSelect не найден в updateCategorySelect');
+            return;
+        }
+
         const selectedVid = vidSelect.value;
+        const dist = parseInt(distanceInput?.value) || 0;
+
+        console.log('updateCategorySelect:', {isEvacuator, selectedVid});
 
         if (isEvacuator) {
+            // Эвакуатор
             document.querySelectorAll('.clt_div_1--js .clt_tip--js').forEach(el => {
                 el.classList.add('hidden');
             });
             const target = document.getElementById(`clt_tip_1_${selectedVid}`);
             if (target) target.classList.remove('hidden');
+
+            // Показываем правильные доп. услуги
+            document.querySelector('.extras-grid.clt_div_1--js')?.classList.remove('hidden');
+            document.querySelector('.extras-grid.clt_div_2--js')?.classList.add('hidden');
+
+            const wheelsLabel = document.querySelector('.form-label.clt_div_1--js');
+            if (wheelsLabel) wheelsLabel.textContent = 'Заблокированных колёс';
+
         } else {
+            // Манипулятор
             document.querySelectorAll('.clt_div_2--js .clt_tip--js').forEach(el => {
                 el.classList.add('hidden');
             });
-            const target = document.getElementById(`clt_tip_2_${selectedVid}`);
+
+            const targetId = `clt_tip_2_${selectedVid}`;
+            const target = document.getElementById(targetId);
             if (target) target.classList.remove('hidden');
+
+            // Показываем правильные доп. услуги
+            document.querySelector('.extras-grid.clt_div_2--js')?.classList.remove('hidden');
+            document.querySelector('.extras-grid.clt_div_1--js')?.classList.add('hidden');
+
+            const wheelsLabel = document.querySelector('.form-label.clt_div_2--js');
+            if (wheelsLabel) wheelsLabel.textContent = 'Отсутствующих колёс';
         }
 
-        // Пересчитываем, если есть расстояние
-        const dist = parseInt(distanceInput.value) || 0;
-        if (dist > 0) {
+        if (dist > 0 && typeof SumRez === 'function') {
             SumRez();
         } else {
-            sumElement.textContent = '0';
+            document.querySelector('.clt_sum--js').textContent = '0';
         }
     }
 
@@ -366,5 +404,135 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    console.log('Calculator initialized successfully');
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded - initializing calculator');
+
+    // Получаем элементы
+    const vkInput = document.getElementById('clt_vk');
+    const vidSelect = document.getElementById('clt_vid_1');
+    const distanceInput = document.getElementById('f_qq');
+    
+    // Получаем скрытые данные
+    const evacuatorTypesDiv = document.getElementById('evacuator_types_data');
+    const manipulatorTypesDiv = document.getElementById('manipulator_types_data');
+    
+    if (!evacuatorTypesDiv || !manipulatorTypesDiv) {
+        console.error('Скрытые данные не найдены!');
+        return;
+    }
+    
+    const evacuatorOptions = evacuatorTypesDiv.innerHTML;
+    const manipulatorOptions = manipulatorTypesDiv.innerHTML;
+    
+    // Функция обновления списка видов авто
+    function updateVidSelect(vehicleType) {
+        if (!vidSelect) return;
+        
+        if (vehicleType === 'evacuator') {
+            vidSelect.innerHTML = evacuatorOptions;
+        } else {
+            vidSelect.innerHTML = manipulatorOptions;
+        }
+        
+        // Выбираем первый элемент
+        if (vidSelect.options.length > 0 && vidSelect.options[0].value) {
+            vidSelect.selectedIndex = 0;
+        }
+        
+        // Триггерим change
+        vidSelect.dispatchEvent(new Event('change'));
+    }
+    
+    // Функция обновления категорий
+    function updateCategorySelect(isEvacuator) {
+        if (!vidSelect) return;
+        
+        const selectedVid = vidSelect.value;
+        const dist = parseInt(distanceInput?.value) || 0;
+
+        console.log('updateCategorySelect:', {isEvacuator, selectedVid});
+
+        if (isEvacuator) {
+            // Эвакуатор
+            document.querySelectorAll('.clt_div_1--js .clt_tip--js').forEach(el => {
+                el.classList.add('hidden');
+            });
+            const target = document.getElementById(`clt_tip_1_${selectedVid}`);
+            if (target) target.classList.remove('hidden');
+
+            document.querySelector('.extras-grid.clt_div_1--js')?.classList.remove('hidden');
+            document.querySelector('.extras-grid.clt_div_2--js')?.classList.add('hidden');
+
+            const wheelsLabel = document.querySelector('.form-label.clt_div_1--js');
+            if (wheelsLabel) wheelsLabel.textContent = 'Заблокированных колёс';
+
+        } else {
+            // Манипулятор
+            document.querySelectorAll('.clt_div_2--js .clt_tip--js').forEach(el => {
+                el.classList.add('hidden');
+            });
+
+            const targetId = `clt_tip_2_${selectedVid}`;
+            const target = document.getElementById(targetId);
+            
+            if (target) {
+                target.classList.remove('hidden');
+            } else {
+                console.log('Селект не найден:', targetId);
+            }
+
+            document.querySelector('.extras-grid.clt_div_2--js')?.classList.remove('hidden');
+            document.querySelector('.extras-grid.clt_div_1--js')?.classList.add('hidden');
+
+            const wheelsLabel = document.querySelector('.form-label.clt_div_2--js');
+            if (wheelsLabel) wheelsLabel.textContent = 'Отсутствующих колёс';
+        }
+
+        if (dist > 0 && typeof SumRez === 'function') {
+            SumRez();
+        } else {
+            document.querySelector('.clt_sum--js').textContent = '0';
+        }
+    }
+    
+    // Обработчики переключения
+    document.querySelectorAll('.switcher-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.switcher-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            const vk = btn.dataset.vk;
+            vkInput.value = vk;
+            
+            // Скрываем/показываем блоки
+            document.querySelector('.clt_div_1--js')?.classList.toggle('hidden', vk !== '1');
+            document.querySelector('.clt_div_2--js')?.classList.toggle('hidden', vk !== '2');
+            
+            if (vk === '1') {
+                updateVidSelect('evacuator');
+                updateCategorySelect(true);
+            } else {
+                updateVidSelect('manipulator');
+                updateCategorySelect(false);
+            }
+            
+            if (typeof SumRez === 'function') SumRez();
+        });
+    });
+    
+    // Обработчик изменения вида авто
+    if (vidSelect) {
+        vidSelect.addEventListener('change', () => {
+            const isEvac = vkInput.value === '1';
+            updateCategorySelect(isEvac);
+        });
+    }
+    
+    // Инициализация
+    updateVidSelect('evacuator');
+    
     console.log('Calculator initialized successfully');
 });

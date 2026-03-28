@@ -147,14 +147,20 @@ class Article(models.Model):
 
 class Page(models.Model):
     PAGE_TYPE_CHOICES = (
-        ('default',        'Обычная страница'),
-        ('metro',          'Метро'),
-        ('district',       'Районы'),
-        ('region',         'Области'),
-        ('highway',        'Шоссе'),
-        ('service',        'Услуга'),
-        ('evacuator_city_mo', 'Эвакуатор по городам МО'),   # ← новый тип
+        ('default',              'Обычная страница'),
+        ('metro',                'Метро'),
+        ('district',             'Районы'),
+        ('region',               'Области'),
+        ('highway',              'Шоссе'),
+        ('service',              'Услуга'),
+        ('evacuator_city_mo',    'Эвакуатор по городам МО'),
+        
+        # 👇 НОВЫЕ ТИПЫ ДЛЯ ЭВАКУАТОРОВ
+        ('truck_evacuator',      'Грузовой эвакуатор'),
+        ('manipulator',          'Манипулятор'),
+        ('special_equipment',    'Спецтехника'),
     )
+
     
     page_type = models.CharField(
         "Тип страницы",
@@ -289,3 +295,74 @@ class Page(models.Model):
         # Если не главная, слаг обязателен
         if not self.is_homepage and not self.slug:
             raise ValidationError('Обычные страницы должны иметь slug')
+        
+
+# core/models.py
+
+class CalculatorVehicleType(models.Model):
+    VEHICLE_TYPE_CHOICES = (
+        ('evacuator', 'Эвакуатор'),
+        ('manipulator', 'Манипулятор'),
+    )
+    
+    name = models.CharField("Название", max_length=100)
+    vehicle_type = models.CharField(
+        "Тип техники", 
+        max_length=20, 
+        choices=VEHICLE_TYPE_CHOICES,
+        default='evacuator'
+    )
+    order = models.PositiveIntegerField("Порядок", default=0)
+    
+    class Meta:
+        ordering = ['vehicle_type', 'order', 'name']
+        verbose_name = "Тип транспорта (калькулятор)"
+        verbose_name_plural = "Типы транспорта (калькулятор)"
+    
+    def __str__(self):
+        return f"{self.name}"
+
+
+class CalculatorCategory(models.Model):
+    vehicle_type = models.ForeignKey(
+        CalculatorVehicleType, 
+        on_delete=models.CASCADE,
+        related_name='categories',
+        verbose_name="Тип транспорта"
+    )
+    name = models.CharField("Название", max_length=200)
+    price_per_100km = models.PositiveIntegerField("Цена за 100 км", default=0)
+    order = models.PositiveIntegerField("Порядок", default=0)
+    
+    class Meta:
+        ordering = ['vehicle_type', 'order', 'name']
+        verbose_name = "Категория (калькулятор)"
+        verbose_name_plural = "Категории (калькулятор)"
+    
+    def __str__(self):
+        return f"{self.name}"
+
+
+class CalculatorExtraService(models.Model):
+    VEHICLE_TYPE_CHOICES = (
+        ('evacuator', 'Эвакуатор'),
+        ('manipulator', 'Манипулятор'),
+    )
+    
+    name = models.CharField("Название услуги", max_length=200)
+    price = models.PositiveIntegerField("Цена", default=0)
+    vehicle_type = models.CharField(
+        "Тип техники", 
+        max_length=20, 
+        choices=VEHICLE_TYPE_CHOICES,
+        default='evacuator'
+    )
+    order = models.PositiveIntegerField("Порядок", default=0)
+    
+    class Meta:
+        ordering = ['vehicle_type', 'order', 'name']
+        verbose_name = "Дополнительная услуга (калькулятор)"
+        verbose_name_plural = "Дополнительные услуги (калькулятор)"
+    
+    def __str__(self):
+        return f"{self.name}"

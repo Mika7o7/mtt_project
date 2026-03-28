@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, Http404
 from django.views.decorators.csrf import csrf_exempt  # если хочешь, но лучше убрать и использовать token в форме
 
-from .models import TransportType, PriceItem, FAQ, Article, Page
+from .models import TransportType, PriceItem, FAQ, Article, Page, CalculatorVehicleType, CalculatorCategory, CalculatorExtraService
     
 
 TELEGRAM_TOKEN = "1625085576:AAGR1VzsLToXxe5NxiPGA-IZy1NmQlbNX7U"  # или хранить в settings.SECRET
@@ -205,13 +205,38 @@ def article_detail(request, pk):
 
 
 
-
 def home(request):
     page = get_object_or_404(Page, is_active=True, is_homepage=True)
     
+    # Получаем данные для калькулятора из админки (убираем is_active)
+    calculator_vehicle_types = CalculatorVehicleType.objects.filter(
+        vehicle_type='evacuator'
+    ).order_by('order', 'name')  # ← сортировка по order
+    
+    calculator_manipulator_types = CalculatorVehicleType.objects.filter(
+        vehicle_type='manipulator'
+    ).order_by('order', 'name')
+    
+    # Группируем категории по типу транспорта
+    evacuator_categories_by_type = {}
+    for vt in calculator_vehicle_types:
+        evacuator_categories_by_type[vt.id] = list(vt.categories.all().order_by('order', 'name'))
+    
+    manipulator_categories_by_type = {}
+    for vt in calculator_manipulator_types:
+        manipulator_categories_by_type[vt.id] = vt.categories.all().order_by('order', 'name')
+    
+    # Получаем дополнительные услуги
+    evacuator_extra_services = CalculatorExtraService.objects.filter(
+        vehicle_type='evacuator'
+    ).order_by('order', 'name')
+    
+    manipulator_extra_services = CalculatorExtraService.objects.filter(
+        vehicle_type='manipulator'
+    ).order_by('order', 'name')
+    
     context = {
         'page': page,
-        # Все связи уже доступны через page.название_связи.all()
         'hero_sections': page.hero_sections.all(),
         'how_to_order_steps': page.how_to_order_steps.all().order_by('order'),
         'transport_types': page.transport_types.all(),
@@ -227,32 +252,60 @@ def home(request):
         'work_photos': page.work_photos.all(),
         'faqs': page.faqs.filter(is_active=True),
         'articles': page.articles.all().order_by('-date')[:5],
-        # Удаленные поля убраны
+        # Данные для калькулятора
+        'calculator_vehicle_types': calculator_vehicle_types,
+        'calculator_manipulator_types': calculator_manipulator_types,
+        'evacuator_categories_by_type': evacuator_categories_by_type,
+        'manipulator_categories_by_type': manipulator_categories_by_type,
+        'evacuator_extra_services': evacuator_extra_services,
+        'manipulator_extra_services': manipulator_extra_services,
     }
     
     return render(request, 'page_detail.html', context)
 
 
+
 def page_detail(request, path=None):
     """
     Универсальный view для всех страниц
-    path может быть: None (главная), 'slug', 'oblasti/evakuator/evakuator-aleshino'
     """
-    
     if path is None:
-        # Главная страница
         page = get_object_or_404(Page, is_homepage=True, is_active=True)
     else:
-        # Ищем страницу по полному пути (который хранится в slug)
         try:
             page = Page.objects.get(slug=path, is_active=True)
         except Page.DoesNotExist:
-            # Если не нашли по полному пути, пробуем найти по последней части
-            # (для обратной совместимости)
             last_part = path.split('/')[-1]
             page = get_object_or_404(Page, slug=last_part, is_active=True)
         except Page.MultipleObjectsReturned:
             page = Page.objects.filter(slug=path, is_active=True).first()
+    
+    # Получаем данные для калькулятора из админки (убираем is_active)
+    calculator_vehicle_types = CalculatorVehicleType.objects.filter(
+        vehicle_type='evacuator'
+    ).order_by('order', 'name')  # ← сортировка по order
+    
+    calculator_manipulator_types = CalculatorVehicleType.objects.filter(
+        vehicle_type='manipulator'
+    ).order_by('order', 'name')
+    
+    # Группируем категории с сортировкой
+    evacuator_categories_by_type = {}
+    for vt in calculator_vehicle_types:
+        evacuator_categories_by_type[vt.id] = vt.categories.all().order_by('order', 'name')
+    
+    manipulator_categories_by_type = {}
+    for vt in calculator_manipulator_types:
+        manipulator_categories_by_type[vt.id] = vt.categories.all().order_by('order', 'name')
+    
+    # Дополнительные услуги с сортировкой (убираем is_active)
+    evacuator_extra_services = CalculatorExtraService.objects.filter(
+        vehicle_type='evacuator'
+    ).order_by('order', 'name')
+    
+    manipulator_extra_services = CalculatorExtraService.objects.filter(
+        vehicle_type='manipulator'
+    ).order_by('order', 'name')
     
     context = {
         'page': page,
@@ -271,6 +324,13 @@ def page_detail(request, path=None):
         'work_photos': page.work_photos.all(),
         'faqs': page.faqs.filter(is_active=True),
         'articles': page.articles.all().order_by('-date')[:5],
+        # Данные для калькулятора
+        'calculator_vehicle_types': calculator_vehicle_types,
+        'calculator_manipulator_types': calculator_manipulator_types,
+        'evacuator_categories_by_type': evacuator_categories_by_type,
+        'manipulator_categories_by_type': manipulator_categories_by_type,
+        'evacuator_extra_services': evacuator_extra_services,
+        'manipulator_extra_services': manipulator_extra_services,
     }
     
     return render(request, 'page_detail.html', context)

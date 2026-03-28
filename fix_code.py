@@ -1,320 +1,268 @@
 #!/usr/bin/env python
 import os
+import sys
 import django
-import re
-from django.db.models import Count, Q
 
+# Добавляем путь к проекту
+sys.path.append('/home/mika/Desktop/projects/mtt_project')
+
+# Устанавливаем настройки Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mtt_project.settings')
+
+# Инициализируем Django
 django.setup()
 
+import re
+from django.utils.text import slugify
 from core.models import Page
 
-def find_duplicates():
-    """Находит дубликаты страниц по названию (регистронезависимо)"""
-    
-    print("=" * 60)
-    print("ПОИСК ДУБЛИКАТОВ СТРАНИЦ")
-    print("=" * 60)
-    
-    # Исключаем обычные страницы (default)
-    pages = Page.objects.exclude(page_type='default')
-    
-    # Группируем по названию (в нижнем регистре)
-    from django.db.models.functions import Lower
-    
-    duplicates = []
-    seen = {}
-    
-    for page in pages:
-        if not page.name:
-            continue
-            
-        name_lower = page.name.lower().strip()
-        
-        if name_lower in seen:
-            seen[name_lower].append(page)
-        else:
-            seen[name_lower] = [page]
-    
-    # Собираем только те, у которых больше одного
-    for name_lower, page_list in seen.items():
-        if len(page_list) > 1:
-            duplicates.append({
-                'name': page_list[0].name,
-                'name_lower': name_lower,
-                'pages': page_list,
-                'count': len(page_list)
-            })
-    
-    if duplicates:
-        print(f"\n❌ Найдено дубликатов: {len(duplicates)}")
-        for dup in duplicates:
-            print(f"\n📌 Название: {dup['name']}")
-            print(f"   Количество: {dup['count']}")
-            print("   Страницы:")
-            for page in dup['pages']:
-                print(f"     - ID: {page.id}, Тип: {page.page_type}, Slug: {page.slug}")
-    else:
-        print("\n✅ Дубликатов не найдено!")
-    
-    return duplicates
+# Словарь для перевода названий городов с латиницы на русский
+LATIN_TO_RUSSIAN = {
+    'balashixa': 'Балашиха',
+    'vidnoe': 'Видное',
+    'dzerzhinskiy': 'Дзержинский',
+    'korolev': 'Королев',
+    'dmitrov': 'Дмитров',
+    'dolgoprudnyij': 'Долгопрудный',
+    'zheleznodorozhnyij': 'Железнодорожный',
+    'ivanteevka': 'Ивантеевка',
+    'klin': 'Клин',
+    'krasnoarmejsk': 'Красноармейск',
+    'krasnogorsk': 'Красногорск',
+    'lobnya': 'Лобня',
+    'lyitkarino': 'Лыткарино',
+    'myitishhi': 'Мытищи',
+    'odinczovo': 'Одинцово',
+    'podolsk': 'Подольск',
+    'reutov': 'Реутов',
+    'sergiev-posad': 'Сергиев Посад',
+    'solnechnogorsk': 'Солнечногорск',
+    'sofrino': 'Софрино',
+    'fryazino': 'Фрязино',
+    'ximki': 'Химки',
+    'shhelkovo': 'Щелково',
+    'shherbinka': 'Щербинка',
+    'elektrostal': 'Электросталь',
+    'noginsk': 'Ногинск',
+    'pushkino': 'Пушкино',
+    'ramenskoe': 'Раменское',
+    'domodedovo': 'Домодедово',
+    'moskva': 'Москва',
+    'moskovskaya-oblast': 'Московская область',
+    'novoryazanskoe-shosse': 'Новорязанское шоссе',
+    'simferopolskoe-shosse': 'Симферопольское шоссе',
+    'yaroslavskoe-shosse': 'Ярославское шоссе',
+}
 
-def fix_duplicates():
-    """Удаляет дубликаты страниц, оставляя по одной"""
-    
-    print("=" * 60)
-    print("УДАЛЕНИЕ ДУБЛИКАТОВ СТРАНИЦ")
-    print("=" * 60)
-    
-    # Исключаем обычные страницы
-    pages = Page.objects.exclude(page_type='default')
-    
-    # Группируем по названию (в нижнем регистре)
-    seen = {}
-    deleted_count = 0
-    kept_count = 0
-    
-    for page in pages:
-        if not page.name:
-            continue
-            
-        name_lower = page.name.lower().strip()
-        
-        if name_lower in seen:
-            seen[name_lower].append(page)
-        else:
-            seen[name_lower] = [page]
-    
-    # Обрабатываем каждую группу дубликатов
-    for name_lower, page_list in seen.items():
-        if len(page_list) > 1:
-            print(f"\n📌 Название: {page_list[0].name}")
-            print(f"   Найдено дубликатов: {len(page_list)}")
-            
-            # Сортируем по ID (оставляем самую старую)
-            page_list.sort(key=lambda x: x.id)
-            
-            # Оставляем первую (самую старую)
-            keep_page = page_list[0]
-            delete_pages = page_list[1:]
-            
-            print(f"   ✅ Оставляем ID: {keep_page.id} (самый старый)")
-            
-            for page in delete_pages:
-                print(f"   ❌ Удаляем ID: {page.id}")
-                page.delete()
-                deleted_count += 1
-            
-            kept_count += 1
-    
-    print(f"\n{'=' * 60}")
-    print(f"Оставлено уникальных страниц: {kept_count}")
-    print(f"Удалено дубликатов: {deleted_count}")
-    print(f"{'=' * 60}")
-    
-    return deleted_count
+# Словарь для правильных названий городов на русском (с большой буквы)
+RUSSIAN_CITIES = {
+    'БАЛАШИХА': 'Балашиха',
+    'ВИДНОЕ': 'Видное',
+    'ДЗЕРЖИНСКИЙ': 'Дзержинский',
+    'КОРОЛЕВ': 'Королев',
+    'КОРОЛЁВ': 'Королев',
+    'ДМИТРОВ': 'Дмитров',
+    'ДОЛГОПРУДНЫЙ': 'Долгопрудный',
+    'ЖЕЛЕЗНОДОРОЖНЫЙ': 'Железнодорожный',
+    'ИВАНТЕЕВКА': 'Ивантеевка',
+    'КЛИН': 'Клин',
+    'КРАСНОАРМЕЙСК': 'Красноармейск',
+    'КРАСНОГОРСК': 'Красногорск',
+    'ЛОБНЯ': 'Лобня',
+    'ЛЫТКАРИНО': 'Лыткарино',
+    'МЫТИЩИ': 'Мытищи',
+    'ОДИНЦОВО': 'Одинцово',
+    'ПОДОЛЬСК': 'Подольск',
+    'РЕУТОВ': 'Реутов',
+    'СЕРГИЕВ ПОСАД': 'Сергиев Посад',
+    'СОЛНЕЧНОГОРСК': 'Солнечногорск',
+    'СОФРИНО': 'Софрино',
+    'ФРЯЗИНО': 'Фрязино',
+    'ХИМКИ': 'Химки',
+    'ЩЕЛКОВО': 'Щелково',
+    'ЩЕРБИНКА': 'Щербинка',
+    'ЭЛЕКТРОСТАЛЬ': 'Электросталь',
+    'НОГИНСК': 'Ногинск',
+    'ПУШКИНО': 'Пушкино',
+    'РАМЕНСКОЕ': 'Раменское',
+    'ДОМОДЕДОВО': 'Домодедово',
+    'МОСКВА': 'Москва',
+    'МОСКОВСКАЯ ОБЛАСТЬ': 'Московская область',
+    'НОВОРЯЗАНСКОЕ ШОССЕ': 'Новорязанское шоссе',
+    'СИМФЕРОПОЛЬСКОЕ ШОССЕ': 'Симферопольское шоссе',
+    'ЯРОСЛАВСКОЕ ШОССЕ': 'Ярославское шоссе',
+}
 
-def fix_info_names():
-    """Исправляет поле info_name у всех страниц"""
+def get_russian_city_name(city_name):
+    """Получить название города на русском"""
+    # Если город уже на русском
+    city_upper = city_name.upper()
+    if city_upper in RUSSIAN_CITIES:
+        return RUSSIAN_CITIES[city_upper]
     
-    print("=" * 60)
-    print("ИСПРАВЛЕНИЕ ПОЛЯ INFO_NAME")
-    print("=" * 60)
+    # Если город на латинице, переводим
+    city_lower = city_name.lower()
+    if city_lower in LATIN_TO_RUSSIAN:
+        return LATIN_TO_RUSSIAN[city_lower]
     
-    pages = Page.objects.all()
-    updated_count = 0
+    # Если не нашли, возвращаем как есть
+    return city_name
+
+def fix_pages():
+    """Основная функция исправления страниц"""
     
-    for page in pages:
-        if not page.info_name:
-            continue
+    print("="*80)
+    print("ИСПРАВЛЕНИЕ СТРАНИЦ ЭВАКУАТОРОВ (РУССКИЕ НАЗВАНИЯ)")
+    print("="*80)
+    
+    # Находим все страницы с типом 'service', 'truck_evacuator', 'manipulator'
+    service_pages = Page.objects.filter(page_type__in=['service', 'truck_evacuator', 'manipulator'])
+    total_pages = service_pages.count()
+    
+    print(f"\nНайдено страниц: {total_pages}")
+    print("="*80)
+    
+    truck_count = 0
+    manipulator_count = 0
+    error_count = 0
+    
+    for page in service_pages:
+        original_name = page.name
+        name_upper = original_name.upper()
+        
+        print(f"\n[{truck_count + manipulator_count + 1}/{total_pages}] Обработка: {original_name}")
+        
+        # Определяем тип по названию
+        if 'ГРУЗОВОЙ' in name_upper:
+            # Извлекаем название города из текущего названия
+            # Убираем "Грузовой эвакуатор" из названия
+            city_part = original_name.replace('Грузовой эвакуатор', '').replace('грузовой эвакуатор', '')
+            city_part = city_part.strip()
             
-        old_info_name = page.info_name
-        new_info_name = old_info_name
-        
-        print(f"\nID: {page.id}")
-        print(f"Тип: {page.page_type}")
-        print(f"Slug: {page.slug}")
-        print(f"Старое info_name: {old_info_name}")
-        
-        # Проверяем, есть ли у нас правило для этого типа страниц
-        fixed = False
-        
-        # 1. Для метро
-        if page.page_type == 'metro' or (page.slug and 'metro' in page.slug):
-            # Убираем "Эвакуатор " в начале
-            if old_info_name.startswith('Эвакуатор '):
-                new_info_name = old_info_name[10:]  # len('Эвакуатор ') = 10
-                fixed = True
-                print(f"  Метро: убираем 'Эвакуатор'")
+            # Если город на латинице или в неправильном регистре, переводим на русский
+            russian_city = get_russian_city_name(city_part)
             
-            # Убираем " (метро)" в конце
-            if new_info_name.endswith(' (метро)'):
-                new_info_name = new_info_name[:-8]  # len(' (метро)') = 8
-                fixed = True
-                print(f"  Метро: убираем ' (метро)'")
-        
-        # 2. Для городов (обычные страницы с evakuator в slug)
-        elif page.page_type == 'default' and page.slug and 'evakuator' in page.slug:
-            if old_info_name.startswith('Эвакуатор '):
-                new_info_name = old_info_name[10:]
-                fixed = True
-                print(f"  Города: убираем 'Эвакуатор'")
-        
-        # 3. Для областей
-        elif page.page_type == 'region':
-            if old_info_name.startswith('Эвакуатор '):
-                new_info_name = old_info_name[10:]
-                fixed = True
-                print(f"  Области: убираем 'Эвакуатор'")
-        
-        # 4. Для грузовых
-        elif page.page_type == 'service' and page.slug and 'gruzovoy' in page.slug:
-            if old_info_name.startswith('Грузовой эвакуатор '):
-                new_info_name = old_info_name[19:]  # len('Грузовой эвакуатор ') = 19
-                fixed = True
-                print(f"  Грузовые: убираем 'Грузовой эвакуатор'")
-        
-        # 5. Для манипуляторов
-        elif page.page_type == 'service' and page.slug and 'manipulyator' in page.slug:
-            if old_info_name.startswith('Эвакуатор с манипулятором '):
-                new_info_name = old_info_name[26:]  # len('Эвакуатор с манипулятором ') = 26
-                fixed = True
-                print(f"  Манипуляторы: убираем 'Эвакуатор с манипулятором'")
-        
-        # 6. Для шоссе
-        elif page.page_type == 'highway':
-            if old_info_name.startswith('Эвакуатор на '):
-                new_info_name = old_info_name[13:]  # len('Эвакуатор на ') = 13
-                # Добавляем "ЭВАКУАТОР НА" в начало
-                new_info_name = 'ЭВАКУАТОР НА ' + new_info_name
-                fixed = True
-                print(f"  Шоссе: заменяем на 'ЭВАКУАТОР НА'")
-        
-        # 7. Если есть дублирование "Эвакуатор ЭВАКУАТОР" в любом месте
-        if not fixed and 'Эвакуатор ЭВАКУАТОР' in old_info_name:
-            new_info_name = old_info_name.replace('Эвакуатор ЭВАКУАТОР', 'ЭВАКУАТОР', 1)
-            fixed = True
-            print(f"  Универсальное: убираем дублирование")
-        
-        # 8. Если начинается с "Эвакуатор " (универсальное правило)
-        if not fixed and old_info_name.startswith('Эвакуатор '):
-            new_info_name = old_info_name[10:]
-            fixed = True
-            print(f"  Универсальное: убираем 'Эвакуатор' в начале")
-        
-        # Дополнительная чистка
-        if fixed:
-            # Убираем множественные пробелы
-            new_info_name = re.sub(r'\s+', ' ', new_info_name)
-            # Убираем пробелы в начале и конце
-            new_info_name = new_info_name.strip()
+            # Формируем правильное название
+            new_name = f"Грузовой эвакуатор {russian_city}"
             
-            # Проверяем, что название не пустое
-            if new_info_name:
-                page.info_name = new_info_name
-                page.save()
-                updated_count += 1
-                print(f"✅ Новое info_name: {new_info_name}")
+            # Формируем slug
+            city_slug = city_part.lower()
+            # Проверяем в словаре латиницы
+            for latin, russian in LATIN_TO_RUSSIAN.items():
+                if city_part.lower() == latin or city_part.lower() in latin:
+                    city_slug = latin
+                    break
             else:
-                print(f"⚠️  Предупреждение: новое название пустое, оставляем старое")
-        else:
-            print(f"  Без изменений")
-    
-    print(f"\n{'=' * 60}")
-    print(f"Всего обновлено страниц: {updated_count}")
-    print(f"{'=' * 60}")
-
-def check_problems():
-    """Проверяет проблемы в данных"""
-    
-    print("=" * 60)
-    print("ПРОВЕРКА ПРОБЛЕМ В ДАННЫХ")
-    print("=" * 60)
-    
-    # Проверка дубликатов по названиям
-    duplicates = find_duplicates()
-    
-    # Проверка проблем в info_name
-    pages = Page.objects.all()
-    problems = []
-    
-    problematic_patterns = [
-        'Эвакуатор ЭВАКУАТОР',
-        'Грузовой эвакуатор ГРУЗОВОЙ ЭВАКУАТОР',
-        'Эвакуатор с манипулятором МАНИПУЛЯТОР',
-        'Эвакуатор на ЭВАКУАТОР',
-    ]
-    
-    for page in pages:
-        if not page.info_name:
-            continue
+                city_slug = slugify(city_part.lower())
             
-        info_name = page.info_name
-        
-        for pattern in problematic_patterns:
-            if pattern in info_name:
-                problems.append({
-                    'id': page.id,
-                    'type': page.page_type,
-                    'slug': page.slug,
-                    'name': info_name,
-                    'pattern': pattern
-                })
-                break
+            new_slug = f"oblasti/gruzovoy-evakuator/gruzovoy-evakuator-{city_slug}"
+            new_type = 'truck_evacuator'
+            
+            print(f"  ➜ Город: {city_part} -> {russian_city}")
+            print(f"  ➜ Новое название: {new_name}")
+            print(f"  ➜ Новый тип: {new_type}")
+            print(f"  ➜ Новый slug: {new_slug}")
+            
+            # Проверяем уникальность slug
+            if Page.objects.filter(slug=new_slug).exclude(id=page.id).exists():
+                new_slug = f"{new_slug}-{page.id}"
+                print(f"  ⚠ Slug уже существует, используем: {new_slug}")
+            
+            # Сохраняем
+            try:
+                page.name = new_name
+                page.page_type = new_type
+                page.slug = new_slug
+                page.save()
+                truck_count += 1
+                print(f"  ✓ УСПЕШНО обновлен!")
+            except Exception as e:
+                error_count += 1
+                print(f"  ✗ ОШИБКА: {e}")
+                
+        elif 'МАНИПУЛЯТОР' in name_upper or 'ЭВАКУАТОР-МАНИПУЛЯТОР' in name_upper:
+            # Извлекаем название города из текущего названия
+            city_part = original_name
+            city_part = city_part.replace('Эвакуатор-манипулятор', '').replace('эвакуатор-манипулятор', '')
+            city_part = city_part.replace('Манипулятор', '').replace('манипулятор', '')
+            city_part = city_part.strip()
+            
+            # Если город на латинице или в неправильном регистре, переводим на русский
+            russian_city = get_russian_city_name(city_part)
+            
+            # Формируем правильное название
+            new_name = f"Эвакуатор-манипулятор {russian_city}"
+            
+            # Формируем slug
+            city_slug = city_part.lower()
+            # Проверяем в словаре латиницы
+            for latin, russian in LATIN_TO_RUSSIAN.items():
+                if city_part.lower() == latin or city_part.lower() in latin:
+                    city_slug = latin
+                    break
+            else:
+                city_slug = slugify(city_part.lower())
+            
+            new_slug = f"oblasti/manipulyator-{city_slug}"
+            new_type = 'manipulator'
+            
+            print(f"  ➜ Город: {city_part} -> {russian_city}")
+            print(f"  ➜ Новое название: {new_name}")
+            print(f"  ➜ Новый тип: {new_type}")
+            print(f"  ➜ Новый slug: {new_slug}")
+            
+            # Проверяем уникальность slug
+            if Page.objects.filter(slug=new_slug).exclude(id=page.id).exists():
+                new_slug = f"{new_slug}-{page.id}"
+                print(f"  ⚠ Slug уже существует, используем: {new_slug}")
+            
+            # Сохраняем
+            try:
+                page.name = new_name
+                page.page_type = new_type
+                page.slug = new_slug
+                page.save()
+                manipulator_count += 1
+                print(f"  ✓ УСПЕШНО обновлен!")
+            except Exception as e:
+                error_count += 1
+                print(f"  ✗ ОШИБКА: {e}")
+        else:
+            print(f"  ⏭ ПРОПУЩЕН (не подходит под критерии)")
+            continue
     
-    if problems:
-        print(f"\n❌ Найдено проблем с info_name: {len(problems)}")
-        for prob in problems[:10]:
-            print(f"\nID: {prob['id']}")
-            print(f"Тип: {prob['type']}")
-            print(f"Slug: {prob['slug']}")
-            print(f"info_name: {prob['name']}")
-            print(f"Проблема: {prob['pattern']}")
-        if len(problems) > 10:
-            print(f"... и еще {len(problems) - 10} проблем")
-    else:
-        print("\n✅ Проблем с info_name не найдено")
+    # Выводим итоговую статистику
+    print("\n" + "="*80)
+    print("ИТОГОВАЯ СТАТИСТИКА:")
+    print(f"  ✅ Грузовые эвакуаторы (truck_evacuator): {truck_count}")
+    print(f"  ✅ Манипуляторы (manipulator): {manipulator_count}")
+    print(f"  📊 Всего обновлено: {truck_count + manipulator_count}")
+    print(f"  ❌ Ошибок: {error_count}")
+    print("="*80)
     
-    return duplicates, problems
+    # Показываем примеры исправленных страниц
+    print("\nПРИМЕРЫ ИСПРАВЛЕННЫХ СТРАНИЦ:")
+    print("-"*80)
+    
+    truck_examples = Page.objects.filter(page_type='truck_evacuator')[:5]
+    if truck_examples:
+        print("\nГрузовые эвакуаторы:")
+        for page in truck_examples:
+            print(f"  • {page.name}")
+            print(f"    Тип: {page.page_type}")
+            print(f"    Slug: {page.slug}")
+    
+    manipulator_examples = Page.objects.filter(page_type='manipulator')[:5]
+    if manipulator_examples:
+        print("\nМанипуляторы:")
+        for page in manipulator_examples:
+            print(f"  • {page.name}")
+            print(f"    Тип: {page.page_type}")
+            print(f"    Slug: {page.slug}")
+    
+    print("\n✅ ГОТОВО!")
+    print("="*80)
 
 if __name__ == "__main__":
-    print("1. Проверить проблемы")
-    print("2. Удалить дубликаты страниц (кроме обычных)")
-    print("3. Исправить info_name")
-    print("4. Сделать всё сразу")
-    
-    choice = input("Выберите действие (1-4): ")
-    
-    if choice == '1':
-        check_problems()
-    elif choice == '2':
-        duplicates = find_duplicates()
-        if duplicates:
-            print(f"\nНайдено {len(duplicates)} групп дубликатов")
-            confirm = input("Удалить все дубликаты? (y/n): ")
-            if confirm.lower() == 'y':
-                fix_duplicates()
-            else:
-                print("Операция отменена")
-        else:
-            print("Дубликатов не найдено")
-    elif choice == '3':
-        confirm = input("Исправить info_name для всех страниц? (y/n): ")
-        if confirm.lower() == 'y':
-            fix_info_names()
-    elif choice == '4':
-        print("\n=== ШАГ 1: Проверка проблем ===")
-        duplicates, problems = check_problems()
-        
-        if duplicates:
-            print("\n=== ШАГ 2: Удаление дубликатов ===")
-            fix_duplicates()
-        
-        if problems:
-            print("\n=== ШАГ 3: Исправление info_name ===")
-            fix_info_names()
-        
-        print("\n=== ШАГ 4: Финальная проверка ===")
-        check_problems()
-    else:
-        print("Неверный выбор")
+    print("\n🚀 Запуск скрипта исправления страниц...\n")
+    fix_pages()

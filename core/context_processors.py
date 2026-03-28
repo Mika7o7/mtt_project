@@ -1,6 +1,5 @@
-# core/context_processors.py
-
 from .models import Page, TransportType
+from django.db.models import Q
 
 def menu_data(request):
     if request.path.startswith('/admin') or request.path.startswith('/static'):
@@ -23,19 +22,21 @@ def menu_data(request):
         ).only('name', 'slug').order_by('name'),
         
         'city_pages': Page.objects.filter(
-            page_type='city',
+            page_type='evacuator_city_mo',
             is_active=True
         ).only('name', 'slug').order_by('name'),
         
+        # Грузовые эвакуаторы - новый тип + старые для совместимости
         'gruz_pages': Page.objects.filter(
-            page_type='service',
-            name__icontains='Грузовой',
+            Q(page_type='truck_evacuator') | 
+            Q(page_type='service', name__icontains='Грузовой'),
             is_active=True
         ).only('name', 'slug').order_by('name'),
         
+        # Манипуляторы - новый тип + старые для совместимости
         'manip_pages': Page.objects.filter(
-            page_type='service',
-            name__icontains='манипулятор',
+            Q(page_type='manipulator') | 
+            Q(page_type='service', name__icontains='манипулятор'),
             is_active=True
         ).only('name', 'slug').order_by('name'),
         
