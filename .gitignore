@@ -24,3 +24,6 @@ coverage.xml
 
 db.sqlite3
 db.sqlite3.beckup
+
+core/migrations/
+*/migrations/*
