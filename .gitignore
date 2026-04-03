@@ -24,3 +24,5 @@ coverage.xml
 
 db.sqlite3
 db.sqlite3.beckup
+__pycache__/
+*.pyc
