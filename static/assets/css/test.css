@@ -4445,4 +4445,19 @@ body {
     left: 15px !important;
     right: auto !important;
     visibility: visible !important;
+    width: 32px !important;  /* тільки ширина логотипа */
+    height: 32px !important; /* тільки висота логотипа */
+    overflow: hidden !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Зсуваємо iframe вліво, щоб логотип був видимим, а текст за межами контейнера */
+.grecaptcha-badge iframe {
+    width: 137px !important; /* оригінальна ширина badge */
+    height: 144px !important;
+    margin-left: -105px !important; /* тягнемо логотип вліво в контейнер 32px */
+    transform: scale(0.8) !important; /* трохи зменшуємо для точності */
 }
