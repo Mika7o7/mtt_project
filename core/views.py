@@ -2,6 +2,7 @@ import requests
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, Http404
 from django.views.decorators.csrf import csrf_exempt  # если хочешь, но лучше убрать и использовать token в форме
+from django.conf import settings
 
 from .models import TransportType, PriceItem, FAQ, Article, Page, CalculatorVehicleType, CalculatorCategory, CalculatorExtraService
     
@@ -9,11 +10,52 @@ from .models import TransportType, PriceItem, FAQ, Article, Page, CalculatorVehi
 TELEGRAM_TOKEN = "1625085576:AAGR1VzsLToXxe5NxiPGA-IZy1NmQlbNX7U"  # или хранить в settings.SECRET
 TELEGRAM_CHAT_ID = "-1003511742071"
 
+
+def verify_recaptcha(token):
+    """Перевірка reCAPTCHA v3 токена з Google"""
+    secret = getattr(settings, 'RECAPTCHA_SECRET_KEY', '')
+    min_score = getattr(settings, 'RECAPTCHA_MIN_SCORE', 0.5)
+
+    if not secret:
+        # Якщо ключ не налаштований, пропускаємо (розробка)
+        return True
+
+    if not token:
+        return False
+
+    try:
+        resp = requests.post(
+            'https://www.google.com/recaptcha/api/siteverify',
+            data={
+                'secret': secret,
+                'response': token,
+            },
+            timeout=5
+        )
+        result = resp.json()
+        success = result.get('success', False)
+        score = result.get('score', 0)
+
+        # reCAPTCHA v3: перевіряємо success та score
+        return success and score >= min_score
+    except Exception as e:
+        print(f"reCAPTCHA verification error: {e}")
+        return False
+
+
 @csrf_exempt
 def universal_form(request):
     if request.method != "POST":
         return JsonResponse(
             {"success": False, "message": "Некорректный запрос"},
+            status=400
+        )
+
+    # Перевірка reCAPTCHA
+    recaptcha_token = request.POST.get('g-recaptcha-response', '').strip()
+    if not verify_recaptcha(recaptcha_token):
+        return JsonResponse(
+            {"success": False, "message": "Проверка reCAPTCHA не пройдена. Попробуйте ещё раз."},
             status=400
         )
 

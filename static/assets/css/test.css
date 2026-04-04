@@ -4439,3 +4439,10 @@ body {
 .order-form button[type="submit"]:hover {
   background: #e63e1a;
 }
+/* reCAPTCHA v3 badge - positioning */
+.grecaptcha-badge {
+    bottom: 15px !important;
+    left: 15px !important;
+    right: auto !important;
+    visibility: visible !important;
+}
