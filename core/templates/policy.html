@@ -24,17 +24,17 @@
 
   <div class="contact-form">
     <h3>Оставьте заявку</h3>
-    <form class="contact-form" novalidate>
+    <form class="ajax-form contact-form" data-url="{% url 'universal_form' %}" data-action="callback" data-success="Заявка отправлена" novalidate>
         {% csrf_token %}
+        <input type="hidden" name="form_type" value="callback">
         <input type="text" name="name" placeholder="Ваше имя">
-        <input type="tel" name="phone" placeholder="+7 (___) ___ __ __" 
+        <input type="tel" name="phone" placeholder="+7 (___) ___ __ __"
                required data-mask="+7 (999) 999 99 99">
 
         <label class="policy-checkbox">
           <span style="text-decoration: none;">Согласен с <a href="/policy" style="text-decoration: none; color: #999 !important;" target="_blank">политикой конфиденциальности</a> и <a href="/policy" style="text-decoration: none; color: #999 !important;" target="_blank">обработкой данных</a></span>
         </label>
 
-        
         <button type="submit">Отправить</button>
         <div class="form-message"></div>
     </form>

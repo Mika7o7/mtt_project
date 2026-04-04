@@ -102,8 +102,9 @@
                 
 
                 <!-- Форма заявки (одинаковая везде) -->
-                <form class="universal-form metro-hero-form ajax-form" novalidate>
+                <form class="universal-form metro-hero-form ajax-form" data-url="{% url 'universal_form' %}" data-action="fastorder" novalidate>
                     {% csrf_token %}
+                    <input type="hidden" name="form_type" value="fastorder">
                     <!-- Телефон — обязательно -->
                     <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required
                         data-mask="+7 (999) 999 99 99">
@@ -200,7 +201,7 @@
             <h2><span>Срочный</span> заказ эвакуатора</h2>
             <p class="order-subtitle">Подача в течение <strong>18 минут</strong>, эвакуация любой сложности</p>
 
-            <form class="ajax-form order-form" data-url="{% url 'universal_form' %}" data-success="Спасибо! Заявка принята">
+            <form class="ajax-form order-form" data-url="{% url 'universal_form' %}" data-action="fastorder" data-success="Спасибо! Заявка принята">
                 {% csrf_token %}
                 <input type="hidden" name="form_type" value="fastorder">
                 <input type="text" name="f_name" placeholder="Ваше имя" required>
@@ -314,7 +315,7 @@
                     <button type="button" class="switcher-btn" data-vk="2">МАНИПУЛЯТОР</button>
                 </div>
             </div>
-            <form class="ajax-form" data-url="{% url 'universal_form' %}" data-success="Спасибо! Заявка принята">
+            <form class="ajax-form" data-url="{% url 'universal_form' %}" data-action="calculator" data-success="Спасибо! Заявка принята">
                 {% csrf_token %}
                 <input type="hidden" name="form_type" value="calculator">
                 <input type="hidden" name="clt_vk" id="clt_vk" value="1">
@@ -485,6 +486,7 @@
                         <textarea class="form-textarea" name="f_ztxt" placeholder="Комментарий"></textarea>
                     </div>
                 </div>
+
                 <button type="submit" class="submit-btn">ОФОРМИТЬ ЗАЯВКУ</button>
                 <div class="form-message"></div>
             </form>
@@ -670,7 +672,7 @@
 
     <div class="contact-form">
         <h3>Оставьте заявку</h3>
-        <form class="ajax-form" data-url="{% url 'universal_form' %}" data-success="Заявка отправлена">
+        <form class="ajax-form" data-url="{% url 'universal_form' %}" data-action="callback" data-success="Заявка отправлена">
             {% csrf_token %}
             <input type="hidden" name="form_type" value="callback">
             <input type="text" name="name" placeholder="Ваше имя">
@@ -683,7 +685,6 @@
                         style="text-decoration: none; color: #999 !important;" target="_blank">обработкой
                         данных</a></span>
             </label>
-
 
             <button type="submit">Отправить</button>
             <div class="form-message"></div>

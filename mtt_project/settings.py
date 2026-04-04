@@ -78,6 +78,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'core.context_processors.menu_data',
+                'core.context_processors.recaptcha_data',  # ← reCAPTCHA
             ],
         },
     },
@@ -165,3 +166,8 @@ if DEBUG:
         'http://127.0.0.1:8000',
         'http://localhost:8000',
     ]
+
+# Google reCAPTCHA v3
+RECAPTCHA_SITE_KEY = '6LcsoqQsAAAAAIhml85WzaFTX1D8zCh7HdWOqv6s'
+RECAPTCHA_SECRET_KEY = '6LcsoqQsAAAAAOHSPr6vrMB2InXH6auIrJX4Kp_d'
+RECAPTCHA_MIN_SCORE = 0.5  # минимальний score (0.0-1.0). 0.5 - помірний, 0.7+ - суворий
