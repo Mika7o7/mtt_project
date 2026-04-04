@@ -52,30 +52,27 @@
     <!-- <script src="https://unpkg.com/imask"></script> -->
     <!-- <script src="{% static 'assets/js/calculator.js' %}"></script> -->
 
-    <!-- Force reCAPTCHA badge to bottom-left -->
+    <!-- Force reCAPTCHA badge to bottom-left - ТОЛЬКО ЛОГОТИП -->
     <style>
         .grecaptcha-badge {
-            bottom: 25px !important;
+            bottom: 15px !important;
             left: 15px !important;
             right: auto !important;
             visibility: visible !important;
-            width: 100px !important;
-            height: 100px !important;
+            width: 32px !important;
+            height: 32px !important;
             overflow: hidden !important;
             padding: 0 !important;
             border: none !important;
             background: transparent !important;
             box-shadow: none !important;
         }
-    
         .grecaptcha-badge iframe {
-            width: 250px !important;
-            height: 200px !important;
-            margin-left: -180px !important;
-            transform: scale(0.8) !important;
+            width: 117px !important;
+            height: 144px !important;
+            margin-left: -42.5px !important;
         }
     </style>
-
     <!-- RECAPTCHA_V3_BADGE_ICON_ONLY_2026 -->
 
     {% block extra_head %}{% endblock %}
