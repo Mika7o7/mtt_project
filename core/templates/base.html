@@ -55,25 +55,27 @@
     <!-- Force reCAPTCHA badge to bottom-left -->
     <style>
         .grecaptcha-badge {
-            bottom: 15px !important;
+            bottom: 25px !important;
             left: 15px !important;
             right: auto !important;
             visibility: visible !important;
-            width: 50px !important;
-            height: 50px !important;
+            width: 100px !important;
+            height: 100px !important;
             overflow: hidden !important;
             padding: 0 !important;
             border: none !important;
             background: transparent !important;
             box-shadow: none !important;
         }
+    
         .grecaptcha-badge iframe {
-            width: 150px !important;
-            height: 150px !important;
-            margin-left: -105px !important;
+            width: 250px !important;
+            height: 200px !important;
+            margin-left: -180px !important;
             transform: scale(0.8) !important;
         }
     </style>
+
     <!-- RECAPTCHA_V3_BADGE_ICON_ONLY_2026 -->
 
     {% block extra_head %}{% endblock %}
