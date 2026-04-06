@@ -46,7 +46,24 @@
                 }
             }, 100);
         });
+
+        // Функция для получения токена reCAPTCHA v3
+        async function getReCaptchaToken() {
+            return new Promise((resolve, reject) => {
+                if (typeof grecaptcha === 'undefined') {
+                    reject(new Error('reCAPTCHA не загружена'));
+                    return;
+                }
+                grecaptcha.ready(() => {
+                    grecaptcha.execute(window.RECAPTCHA_SITE_KEY, { action: 'submit' })
+                        .then(token => resolve(token))
+                        .catch(err => reject(err));
+                });
+            });
+        }
     </script>
+
+    
 
     <!-- Other scripts -->
     <!-- <script src="https://unpkg.com/imask"></script> -->
@@ -308,6 +325,23 @@
                 }
 
                 const formData = new FormData(form);
+
+                // Добавляем reCAPTCHA токен
+                try {
+                    const recaptchaToken = await getReCaptchaToken();
+                    formData.append('g-recaptcha-response', recaptchaToken);
+                } catch (err) {
+                    console.error('reCAPTCHA error:', err);
+                    if (message) {
+                        message.style.color = '#f44336';
+                        message.textContent = 'Ошибка загрузки reCAPTCHA, попробуйте позже';
+                    }
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.textContent = btn.dataset.text || 'Отправить';
+                    }
+                    return;
+                }
 
                 try {
                     const resp = await fetch(form.dataset.url, {

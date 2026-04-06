@@ -10,38 +10,26 @@ from .models import TransportType, PriceItem, FAQ, Article, Page, CalculatorVehi
 TELEGRAM_TOKEN = "1625085576:AAGR1VzsLToXxe5NxiPGA-IZy1NmQlbNX7U"  # или хранить в settings.SECRET
 TELEGRAM_CHAT_ID = "-1003511742071"
 
-
 def verify_recaptcha(token):
-    """Перевірка reCAPTCHA v3 токена з Google"""
-    secret = getattr(settings, 'RECAPTCHA_SECRET_KEY', '')
-    min_score = getattr(settings, 'RECAPTCHA_MIN_SCORE', 0.5)
+   
 
-    if not secret:
-        # Якщо ключ не налаштований, пропускаємо (розробка)
-        return True
-
-    if not token:
-        return False
-
+    url = 'https://www.google.com/recaptcha/api/siteverify'
+    data = {
+        'secret': settings.RECAPTCHA_SECRET_KEY,
+        'response': token,
+    }
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
     try:
-        resp = requests.post(
-            'https://www.google.com/recaptcha/api/siteverify',
-            data={
-                'secret': secret,
-                'response': token,
-            },
-            timeout=5
-        )
-        result = resp.json()
-        success = result.get('success', False)
-        score = result.get('score', 0)
-
-        # reCAPTCHA v3: перевіряємо success та score
-        return success and score >= min_score
+        r = requests.post(url, data=data, headers=headers, timeout=5)
+        result = r.json()
+        print("=== Google reCAPTCHA response ===")
+        print(result)
+        return result.get('success', False) and result.get('score', 0) >= settings.RECAPTCHA_MIN_SCORE
     except Exception as e:
-        print(f"reCAPTCHA verification error: {e}")
+        print("Exception in verify_recaptcha:", e)
         return False
-
 
 @csrf_exempt
 def universal_form(request):
@@ -52,12 +40,11 @@ def universal_form(request):
         )
 
     # Перевірка reCAPTCHA
-    recaptcha_token = request.POST.get('g-recaptcha-response', '').strip()
-    if not verify_recaptcha(recaptcha_token):
-        return JsonResponse(
-            {"success": False, "message": "Проверка reCAPTCHA не пройдена. Попробуйте ещё раз."},
-            status=400
-        )
+    recaptcha_token = request.POST.get('g-recaptcha-response')
+    print("Received token:", recaptcha_token)
+    if not recaptcha_token or not verify_recaptcha(recaptcha_token):
+        return JsonResponse({'success': False, 'message': 'Проверка reCAPTCHA не пройдена. Попробуйте ещё раз.'})
+
 
     form_type = request.POST.get("form_type", "").strip()
 
